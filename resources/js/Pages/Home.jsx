@@ -27,7 +27,7 @@ const navLinks = [
     { label: 'Produktai', href: '#produktai' },
     { label: 'Receptai',  href: '/receptai' },
     { label: 'Apie Mus',  href: '#apie' },
-    { label: 'Kontaktai', href: '#kontaktai' },
+    { label: 'Kontaktai', href: '/kontaktai' },
 ];
 
 function ImagePlaceholder({ className = '', text = '' }) {

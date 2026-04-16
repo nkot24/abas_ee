@@ -11,6 +11,10 @@ Route::get('/receptai', function () {
     return Inertia::render('Recipes');
 });
 
+Route::get('/kontaktai', function () {
+    return Inertia::render('Contact');
+});
+
 Route::get('/receptai/{id}', function ($id) {
     $recipes = [
         1  => ['id' => 1,  'title' => 'Kepsniai griliuje su marinatu',                        'category' => 'Pagrindinis'],
