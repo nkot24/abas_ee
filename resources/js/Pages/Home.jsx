@@ -24,9 +24,9 @@ const recipes = [
 
 const navLinks = [
     { label: 'Pradžia',   href: '/' },
-    { label: 'Produktai', href: '#produktai' },
+    { label: 'Produktai', href: '/produktai' },
     { label: 'Receptai',  href: '/receptai' },
-    { label: 'Apie Mus',  href: '#apie' },
+    { label: 'ES Fondai', href: '/es-fondai' },
     { label: 'Kontaktai', href: '/kontaktai' },
 ];
 
@@ -375,7 +375,7 @@ export default function Home() {
                             <p className="text-gray-400 text-sm leading-relaxed mb-4">
                                 SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
                             </p>
-                            <a href="#" className="text-red-500 hover:text-red-400 text-sm transition-colors">
+                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">
                                 Skaityti daugiau »
                             </a>
                             <div className="mt-6">

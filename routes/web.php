@@ -11,6 +11,14 @@ Route::get('/receptai', function () {
     return Inertia::render('Recipes');
 });
 
+Route::get('/produktai', function () {
+    return Inertia::render('Products');
+});
+
+Route::get('/es-fondai', function () {
+    return Inertia::render('EsFondai');
+});
+
 Route::get('/kontaktai', function () {
     return Inertia::render('Contact');
 });
