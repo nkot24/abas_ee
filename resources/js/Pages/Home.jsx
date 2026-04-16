@@ -185,26 +185,26 @@ export default function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {products.map(product => (
                             <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1">
-
-                                {/* Image */}
-                                <div className="relative">
-                                    <ImagePlaceholder className="w-full h-52" />
-                                    {product.badge && (
-                                        <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
-                                            {product.badge}
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Info */}
-                                <div className="p-5">
-                                    <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-red-600 transition-colors">
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-2xl font-black text-red-600 mb-4">
-                                        {product.price}
-                                        <span className="text-sm font-normal text-gray-400 ml-1">{product.unit}</span>
-                                    </p>
+                                <a href={`/produktai/${product.id}`} className="block">
+                                    <div className="relative">
+                                        <ImagePlaceholder className="w-full h-52" />
+                                        {product.badge && (
+                                            <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
+                                                {product.badge}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="p-5 pb-3">
+                                        <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-red-600 transition-colors">
+                                            {product.name}
+                                        </h3>
+                                        <p className="text-2xl font-black text-red-600 mb-2">
+                                            {product.price}
+                                            <span className="text-sm font-normal text-gray-400 ml-1">{product.unit}</span>
+                                        </p>
+                                    </div>
+                                </a>
+                                <div className="px-5 pb-5">
                                     <button
                                         onClick={addToCart}
                                         className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"
