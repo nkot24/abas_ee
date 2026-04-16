@@ -23,10 +23,10 @@ const recipes = [
 ];
 
 const navLinks = [
-    { label: 'Pradžia', href: '#' },
+    { label: 'Pradžia',   href: '/' },
     { label: 'Produktai', href: '#produktai' },
-    { label: 'Receptai', href: '#receptai' },
-    { label: 'Apie Mus', href: '#apie' },
+    { label: 'Receptai',  href: '/receptai' },
+    { label: 'Apie Mus',  href: '#apie' },
     { label: 'Kontaktai', href: '#kontaktai' },
 ];
 
