@@ -15,35 +15,6 @@ const categories = [
     { id: 'lauzavietes',     label: 'Laužavietės' },
 ];
 
-const products = [
-    { id: 1,  name: 'ABAS Mini Rūkykla',            price: 149,  category: 'rukyklos',       badge: 'Populiaru', material: 'nerūdijantis', h: 40,  w: 30  },
-    { id: 2,  name: 'ABAS Standard Rūkykla',         price: 249,  category: 'rukyklos',       badge: null,        material: 'nerūdijantis', h: 60,  w: 40  },
-    { id: 3,  name: 'ABAS Pro Rūkykla',              price: 399,  category: 'rukyklos',       badge: 'Naujiena',  material: 'nerūdijantis', h: 80,  w: 50  },
-    { id: 4,  name: 'ABAS XL Rūkykla',               price: 549,  category: 'rukyklos',       badge: null,        material: 'nerūdijantis', h: 100, w: 60  },
-    { id: 5,  name: 'ABAS Mini Nešiojama Rūkykla',   price: 119,  category: 'nesiojaimos',    badge: null,        material: 'paprastas',    h: 35,  w: 25  },
-    { id: 6,  name: 'ABAS Compact Nešiojama',        price: 189,  category: 'nesiojaimos',    badge: 'Populiaru', material: 'paprastas',    h: 45,  w: 35  },
-    { id: 7,  name: 'ABAS Pro Profesionali Rūkykla', price: 699,  category: 'profesionalios', badge: null,        material: 'nerūdijantis', h: 120, w: 70  },
-    { id: 8,  name: 'ABAS Master Profesionali',      price: 999,  category: 'profesionalios', badge: 'Naujiena',  material: 'nerūdijantis', h: 150, w: 80  },
-    { id: 9,  name: 'ABAS Grilis Classic',            price: 199,  category: 'grilis',         badge: null,        material: 'paprastas',    h: 90,  w: 55  },
-    { id: 10, name: 'ABAS Grilis Pro',                price: 349,  category: 'grilis',         badge: 'Populiaru', material: 'nerūdijantis', h: 110, w: 65  },
-    { id: 11, name: 'ABAS Grilis XL',                 price: 499,  category: 'grilis',         badge: null,        material: 'nerūdijantis', h: 130, w: 80  },
-    { id: 12, name: 'BBQ Priekaba Classic',           price: 890,  category: 'bbq-priekabos',  badge: null,        material: 'paprastas',    h: 140, w: 200 },
-    { id: 13, name: 'BBQ Priekaba Pro',               price: 1290, category: 'bbq-priekabos',  badge: 'Naujiena',  material: 'nerūdijantis', h: 160, w: 250 },
-    { id: 14, name: 'Sodo Kėdžių Komplektas',         price: 249,  category: 'sodo-baldai',    badge: null,        material: 'paprastas',    h: 90,  w: 60  },
-    { id: 15, name: 'Sodo Stalas su Suolais',         price: 349,  category: 'sodo-baldai',    badge: null,        material: 'paprastas',    h: 75,  w: 180 },
-    { id: 16, name: 'Grilio Anglys 5 kg',             price: 12,   category: 'grilio-anglys',  badge: null,        material: null,           h: null, w: null },
-    { id: 17, name: 'Grilio Anglys 10 kg',            price: 22,   category: 'grilio-anglys',  badge: 'Populiaru', material: null,           h: null, w: null },
-    { id: 18, name: 'Laužavietė Round',               price: 129,  category: 'lauzavietes',    badge: null,        material: 'paprastas',    h: 40,  w: 60  },
-    { id: 19, name: 'Laužavietė XL',                  price: 199,  category: 'lauzavietes',    badge: null,        material: 'paprastas',    h: 50,  w: 80  },
-    { id: 20, name: 'Viryklė Lauko',                  price: 159,  category: 'virykles',        badge: null,        material: 'paprastas',    h: 60,  w: 50  },
-    { id: 21, name: 'Krosnelė Lauko Pro',             price: 279,  category: 'virykles',        badge: 'Naujiena',  material: 'nerūdijantis', h: 80,  w: 55  },
-    { id: 22, name: 'Pirštinės BBQ',                  price: 16,   category: 'aksesuarai',     badge: null,        material: null,           h: null, w: null },
-    { id: 23, name: 'ABAS prijuostė',                 price: 19,   category: 'aksesuarai',     badge: null,        material: null,           h: null, w: null },
-    { id: 24, name: 'Mėsos termometras',              price: 29,   category: 'aksesuarai',     badge: 'Naujiena',  material: null,           h: null, w: null },
-    { id: 25, name: 'Rūkymo drožlių rinkinys',        price: 18,   category: 'kiti',           badge: null,        material: null,           h: null, w: null },
-    { id: 26, name: 'Temperatūros zondas',            price: 24,   category: 'kiti',           badge: null,        material: null,           h: null, w: null },
-];
-
 const navLinks = [
     { label: 'Pradžia',   href: '/' },
     { label: 'Produktai', href: '/produktai' },
@@ -56,9 +27,12 @@ const MAX_PRICE  = 1500;
 const MAX_HEIGHT = 300;
 const MAX_WIDTH  = 300;
 
-function ImagePlaceholder({ className = '' }) {
+function ProductImage({ src }) {
+    if (src) {
+        return <img src={src} alt="" className="w-full h-full object-cover" />;
+    }
     return (
-        <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
+        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -66,7 +40,7 @@ function ImagePlaceholder({ className = '' }) {
     );
 }
 
-export default function Products() {
+export default function Products({ products = [] }) {
     const [cartCount, setCartCount]           = useState(0);
     const [mobileOpen, setMobileOpen]         = useState(false);
     const [activeCategory, setActiveCategory] = useState('visi');
@@ -89,7 +63,12 @@ export default function Products() {
 
     const dimsActive = heightMin > 0 || heightMax < MAX_HEIGHT || widthMin > 0 || widthMax < MAX_WIDTH;
 
-    const filtered = useMemo(() => products.filter(p => {
+    // Normalise DB fields (height/width) to h/w used by filters
+    const normalisedProducts = useMemo(() =>
+        products.map(p => ({ ...p, h: p.h ?? p.height ?? null, w: p.w ?? p.width ?? null })),
+    [products]);
+
+    const filtered = useMemo(() => normalisedProducts.filter(p => {
         if (activeCategory !== 'visi' && p.category !== activeCategory) return false;
         if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
         if (p.price < priceMin || p.price > priceMax) return false;
@@ -99,7 +78,7 @@ export default function Products() {
             if (p.w < widthMin  || p.w > widthMax)  return false;
         }
         return true;
-    }), [activeCategory, search, priceMin, priceMax, activeMaterials, heightMin, heightMax, widthMin, widthMax, dimsActive]);
+    }), [normalisedProducts, activeCategory, search, priceMin, priceMax, activeMaterials, heightMin, heightMax, widthMin, widthMax, dimsActive]);
 
     useEffect(() => { setPage(1); }, [filtered]);
 
@@ -240,7 +219,7 @@ export default function Products() {
                                             >
                                                 {cat.label}
                                                 <span className={`ml-1 text-xs ${activeCategory === cat.id ? 'text-red-200' : 'text-gray-400'}`}>
-                                                    ({cat.id === 'visi' ? products.length : products.filter(p => p.category === cat.id).length})
+                                                    ({cat.id === 'visi' ? normalisedProducts.length : normalisedProducts.filter(p => p.category === cat.id).length})
                                                 </span>
                                             </button>
                                         </li>
@@ -388,8 +367,8 @@ export default function Products() {
                                     {paginated.map(product => (
                                         <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1">
                                             <a href={`/produktai/${product.id}`} className="block">
-                                                <div className="relative">
-                                                    <ImagePlaceholder className="w-full h-48" />
+                                                <div className="relative h-48 overflow-hidden">
+                                                    <ProductImage src={product.main_image_url} />
                                                     {product.badge && (
                                                         <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
                                                             {product.badge}

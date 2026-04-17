@@ -9,7 +9,28 @@ const navLinks = [
     { label: 'Kontaktai', href: '/kontaktai' },
 ];
 
-export default function Contact() {
+export default function Contact({ settings = {} }) {
+    const s = {
+        phone:               '+371 29284179',
+        email:               'info@abas.lv',
+        company_name:        'SIA Linda-1',
+        reg_number:          'LV40003167227',
+        legal_address:       'Kandava, Sabiles g. 2',
+        bank_account_1:      'LV05UNLA0011003467703',
+        bank_code_1:         'UNLALV2X',
+        bank_name_1:         'A/S SEB banka',
+        bank_account_2:      'LV79HABA0551005509068',
+        bank_code_2:         'HABALV2X',
+        bank_name_2:         'AS Swedbank',
+        office_address:      'Kandava, Sabiles g. 2',
+        production_address:  'Kandava, Jelgavas g. 1i',
+        production_phone:    '+371 29284179',
+        production_contact:  'Guntars',
+        showroom_address:    '„Lidostas parks 5", „Vismaņi", Mārupes pag., Mārupes nov., LV-2167',
+        showroom_phone:      '+371 20383017',
+        map_embed_url:       'https://maps.google.com/maps?q=Jelgavas+iela+1d,+Kandava,+LV-3120,+Latvia&t=&z=15&ie=UTF8&iwloc=&output=embed',
+        ...settings,
+    };
     const [cartCount, setCartCount]   = useState(0);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [form, setForm] = useState({ vardas: '', email: '', zinute: '' });
@@ -126,8 +147,8 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">Telefonas</p>
-                                    <a href="tel:+37129284179" className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
-                                        +371 29284179
+                                    <a href={`tel:${s.phone}`} className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
+                                        {s.phone}
                                     </a>
                                 </div>
                             </div>
@@ -141,8 +162,8 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">El. paštas</p>
-                                    <a href="mailto:info@abas.lv" className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
-                                        info@abas.lv
+                                    <a href={`mailto:${s.email}`} className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
+                                        {s.email}
                                     </a>
                                 </div>
                             </div>
@@ -157,16 +178,16 @@ export default function Contact() {
                                 <div>
                                     <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">Rekvizitai</p>
                                     <div className="text-gray-700 text-sm space-y-1 leading-relaxed">
-                                        <p className="font-semibold">SIA Linda-1</p>
-                                        <p>Registracijos Nr.: LV40003167227</p>
-                                        <p>Juridinis adresas: Kandava, Sabiles g. 2</p>
+                                        <p className="font-semibold">{s.company_name}</p>
+                                        <p>Registracijos Nr.: {s.reg_number}</p>
+                                        <p>Juridinis adresas: {s.legal_address}</p>
                                         <p className="mt-3 font-semibold">Atsiskaitymo sąskaitos:</p>
-                                        <p className="mt-1 font-medium">LV05UNLA0011003467703</p>
-                                        <p>Banko kodas: UNLALV2X</p>
-                                        <p>Bankas: A/S SEB banka</p>
-                                        <p className="mt-2 font-medium">LV79HABA0551005509068</p>
-                                        <p>Banko kodas: HABALV2X</p>
-                                        <p>Bankas: AS Swedbank</p>
+                                        <p className="mt-1 font-medium">{s.bank_account_1}</p>
+                                        <p>Banko kodas: {s.bank_code_1}</p>
+                                        <p>Bankas: {s.bank_name_1}</p>
+                                        <p className="mt-2 font-medium">{s.bank_account_2}</p>
+                                        <p>Banko kodas: {s.bank_code_2}</p>
+                                        <p>Bankas: {s.bank_name_2}</p>
                                     </div>
                                 </div>
                             </div>
@@ -182,16 +203,15 @@ export default function Contact() {
                                 <div>
                                     <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">Adresas</p>
                                     <div className="text-gray-700 text-sm space-y-2 leading-relaxed">
-                                        <p><span className="font-medium">Biuro adresas:</span> Kandava, Sabiles g. 2</p>
+                                        <p><span className="font-medium">Biuro adresas:</span> {s.office_address}</p>
                                         <p>
-                                            <span className="font-medium">Gamybos ir sandėlio adresas:</span> Kandava, Jelgavas g. 1i<br/>
-                                            Tel: <a href="tel:+37129284179" className="text-red-600 hover:underline">+371 29284179</a> Guntars
+                                            <span className="font-medium">Gamybos ir sandėlio adresas:</span> {s.production_address}<br/>
+                                            Tel: <a href={`tel:${s.production_phone}`} className="text-red-600 hover:underline">{s.production_phone}</a> {s.production_contact}
                                         </p>
                                         <p>
                                             <span className="font-medium">Sandėlio ir parodų salės adresas:</span><br/>
-                                            „Lidostas parks 5", „Vismaņi",<br/>
-                                            Mārupes pag., Mārupes nov., LV-2167<br/>
-                                            Tel: <a href="tel:+37120383017" className="text-red-600 hover:underline">+371 20383017</a>
+                                            {s.showroom_address}<br/>
+                                            Tel: <a href={`tel:${s.showroom_phone}`} className="text-red-600 hover:underline">{s.showroom_phone}</a>
                                         </p>
                                     </div>
                                 </div>
@@ -270,7 +290,7 @@ export default function Contact() {
             <section className="h-96 bg-gray-200">
                 <iframe
                     title="Žemėlapis"
-                    src="https://maps.google.com/maps?q=Jelgavas+iela+1d,+Kandava,+LV-3120,+Latvia&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    src={s.map_embed_url}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

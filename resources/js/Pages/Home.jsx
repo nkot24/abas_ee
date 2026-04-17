@@ -1,26 +1,5 @@
 import { useState } from 'react';
 
-const products = [
-    { id: 1, name: 'Rūkyta Sprandinė', price: '12.90', unit: '€/kg', badge: 'Populiaru' },
-    { id: 2, name: 'Rūkytas Lašinys', price: '8.50', unit: '€/kg', badge: null },
-    { id: 3, name: 'Rūkyti Šonkauliukai', price: '15.90', unit: '€/kg', badge: 'Naujiena' },
-    { id: 4, name: 'Rūkyta Dešra', price: '6.90', unit: '€/kg', badge: null },
-];
-
-const recipes = [
-    { id: 1, title: 'Rūkyti Šonkauliukai su BBQ Padažu', category: 'Pagrindinis' },
-    { id: 2, title: 'Sprandinės Sumuštiniai', category: 'Užkandžiai' },
-    { id: 3, title: 'Rūkyto Lašinio Sriuba', category: 'Sriubos' },
-    { id: 4, title: 'Rūkyta Dešra su Bulvėmis', category: 'Pagrindinis' },
-    { id: 5, title: 'BBQ Vištiena su Daržovėmis', category: 'Pagrindinis' },
-    { id: 6, title: 'Rūkyto Sūrio Salotos', category: 'Salotos' },
-    { id: 7, title: 'Kiaulienos Kepsnys', category: 'Pagrindinis' },
-    { id: 8, title: 'Šaltų Užkandžių Lėkštė', category: 'Užkandžiai' },
-    { id: 9, title: 'Rūkytos Žuvies Patiekalas', category: 'Pagrindinis' },
-    { id: 10, title: 'Karšti Dūminiai Sparneliai', category: 'Užkandžiai' },
-    { id: 11, title: 'Rūkytos Daržovės Orkaitėje', category: 'Garnyrас' },
-    { id: 12, title: 'Medumi Glazūruoti Šonkauliukai', category: 'Pagrindinis' },
-];
 
 const navLinks = [
     { label: 'Pradžia',   href: '/' },
@@ -41,7 +20,9 @@ function ImagePlaceholder({ className = '', text = '' }) {
     );
 }
 
-export default function Home() {
+export default function Home({ featuredProducts = [], featuredRecipes = [], settings = {} }) {
+    const products = featuredProducts;
+    const recipes  = featuredRecipes;
     const [cartCount, setCartCount] = useState(0);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -139,7 +120,7 @@ export default function Home() {
                         <span className="text-red-500">SMOKE HOUSE</span>
                     </h1>
                     <p className="text-gray-300 text-lg md:text-xl mb-10 max-w-xl mx-auto leading-relaxed">
-                        Tradiciniai dūminiai gaminiai iš aukščiausios kokybės ingredientų. Paragaukite tikrojo skonio.
+                        {settings.hero_subtitle || 'Tradiciniai dūminiai gaminiai iš aukščiausios kokybės ingredientų. Paragaukite tikrojo skonio.'}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
@@ -328,16 +309,16 @@ export default function Home() {
                             <h2 className="text-4xl font-bold text-gray-900 mb-6">Apie mus</h2>
                             <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                Mes esame kūpinimo ir grilių gamybos įmonė iš Latvijos, pavadinimu SIA „Linda-1". Mūsų verslas – namų, sodo ir viešojo maitinimo įrangos projektavimas ir gamyba – mėsos, paukštienos, žuvies, sūrio ir daržovių rūkymui bei griliavimuisi. Savo produkciją parduodame su registruotu prekių ženklu ABAS.
+                                {settings.about_text_1 || 'Mes esame kūpinimo ir grilių gamybos įmonė iš Latvijos, pavadinimu SIA „Linda-1". Mūsų verslas – namų, sodo ir viešojo maitinimo įrangos projektavimas ir gamyba – mėsos, paukštienos, žuvies, sūrio ir daržovių rūkymui bei griliavimuisi. Savo produkciją parduodame su registruotu prekių ženklu ABAS.'}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                Mūsų produktai yra unikalūs tarp kitų, galbūt panašių gaminių. Visų pirma, mūsų rūkyklos yra šiluminiu būdu izoliuotos, kas užtikrina energijos efektyvumą ir saugumą. Rūkymo metu mūsų produktai sunaudoja labai mažai malkų ir išskiria itin mažai šilumos nuo rūkyklos paviršiaus.
+                                {settings.about_text_2 || 'Mūsų produktai yra unikalūs tarp kitų, galbūt panašių gaminių. Visų pirma, mūsų rūkyklos yra šiluminiu būdu izoliuotos, kas užtikrina energijos efektyvumą ir saugumą. Rūkymo metu mūsų produktai sunaudoja labai mažai malkų ir išskiria itin mažai šilumos nuo rūkyklos paviršiaus.'}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                Unikalus ir patentuotas dizainas suteikia ABAS Smokehouse naudotojams visišką temperatūros lygio ir proceso stabilumo kontrolę – oro srauto valdymas ir tiesioginis temperatūros ekranas užtikrina, kad visi rūkyti patiekalai bus skanūs ir kokybiški.
+                                {settings.about_text_3 || 'Unikalus ir patentuotas dizainas suteikia ABAS Smokehouse naudotojams visišką temperatūros lygio ir proceso stabilumo kontrolę – oro srauto valdymas ir tiesioginis temperatūros ekranas užtikrina, kad visi rūkyti patiekalai bus skanūs ir kokybiški.'}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-8">
-                                Visi mūsų produktai skirti naudoti tik lauke; jie yra ilgaamžiai įvairių oro sąlygų atžvilgiu ir lengvai pernešami. Judumas priklauso nuo jūsų pasirinkto modelio.
+                                {settings.about_text_4 || 'Visi mūsų produktai skirti naudoti tik lauke; jie yra ilgaamžiai įvairių oro sąlygų atžvilgiu ir lengvai pernešami. Judumas priklauso nuo jūsų pasirinkto modelio.'}
                             </p>
                             <a
                                 href="#kontaktai"

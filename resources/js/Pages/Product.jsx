@@ -14,6 +14,10 @@ export default function Product({ product }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [qty, setQty]               = useState(1);
 
+    const images   = product.images ?? [];
+    const mainIdx  = images.findIndex(i => i.is_main);
+    const [active, setActive] = useState(mainIdx >= 0 ? mainIdx : 0);
+
     return (
         <div className="min-h-screen bg-white" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
 
@@ -92,17 +96,74 @@ export default function Product({ product }) {
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
 
-                        {/* Image */}
-                        <div className="relative">
-                            <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
+                        {/* Image gallery */}
+                        <div>
+                            {/* Main display */}
+                            <div className="relative w-full aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                {images.length > 0 ? (
+                                    <img
+                                        src={images[active].url}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                )}
+                                {product.badge && (
+                                    <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide">
+                                        {product.badge}
+                                    </span>
+                                )}
+                                {images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={() => setActive(i => (i - 1 + images.length) % images.length)}
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center transition-all"
+                                        >
+                                            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => setActive(i => (i + 1) % images.length)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center transition-all"
+                                        >
+                                            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                            {images.map((_, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => setActive(idx)}
+                                                    className={`w-2 h-2 rounded-full transition-all ${idx === active ? 'bg-red-600 w-4' : 'bg-white/70 hover:bg-white'}`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                            {product.badge && (
-                                <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide">
-                                    {product.badge}
-                                </span>
+
+                            {/* Thumbnails */}
+                            {images.length > 1 && (
+                                <div className="flex gap-2 mt-3 flex-wrap">
+                                    {images.map((img, idx) => (
+                                        <button
+                                            key={img.id}
+                                            onClick={() => setActive(idx)}
+                                            className={`w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
+                                                idx === active ? 'border-red-600' : 'border-transparent hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <img src={img.url} alt="" className="w-full h-full object-cover" />
+                                        </button>
+                                    ))}
+                                </div>
                             )}
                         </div>
 

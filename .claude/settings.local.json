@@ -44,7 +44,17 @@
       "Bash(php -m)",
       "Read(//c/php/**)",
       "Bash(/c/php/php.exe --version)",
-      "Bash(/c/php/php.exe -m)"
+      "Bash(/c/php/php.exe -m)",
+      "Bash(php artisan *)",
+      "Bash(grep -rn 'protected static ?string $navigation' app/Filament/)",
+      "Bash(php -r \"echo class_exists\\('Filament\\\\\\\\Schemas\\\\\\\\Schema'\\) ? 'yes' : 'no';\")",
+      "Bash(php -r \"echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Form'\\) ? 'yes' : 'no';\")",
+      "Bash(grep -r \"namespace Filament\\\\\\\\\\\\\\\\Schemas\" c:/Users/niksi/programming/abas_lt/vendor/filament/schemas/src/Schema.php)",
+      "Bash(php -r \"echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\Section'\\) ? 'yes' : 'no'; echo PHP_EOL; echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\TextInput'\\) ? 'yes' : 'no';\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\TextInput'\\) ? 'yes' : 'no';\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\Section'\\) ? 'yes' : 'no'; echo PHP_EOL; echo class_exists\\('Filament\\\\\\\\Schemas\\\\\\\\Components\\\\\\\\Section'\\) ? 'yes' : 'no';\")",
+      "Bash(php -r 'require '\\\\''vendor/autoload.php'\\\\''; $app = require '\\\\''bootstrap/app.php'\\\\''; echo '\\\\''OK'\\\\'';')",
+      "Bash(php -r \"echo 'php ok';\")"
     ]
   }
 }

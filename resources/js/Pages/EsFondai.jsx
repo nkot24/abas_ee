@@ -8,7 +8,15 @@ const navLinks = [
     { label: 'Kontaktai', href: '/kontaktai' },
 ];
 
-export default function EsFondai() {
+export default function EsFondai({ settings = {} }) {
+    const s = {
+        section1_text:    'SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.',
+        section2_p1:      '2020 m. liepos 1 d. SIA „Linda-1", bendradarbiaudama su LVMI „Silava", pradėjo įgyvendinti programos „Augimas ir užimtumas" specifinio paramos tikslo 1.1.1. priemonės 1.1.1.1. „Taikomieji tyrimai" projektą „Naujos maisto rūkymo technologijos sukūrimas" (Nr. 1.1.1.1/19/A/092).',
+        section2_p2:      'Tyrimo tikslas – įgyti intelektinės nuosavybės teises ir ekonominių pranašumų, sukuriant naujausiais mokslo pasiekimais pagrįstą naują maisto rūkymo technologiją.',
+        project_budget:   '617 503,51 EUR',
+        project_deadline: 'iki 2022 m. gruodžio 31 d.',
+        ...settings,
+    };
     const [cartCount, setCartCount]   = useState(0);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -102,7 +110,7 @@ export default function EsFondai() {
                         <h2 className="text-2xl font-black text-gray-900 uppercase tracking-wide mb-2">ES fondų parama</h2>
                         <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
                         <p className="text-gray-600 leading-relaxed mb-4">
-                            SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
+                            {s.section1_text}
                         </p>
                     </div>
 
@@ -112,20 +120,20 @@ export default function EsFondai() {
                         <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
 
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            2020 m. liepos 1 d. SIA „Linda-1", bendradarbiaudama su LVMI „Silava", pradėjo įgyvendinti programos „Augimas ir užimtumas" specifinio paramos tikslo 1.1.1. „Padidinti Latvijos mokslo institucijų mokslinius ir inovacinius pajėgumus bei gebėjimą pritraukti išorinį finansavimą, investuojant į žmogiškuosius išteklius ir infrastruktūrą" priemonės 1.1.1.1. „Taikomieji tyrimai" projektą „Naujos maisto rūkymo technologijos sukūrimas, skirtas policiklinių aromatinių angliavandenilių (benzpireno) koncentracijos mažinimui rūkytuose mėsos produktuose – „Blue smoke" (Nr. 1.1.1.1/19/A/092).
+                            {s.section2_p1}
                         </p>
 
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            Tyrimo tikslas – įgyti intelektinės nuosavybės teises ir ekonominių pranašumų, sukuriant naujausiais mokslo pasiekimais pagrįstą naują maisto rūkymo technologiją, kurią sudarys automatizuoto valdymo rūkymo įrenginys ir specialiai jam sukurtas kuras, kurie kompleksiškai užtikrins, kad maisto produktų rūkymo procese naudojamos, natūralaus medienos degimo rezultate gautos dumos būtų gaminamos ir kontroliuojamos taip, kad rūkymo produkcija atitiktų EB nustatytus kriterijus dėl benzpireno koncentracijos, kartu išsaugant galutinio produkto maistinę vertę ir organoleptines savybes.
+                            {s.section2_p2}
                         </p>
 
                         {/* Highlight box */}
                         <div className="bg-gray-50 border-l-4 border-red-600 px-6 py-4 rounded-r-lg">
                             <p className="text-gray-700 font-semibold">
-                                Bendras projekto finansavimas: <span className="text-red-600">617 503,51 EUR</span>
+                                Bendras projekto finansavimas: <span className="text-red-600">{s.project_budget}</span>
                             </p>
                             <p className="text-gray-600 text-sm mt-1">
-                                Projekto įgyvendinimo terminas: iki 2022 m. gruodžio 31 d.
+                                Projekto įgyvendinimo terminas: {s.project_deadline}
                             </p>
                         </div>
                     </div>
