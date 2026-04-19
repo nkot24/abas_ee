@@ -36,7 +36,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-24">
 
                     {/* Logo */}
-                    <a href="#" className="flex items-center">
+                    <a href="/" className="flex items-center">
                         <img src="/images/logo.png" alt="ABAS Smoke House" className="h-16 w-auto" />
                     </a>
 
@@ -124,13 +124,13 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
-                            href="#produktai"
+                            href="/produktai"
                             className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:shadow-lg hover:shadow-red-900/40 hover:-translate-y-0.5"
                         >
                             Pirkti Dabar
                         </a>
                         <a
-                            href="#receptai"
+                            href="/receptai"
                             className="px-8 py-4 border border-white/40 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:bg-white/10"
                         >
                             Receptai
@@ -167,8 +167,11 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                         {products.map(product => (
                             <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1">
                                 <a href={`/produktai/${product.id}`} className="block">
-                                    <div className="relative">
-                                        <ImagePlaceholder className="w-full h-52" />
+                                    <div className="relative h-52 overflow-hidden">
+                                        {product.main_image_url
+                                            ? <img src={product.main_image_url} alt={product.name} className="w-full h-full object-cover" />
+                                            : <ImagePlaceholder className="w-full h-full" />
+                                        }
                                         {product.badge && (
                                             <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
                                                 {product.badge}
@@ -200,7 +203,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     {/* View all */}
                     <div className="text-center mt-12">
                         <a
-                            href="#"
+                            href="/produktai"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
                             Visi Produktai
@@ -231,7 +234,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                         {recipes.map(recipe => (
                             <a
                                 key={recipe.id}
-                                href="#"
+                                href={`/receptai/${recipe.id}`}
                                 className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                             >
                                 <ImagePlaceholder className="w-full h-40" />
@@ -249,7 +252,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
 
                     <div className="text-center mt-12">
                         <a
-                            href="#"
+                            href="/receptai"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
                             Visi Receptai
@@ -273,16 +276,16 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                         </h2>
                         <div className="flex flex-col sm:flex-row gap-4">
                             <a
-                                href="mailto:info@abas.lt"
+                                href="/kontaktai"
                                 className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center"
                             >
                                 Susisiekti
                             </a>
                             <a
-                                href="tel:+37060000000"
+                                href="/kontaktai"
                                 className="px-8 py-4 border border-white/30 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center hover:bg-white/10"
                             >
-                                +370 600 00000
+                                Kontaktai
                             </a>
                         </div>
                     </div>
@@ -321,7 +324,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                 {settings.about_text_4 || 'Visi mūsų produktai skirti naudoti tik lauke; jie yra ilgaamžiai įvairių oro sąlygų atžvilgiu ir lengvai pernešami. Judumas priklauso nuo jūsų pasirinkto modelio.'}
                             </p>
                             <a
-                                href="#kontaktai"
+                                href="/kontaktai"
                                 className="inline-block px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                             >
                                 Susisiekti

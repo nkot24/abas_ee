@@ -10,20 +10,28 @@ class Product extends Model
 {
     protected $fillable = [
         'name',
+        'description',
         'price',
         'category',
         'badge',
         'material',
         'height',
+        'length',
         'width',
+        'thickness',
+        'weight',
         'active',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
-        'price'  => 'integer',
-        'height' => 'integer',
-        'width'  => 'integer',
+        'active'    => 'boolean',
+        'price'     => 'decimal:2',
+        'category'  => 'array',
+        'height'    => 'integer',
+        'length'    => 'integer',
+        'width'     => 'integer',
+        'thickness' => 'decimal:2',
+        'weight'    => 'decimal:2',
     ];
 
     protected $appends = ['main_image_url'];

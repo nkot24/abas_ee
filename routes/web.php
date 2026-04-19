@@ -9,8 +9,28 @@ use Inertia\Inertia;
 Route::get('/', function () {
     $settings = PageSetting::getForPage('home');
 
+    $featuredIds = array_filter([
+        $settings['featured_product_1'] ?? null,
+        $settings['featured_product_2'] ?? null,
+        $settings['featured_product_3'] ?? null,
+        $settings['featured_product_4'] ?? null,
+    ]);
+
+    if (count($featuredIds) > 0) {
+        // Preserve the admin-chosen order
+        $featuredProducts = Product::where('active', true)
+            ->with('mainImage')
+            ->whereIn('id', $featuredIds)
+            ->get()
+            ->sortBy(fn ($p) => array_search($p->id, array_values($featuredIds)))
+            ->values()
+            ->toArray();
+    } else {
+        $featuredProducts = Product::where('active', true)->with('mainImage')->take(4)->get()->toArray();
+    }
+
     return Inertia::render('Home', [
-        'featuredProducts' => Product::where('active', true)->with('mainImage')->take(4)->get()->toArray(),
+        'featuredProducts' => $featuredProducts,
         'featuredRecipes'  => Recipe::where('active', true)->take(12)->get()->toArray(),
         'settings'         => $settings,
     ]);
@@ -47,7 +67,9 @@ Route::get('/produktai/{id}', function ($id) {
     $data = $product->toArray();
     $data['h'] = $product->height;
     $data['w'] = $product->width;
-    $data['category_label'] = $categoryLabels[$product->category] ?? $product->category;
+    $data['l'] = $product->length;
+    $cats = is_array($product->category) ? $product->category : [$product->category];
+    $data['category_label'] = implode(', ', array_map(fn($c) => $categoryLabels[$c] ?? $c, array_filter($cats)));
     $data['images'] = $product->images->map(fn ($img) => [
         'id'      => $img->id,
         'url'     => $img->url,

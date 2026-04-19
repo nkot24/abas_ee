@@ -177,12 +177,17 @@ export default function Product({ product }) {
                                 {product.price} <span className="text-lg font-normal text-gray-400">€</span>
                             </p>
 
+                            {/* Description */}
+                            {product.description && (
+                                <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
+                            )}
+
                             {/* Specs */}
                             <div className="bg-gray-50 rounded-lg p-5 mb-8 space-y-3">
                                 {product.material && (
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-500 font-medium">Medžiaga</span>
-                                        <span className="text-gray-800 font-semibold capitalize">{product.material === 'nerūdijantis' ? 'Nerūdijantis plienas' : 'Paprastas plienas'}</span>
+                                        <span className="text-gray-800 font-semibold">{{ nerūdijantis: 'Nerūdijantis plienas', paprastas: 'Paprastas plienas', corten: 'Corten plienas' }[product.material] ?? product.material}</span>
                                     </div>
                                 )}
                                 {product.h && (
@@ -191,10 +196,28 @@ export default function Product({ product }) {
                                         <span className="text-gray-800 font-semibold">{product.h} cm</span>
                                     </div>
                                 )}
+                                {product.l && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500 font-medium">Ilgis</span>
+                                        <span className="text-gray-800 font-semibold">{product.l} cm</span>
+                                    </div>
+                                )}
                                 {product.w && (
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-500 font-medium">Plotis</span>
                                         <span className="text-gray-800 font-semibold">{product.w} cm</span>
+                                    </div>
+                                )}
+                                {product.thickness && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500 font-medium">Medžiagos storis</span>
+                                        <span className="text-gray-800 font-semibold">{product.thickness} mm</span>
+                                    </div>
+                                )}
+                                {product.weight && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500 font-medium">Svoris</span>
+                                        <span className="text-gray-800 font-semibold">{product.weight} kg</span>
                                     </div>
                                 )}
                             </div>

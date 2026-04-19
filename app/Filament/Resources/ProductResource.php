@@ -6,8 +6,8 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -33,53 +33,31 @@ class ProductResource extends Resource
     public static function form(Schema $form): Schema
     {
         return $form->schema([
-            Section::make('Images')->schema([
-                Repeater::make('images')
-                    ->relationship('images')
-                    ->schema([
-                        FileUpload::make('path')
-                            ->label('Image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('products')
-                            ->visibility('public')
-                            ->required()
-                            ->columnSpan(2),
-
-                        Toggle::make('is_main')
-                            ->label('Main image (shown in product list)')
-                            ->default(false)
-                            ->live()
-                            ->afterStateUpdated(function (bool $state, $component, $livewire) {
-                                if (! $state) {
-                                    return;
-                                }
-                                // Find the current item's key from its state path
-                                $parts      = explode('.', $component->getStatePath());
-                                $currentKey = $parts[count($parts) - 2];
-
-                                // Unset is_main on every other item
-                                $images = data_get($livewire->data, 'images', []);
-                                foreach (array_keys($images) as $key) {
-                                    if ($key !== $currentKey) {
-                                        data_set($livewire->data, "images.{$key}.is_main", false);
-                                    }
-                                }
-                            })
-                            ->columnSpan(1),
-                    ])
-                    ->columns(3)
-                    ->addActionLabel('Add image')
-                    ->reorderable('sort_order')
-                    ->collapsible()
-                    ->columnSpanFull(),
-            ]),
+            Section::make('Images')
+                ->description('Select multiple images at once. Drag to reorder — the first image is used as the main image in the product list.')
+                ->schema([
+                    FileUpload::make('uploaded_images')
+                        ->label('')
+                        ->multiple()
+                        ->image()
+                        ->disk('public')
+                        ->directory('products')
+                        ->visibility('public')
+                        ->reorderable()
+                        ->columnSpanFull(),
+                ]),
 
             Section::make('Basic information')->schema([
                 TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->maxLength(255),
+
+                Textarea::make('description')
+                    ->label('Description')
+                    ->rows(4)
+                    ->nullable()
+                    ->columnSpanFull(),
 
                 TextInput::make('price')
                     ->label('Price (€)')
@@ -88,13 +66,13 @@ class ProductResource extends Resource
                     ->minValue(0),
 
                 Select::make('category')
-                    ->label('Category')
+                    ->label('Categories')
+                    ->multiple()
                     ->required()
                     ->options([
                         'aksesuarai'     => 'Accessories',
                         'bbq-priekabos'  => 'BBQ trailers',
                         'sodo-baldai'    => 'Garden furniture',
-                        'grilio-anglys'  => 'Grill charcoal',
                         'grilis'         => 'Grill',
                         'rukyklos'       => 'Smokers',
                         'kiti'           => 'Other products',
@@ -116,6 +94,7 @@ class ProductResource extends Resource
                     ->options([
                         'nerūdijantis' => 'Stainless steel',
                         'paprastas'    => 'Regular steel',
+                        'corten'       => 'Corten steel',
                     ])
                     ->nullable(),
 
@@ -125,8 +104,26 @@ class ProductResource extends Resource
                     ->minValue(0)
                     ->nullable(),
 
+                TextInput::make('length')
+                    ->label('Length (cm)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->nullable(),
+
                 TextInput::make('width')
                     ->label('Width (cm)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->nullable(),
+
+                TextInput::make('thickness')
+                    ->label('Material thickness (mm)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->nullable(),
+
+                TextInput::make('weight')
+                    ->label('Weight (kg)')
                     ->numeric()
                     ->minValue(0)
                     ->nullable(),

@@ -5,7 +5,6 @@ const categories = [
     { id: 'aksesuarai',      label: 'Aksesuarai' },
     { id: 'bbq-priekabos',   label: 'BBQ priekabos' },
     { id: 'sodo-baldai',     label: 'Sodo baldai' },
-    { id: 'grilio-anglys',   label: 'Grilio anglys' },
     { id: 'grilis',          label: 'Grilis' },
     { id: 'rukyklos',        label: 'Rūkyklos' },
     { id: 'kiti',            label: 'Kiti produktai' },
@@ -47,7 +46,7 @@ export default function Products({ products = [] }) {
     const [search, setSearch]                 = useState('');
     const [priceMin, setPriceMin]             = useState(0);
     const [priceMax, setPriceMax]             = useState(MAX_PRICE);
-    const [materials, setMaterials]           = useState({ nerūdijantis: false, paprastas: false });
+    const [materials, setMaterials]           = useState({ nerūdijantis: false, paprastas: false, corten: false });
     const [heightMin, setHeightMin]           = useState(0);
     const [heightMax, setHeightMax]           = useState(MAX_HEIGHT);
     const [widthMin, setWidthMin]             = useState(0);
@@ -69,7 +68,7 @@ export default function Products({ products = [] }) {
     [products]);
 
     const filtered = useMemo(() => normalisedProducts.filter(p => {
-        if (activeCategory !== 'visi' && p.category !== activeCategory) return false;
+        if (activeCategory !== 'visi' && !(Array.isArray(p.category) ? p.category.includes(activeCategory) : p.category === activeCategory)) return false;
         if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
         if (p.price < priceMin || p.price > priceMax) return false;
         if (activeMaterials.length > 0 && !activeMaterials.includes(p.material)) return false;
@@ -94,7 +93,7 @@ export default function Products({ products = [] }) {
         setSearch('');
         setPriceMin(0);
         setPriceMax(MAX_PRICE);
-        setMaterials({ nerūdijantis: false, paprastas: false });
+        setMaterials({ nerūdijantis: false, paprastas: false, corten: false });
         setHeightMin(0);
         setHeightMax(MAX_HEIGHT);
         setWidthMin(0);
@@ -219,7 +218,7 @@ export default function Products({ products = [] }) {
                                             >
                                                 {cat.label}
                                                 <span className={`ml-1 text-xs ${activeCategory === cat.id ? 'text-red-200' : 'text-gray-400'}`}>
-                                                    ({cat.id === 'visi' ? normalisedProducts.length : normalisedProducts.filter(p => p.category === cat.id).length})
+                                                    ({cat.id === 'visi' ? normalisedProducts.length : normalisedProducts.filter(p => Array.isArray(p.category) ? p.category.includes(cat.id) : p.category === cat.id).length})
                                                 </span>
                                             </button>
                                         </li>
@@ -274,6 +273,7 @@ export default function Products({ products = [] }) {
                                     {[
                                         { key: 'nerūdijantis', label: 'Nerūdijantis plienas' },
                                         { key: 'paprastas',    label: 'Paprastas plienas' },
+                                        { key: 'corten',       label: 'Corten plienas' },
                                     ].map(({ key, label }) => (
                                         <label key={key} className="flex items-center gap-2.5 cursor-pointer group">
                                             <input
@@ -365,9 +365,9 @@ export default function Products({ products = [] }) {
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {paginated.map(product => (
-                                        <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1">
-                                            <a href={`/produktai/${product.id}`} className="block">
-                                                <div className="relative h-48 overflow-hidden">
+                                        <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1 flex flex-col">
+                                            <a href={`/produktai/${product.id}`} className="block flex-1">
+                                                <div className="relative h-64 overflow-hidden">
                                                     <ProductImage src={product.main_image_url} />
                                                     {product.badge && (
                                                         <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
@@ -376,7 +376,7 @@ export default function Products({ products = [] }) {
                                                     )}
                                                     {product.material && product.material !== null && (
                                                         <span className="absolute top-3 right-3 bg-gray-900/70 text-white text-xs px-2 py-1 rounded-sm">
-                                                            {product.material === 'nerūdijantis' ? 'Nerūd.' : 'Paprastas'}
+                                                            {{ nerūdijantis: 'Nerūd.', paprastas: 'Paprastas', corten: 'Corten' }[product.material] ?? product.material}
                                                         </span>
                                                     )}
                                                 </div>
@@ -384,15 +384,15 @@ export default function Products({ products = [] }) {
                                                     {product.h && (
                                                         <p className="text-xs text-gray-400 mb-1">{product.h} × {product.w} cm</p>
                                                     )}
-                                                    <h3 className="font-bold text-gray-900 text-sm mb-1 group-hover:text-red-600 transition-colors leading-snug">
+                                                    <h3 className="font-bold text-gray-900 text-sm group-hover:text-red-600 transition-colors leading-snug">
                                                         {product.name}
                                                     </h3>
-                                                    <p className="text-2xl font-black text-red-600 mb-3">
-                                                        {product.price} <span className="text-sm font-normal text-gray-400">€</span>
-                                                    </p>
                                                 </div>
                                             </a>
                                             <div className="px-4 pb-4">
+                                                <p className="text-2xl font-black text-red-600 mb-3">
+                                                    {product.price} <span className="text-sm font-normal text-gray-400">€</span>
+                                                </p>
                                                 <button
                                                     onClick={addToCart}
                                                     className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"
