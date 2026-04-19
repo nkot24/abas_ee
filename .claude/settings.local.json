@@ -54,7 +54,14 @@
       "Bash(php -r \"require 'vendor/autoload.php'; echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\TextInput'\\) ? 'yes' : 'no';\")",
       "Bash(php -r \"require 'vendor/autoload.php'; echo class_exists\\('Filament\\\\\\\\Forms\\\\\\\\Components\\\\\\\\Section'\\) ? 'yes' : 'no'; echo PHP_EOL; echo class_exists\\('Filament\\\\\\\\Schemas\\\\\\\\Components\\\\\\\\Section'\\) ? 'yes' : 'no';\")",
       "Bash(php -r 'require '\\\\''vendor/autoload.php'\\\\''; $app = require '\\\\''bootstrap/app.php'\\\\''; echo '\\\\''OK'\\\\'';')",
-      "Bash(php -r \"echo 'php ok';\")"
+      "Bash(php -r \"echo 'php ok';\")",
+      "Read(//c/Users/niksi/Downloads/**)",
+      "Read(//c/Users/niksi/Desktop/**)",
+      "Bash(python3 -c \" import sys, csv reader = csv.DictReader\\(sys.stdin\\) for row in reader: print\\(row['id'] + '|' + row['title'] + '|' + row['price'] + '|' + row['categories']\\) \")",
+      "Bash(python3 -c \" import sys, csv reader = csv.DictReader\\(sys.stdin\\) rows = list\\(reader\\) print\\(f'Total rows: {len\\(rows\\)}'\\) for row in rows: desc = row['description'].replace\\('\\\\n', ' '\\)[:80] if row['description'] else '' print\\(row['id'] + '|' + row['title'] + '|' + row['price'] + '|' + row['categories'] + '|' + desc\\) \")",
+      "Bash(python3 -c \" import sys, csv, json reader = csv.DictReader\\(sys.stdin\\) rows = list\\(reader\\) print\\(f'Total: {len\\(rows\\)}'\\) data = [] for row in rows: data.append\\({ 'id': row['id'], 'title': row['title'], 'description': row['description'], 'price': row['price'], 'categories': row['categories'] }\\) print\\(json.dumps\\(data, ensure_ascii=False, indent=2\\)\\) \" wc -l /tmp/products_raw.json)",
+      "Bash(python3)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
