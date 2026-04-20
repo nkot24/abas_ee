@@ -71,11 +71,10 @@ class ProductResource extends Resource
                     ->required()
                     ->options([
                         'aksesuarai'     => 'Accessories',
-                        'bbq-priekabos'  => 'BBQ trailers',
                         'sodo-baldai'    => 'Garden furniture',
                         'grilis'         => 'Grill',
                         'rukyklos'       => 'Smokers',
-                        'kiti'           => 'Other products',
+                        'grilio-anglys'  => 'Grill charcoal',
                         'virykles'       => 'Stoves & cookers',
                         'nesiojaimos'    => 'Portable smokers',
                         'profesionalios' => 'Professional smokers',

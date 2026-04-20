@@ -51,12 +51,10 @@ Route::get('/produktai', function () {
 Route::get('/produktai/{id}', function ($id) {
     $categoryLabels = [
         'aksesuarai'     => 'Aksesuarai',
-        'bbq-priekabos'  => 'BBQ priekabos',
         'sodo-baldai'    => 'Sodo baldai',
         'grilio-anglys'  => 'Grilio anglys',
         'grilis'         => 'Grilis',
         'rukyklos'       => 'Rūkyklos',
-        'kiti'           => 'Kiti produktai',
         'virykles'       => 'Viryklės ir krosnelės',
         'nesiojaimos'    => 'Nešiojamos rūkyklos',
         'profesionalios' => 'Profesionalios rūkyklos',

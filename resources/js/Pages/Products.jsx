@@ -3,11 +3,10 @@ import { useState, useMemo, useEffect } from 'react';
 const categories = [
     { id: 'visi',            label: 'Visi produktai' },
     { id: 'aksesuarai',      label: 'Aksesuarai' },
-    { id: 'bbq-priekabos',   label: 'BBQ priekabos' },
     { id: 'sodo-baldai',     label: 'Sodo baldai' },
     { id: 'grilis',          label: 'Grilis' },
     { id: 'rukyklos',        label: 'Rūkyklos' },
-    { id: 'kiti',            label: 'Kiti produktai' },
+    { id: 'grilio-anglys',   label: 'Grilio anglys' },
     { id: 'virykles',        label: 'Viryklės ir krosnelės' },
     { id: 'nesiojaimos',     label: 'Nešiojamos rūkyklos' },
     { id: 'profesionalios',  label: 'Profesionalios rūkyklos' },
@@ -22,7 +21,7 @@ const navLinks = [
     { label: 'Kontaktai', href: '/kontaktai' },
 ];
 
-const MAX_PRICE  = 1500;
+const MAX_PRICE  = 10000;
 const MAX_HEIGHT = 300;
 const MAX_WIDTH  = 300;
 
