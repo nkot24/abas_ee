@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from '@inertiajs/react';
+import { useCart } from '../useCart';
+import CartDrawer from '../CartDrawer';
 
 const navLinks = [
     { label: 'Pradžia',   href: '/' },
@@ -10,7 +12,8 @@ const navLinks = [
 ];
 
 export default function Product({ product }) {
-    const [cartCount, setCartCount]   = useState(0);
+    const { items: cartItems, addItem, removeItem, updateQty: updateCartQty, count: cartCount, total: cartTotal } = useCart();
+    const [cartOpen, setCartOpen]     = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [qty, setQty]               = useState(1);
 
@@ -20,6 +23,7 @@ export default function Product({ product }) {
 
     return (
         <div className="min-h-screen bg-white" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+            <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} items={cartItems} removeItem={removeItem} updateQty={updateCartQty} total={cartTotal} />
 
             {/* ── NAVIGATION ── */}
             <nav className="fixed top-0 inset-x-0 z-50 bg-white shadow-md">
@@ -46,7 +50,7 @@ export default function Product({ product }) {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>
-                        <button onClick={() => setCartCount(c => c + 1)} className="relative text-gray-600 hover:text-red-600 transition-colors">
+                        <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
                                 <circle cx="9" cy="21" r="1" fill="currentColor" stroke="none"/>
@@ -232,7 +236,7 @@ export default function Product({ product }) {
                                         className="w-10 h-10 text-gray-600 hover:text-red-600 text-lg font-bold transition-colors">+</button>
                                 </div>
                                 <button
-                                    onClick={() => setCartCount(c => c + qty)}
+                                    onClick={() => { addItem(product, qty); setCartOpen(true); }}
                                     className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                                 >
                                     Į Krepšelį

@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useCart } from '../useCart';
+import CartDrawer from '../CartDrawer';
 
 const categories = [
     { id: 'visi',            label: 'Visi produktai' },
@@ -39,7 +41,8 @@ function ProductImage({ src }) {
 }
 
 export default function Products({ products = [] }) {
-    const [cartCount, setCartCount]           = useState(0);
+    const { items: cartItems, addItem, removeItem, updateQty, count: cartCount, total: cartTotal } = useCart();
+    const [cartOpen, setCartOpen]             = useState(false);
     const [mobileOpen, setMobileOpen]         = useState(false);
     const [activeCategory, setActiveCategory] = useState('visi');
     const [search, setSearch]                 = useState('');
@@ -53,7 +56,6 @@ export default function Products({ products = [] }) {
     const [page, setPage]                     = useState(1);
     const PER_PAGE = 15;
 
-    const addToCart = () => setCartCount(c => c + 1);
 
     const toggleMaterial = (key) => setMaterials(m => ({ ...m, [key]: !m[key] }));
 
@@ -103,6 +105,7 @@ export default function Products({ products = [] }) {
 
     return (
         <div className="min-h-screen bg-white" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+            <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} items={cartItems} removeItem={removeItem} updateQty={updateQty} total={cartTotal} />
 
             {/* ── NAVIGATION ── */}
             <nav className="fixed top-0 inset-x-0 z-50 bg-white shadow-md">
@@ -129,7 +132,7 @@ export default function Products({ products = [] }) {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>
-                        <button onClick={addToCart} className="relative text-gray-600 hover:text-red-600 transition-colors">
+                        <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
                                 <circle cx="9" cy="21" r="1" fill="currentColor" stroke="none"/>
@@ -393,7 +396,7 @@ export default function Products({ products = [] }) {
                                                     {product.price} <span className="text-sm font-normal text-gray-400">€</span>
                                                 </p>
                                                 <button
-                                                    onClick={addToCart}
+                                                    onClick={() => { addItem(product); setCartOpen(true); }}
                                                     className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"
                                                 >
                                                     Į Krepšelį
