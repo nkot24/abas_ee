@@ -61,7 +61,20 @@
       "Bash(python3 -c \" import sys, csv reader = csv.DictReader\\(sys.stdin\\) rows = list\\(reader\\) print\\(f'Total rows: {len\\(rows\\)}'\\) for row in rows: desc = row['description'].replace\\('\\\\n', ' '\\)[:80] if row['description'] else '' print\\(row['id'] + '|' + row['title'] + '|' + row['price'] + '|' + row['categories'] + '|' + desc\\) \")",
       "Bash(python3 -c \" import sys, csv, json reader = csv.DictReader\\(sys.stdin\\) rows = list\\(reader\\) print\\(f'Total: {len\\(rows\\)}'\\) data = [] for row in rows: data.append\\({ 'id': row['id'], 'title': row['title'], 'description': row['description'], 'price': row['price'], 'categories': row['categories'] }\\) print\\(json.dumps\\(data, ensure_ascii=False, indent=2\\)\\) \" wc -l /tmp/products_raw.json)",
       "Bash(python3)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(composer require *)",
+      "Bash(php composer.phar require paysera/lib-webtopay)",
+      "Bash(/c/Users/niksi/AppData/Roaming/Composer/vendor/bin/composer require *)",
+      "Bash(/c/Users/niksi/.config/herd-lite/bin/composer.bat require *)",
+      "Bash(/c/Users/niksi/.config/herd-lite/bin/composer.bat search *)",
+      "Bash(ngrok http *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['tunnels'][0]['public_url']\\)\")",
+      "Bash(where ngrok *)",
+      "Bash(\"/c/Users/niksi/AppData/Local/Microsoft/WinGet/Packages/Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe/ngrok.exe\" http *)",
+      "Bash(curl -s http://127.0.0.1:4040/api/tunnels)",
+      "PowerShell(Invoke-WebRequest -Uri \"https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip\" -OutFile \"$env:TEMP\\\\ngrok.zip\"; Expand-Archive -Path \"$env:TEMP\\\\ngrok.zip\" -DestinationPath \"C:\\\\Users\\\\niksi\\\\ngrok\" -Force; Write-Host \"Done: $\\(Get-Item 'C:\\\\Users\\\\niksi\\\\ngrok\\\\ngrok.exe'\\)\")",
+      "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderConfirmed --markdown=emails.order-confirmed)",
+      "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderPlaced --markdown=emails.order-placed)"
     ]
   }
 }
