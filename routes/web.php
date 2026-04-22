@@ -7,9 +7,25 @@ use App\Models\PageSetting;
 use App\Models\Product;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
+function translateSetting(string $page, string $key, string $value): string
+{
+    $cacheKey = "setting_en_{$page}_{$key}";
+    return Cache::rememberForever($cacheKey, function () use ($value) {
+        try {
+            $tr = new GoogleTranslate('en');
+            $tr->setSource('lt');
+            return $tr->translate($value);
+        } catch (\Exception) {
+            return $value;
+        }
+    });
+}
 
 Route::get('/', function () {
     $settings = PageSetting::getForPage('home');
@@ -34,10 +50,19 @@ Route::get('/', function () {
         $featuredProducts = Product::where('active', true)->with('mainImage')->take(4)->get()->toArray();
     }
 
+    $translatableKeys = ['hero_subtitle', 'about_text_1', 'about_text_2', 'about_text_3', 'about_text_4'];
+    $settingsEn = [];
+    foreach ($translatableKeys as $key) {
+        if (!empty($settings[$key])) {
+            $settingsEn[$key] = translateSetting('home', $key, $settings[$key]);
+        }
+    }
+
     return Inertia::render('Home', [
         'featuredProducts' => $featuredProducts,
         'featuredRecipes'  => Recipe::where('active', true)->take(12)->get()->toArray(),
         'settings'         => $settings,
+        'settingsEn'       => $settingsEn,
     ]);
 });
 
@@ -73,6 +98,7 @@ Route::get('/produktai/{id}', function ($id) {
     $data['l'] = $product->length;
     $cats = is_array($product->category) ? $product->category : [$product->category];
     $data['category_label'] = implode(', ', array_map(fn($c) => $categoryLabels[$c] ?? $c, array_filter($cats)));
+    $data['category_slug']  = array_values(array_filter($cats))[0] ?? null;
     $data['images'] = $product->images->map(fn ($img) => [
         'id'      => $img->id,
         'url'     => $img->url,
@@ -104,29 +130,121 @@ Route::get('/uzsakymas', function () {
     return Inertia::render('Checkout');
 });
 
+Route::get('/api/product-names', function (Request $request) {
+    $ids = array_filter(array_map('intval', explode(',', $request->query('ids', ''))));
+    if (empty($ids)) return response()->json([]);
+    return response()->json(
+        Product::whereIn('id', $ids)->pluck('name_en', 'id')
+    );
+});
+
+Route::get('/omniva/locations', function () {
+    $cacheKey = 'omniva_locations';
+    $locations = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () {
+        $json = file_get_contents('https://www.omniva.ee/locations.json');
+        $all  = json_decode($json, true);
+        return array_values(array_filter($all, fn($l) =>
+            in_array($l['A0_NAME'] ?? '', ['Latvija', 'Lietuva', 'Eesti']) &&
+            ($l['TYPE'] ?? '') == '0'
+        ));
+    });
+    return response()->json($locations);
+});
+
+Route::post('/shipping/calculate', function (Request $request) {
+    $request->validate([
+        'items'   => 'required|array|min:1',
+        'items.*.id'  => 'required|integer',
+        'items.*.qty' => 'required|integer|min:1',
+        'country' => 'required|string|max:2',
+        'method'  => 'required|in:locker,courier',
+    ]);
+
+    $BALTIC = ['LT', 'LV', 'EE'];
+    $country = strtoupper($request->country);
+
+    if ($request->method === 'locker') {
+        $rate = in_array($country, $BALTIC) ? 3.49 : 3.49;
+        return response()->json(['cost' => $rate]);
+    }
+
+    // Courier: calculate by chargeable weight (actual vs volumetric)
+    $totalWeight = 0;
+    $maxVolumetric = 0;
+
+    foreach ($request->items as $item) {
+        $product = Product::find($item['id']);
+        if (!$product) continue;
+
+        $qty = $item['qty'];
+        $actualWeight = (float) ($product->weight ?? 1) * $qty;
+
+        // Volumetric weight = L×W×H / 5000 (cm → kg)
+        $l = (float) ($product->length ?? 30);
+        $w = (float) ($product->width  ?? 30);
+        $h = (float) ($product->height ?? 30);
+        $volumetric = ($l * $w * $h / 5000) * $qty;
+
+        $totalWeight += max($actualWeight, $volumetric);
+    }
+
+    // Rate tables
+    $balticRates = [
+        [5,   6.99],
+        [10,  8.99],
+        [20, 12.99],
+        [31.5, 16.99],
+        [50, 24.99],
+        [70, 34.99],
+        [PHP_INT_MAX, 49.99],
+    ];
+    $euRates = [
+        [5,   14.99],
+        [10,  18.99],
+        [20,  24.99],
+        [31.5, 32.99],
+        [50,  44.99],
+        [70,  59.99],
+        [PHP_INT_MAX, 79.99],
+    ];
+
+    $table = in_array($country, $BALTIC) ? $balticRates : $euRates;
+    $cost  = end($table)[1];
+    foreach ($table as [$limit, $price]) {
+        if ($totalWeight <= $limit) { $cost = $price; break; }
+    }
+
+    return response()->json(['cost' => $cost, 'weight' => round($totalWeight, 2)]);
+});
+
 Route::post('/uzsakymas', function (Request $request) {
     $data = $request->validate([
-        'items'          => 'required|array|min:1',
-        'items.*.id'     => 'required|integer',
-        'items.*.name'   => 'required|string',
-        'items.*.price'  => 'required|numeric|min:0',
-        'items.*.qty'    => 'required|integer|min:1',
-        'total'          => 'required|numeric|min:0',
-        'first_name'     => 'required|string|max:100',
-        'last_name'      => 'required|string|max:100',
-        'email'          => 'required|email|max:255',
-        'phone'          => 'required|string|max:30',
-        'address'        => 'required|string|max:255',
-        'city'           => 'required|string|max:100',
-        'postal_code'    => 'required|string|max:20',
-        'country'        => 'required|string|max:2',
-        'payment_method' => 'required|in:paysera',
+        'items'               => 'required|array|min:1',
+        'items.*.id'          => 'required|integer',
+        'items.*.name'        => 'required|string',
+        'items.*.price'       => 'required|numeric|min:0',
+        'items.*.qty'         => 'required|integer|min:1',
+        'total'               => 'required|numeric|min:0',
+        'shipping_cost'       => 'required|numeric|min:0',
+        'parcel_locker_id'    => 'nullable|string',
+        'parcel_locker_name'  => 'nullable|string',
+        'first_name'          => 'required|string|max:100',
+        'last_name'           => 'required|string|max:100',
+        'email'               => 'required|email|max:255',
+        'phone'               => 'required|string|max:30',
+        'address'             => 'required|string|max:255',
+        'city'                => 'required|string|max:100',
+        'postal_code'         => 'required|string|max:20',
+        'country'             => 'required|string|max:2',
+        'lang'                => 'nullable|in:lt,en',
+        'payment_method'      => 'required|in:paysera',
     ]);
 
     $order = Order::create($data);
 
-    // Build Paysera payment URL
-    $amountCents = (int) round($order->total * 100);
+    // Build Paysera payment URL — charge items total + shipping
+    $grandTotal  = $order->total + $order->shipping_cost;
+    $amountCents = (int) round($grandTotal * 100);
 
     $params = \WebToPay::buildRequest([
         'projectid'     => (int) env('PAYSERA_PROJECT_ID'),

@@ -2,20 +2,23 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { useCart } from '../useCart';
 import CartDrawer from '../CartDrawer';
-
-const navLinks = [
-    { label: 'Pradžia',   href: '/' },
-    { label: 'Produktai', href: '/produktai' },
-    { label: 'Receptai',  href: '/receptai' },
-    { label: 'ES Fondai', href: '/es-fondai' },
-    { label: 'Kontaktai', href: '/kontaktai' },
-];
+import { useLang } from '../i18n';
+import LangSwitcher from '../LangSwitcher';
 
 export default function Product({ product }) {
     const { items: cartItems, addItem, removeItem, updateQty: updateCartQty, count: cartCount, total: cartTotal } = useCart();
     const [cartOpen, setCartOpen]     = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [qty, setQty]               = useState(1);
+    const { t, lang } = useLang();
+
+    const navLinks = [
+        { label: t.nav.home,     href: '/' },
+        { label: t.nav.products, href: '/produktai' },
+        { label: t.nav.recipes,  href: '/receptai' },
+        { label: t.nav.euFunds,  href: '/es-fondai' },
+        { label: t.nav.contacts, href: '/kontaktai' },
+    ];
 
     const images   = product.images ?? [];
     const mainIdx  = images.findIndex(i => i.is_main);
@@ -33,7 +36,7 @@ export default function Product({ product }) {
                     </a>
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href}
+                            <a key={link.href} href={link.href}
                                 className={`text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
                                     link.href === '/produktai' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
                                 }`}>
@@ -50,6 +53,7 @@ export default function Product({ product }) {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>
+                        <LangSwitcher />
                         <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
@@ -74,10 +78,13 @@ export default function Product({ product }) {
                 {mobileOpen && (
                     <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
+                            <a key={link.href} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
                                 {link.label}
                             </a>
                         ))}
+                        <div className="pt-2 border-t border-gray-100">
+                            <LangSwitcher />
+                        </div>
                     </div>
                 )}
             </nav>
@@ -86,9 +93,9 @@ export default function Product({ product }) {
             <div className="pt-24 bg-gray-50 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-6 py-3">
                     <p className="text-sm text-gray-500">
-                        <a href="/" className="hover:text-red-600 transition-colors">Pradžia</a>
+                        <a href="/" className="hover:text-red-600 transition-colors">{t.product.breadHome}</a>
                         <span className="mx-2">/</span>
-                        <a href="/produktai" className="hover:text-red-600 transition-colors">Produktai</a>
+                        <a href="/produktai" className="hover:text-red-600 transition-colors">{t.product.breadProducts}</a>
                         <span className="mx-2">/</span>
                         <span className="text-gray-800">{product.name}</span>
                     </p>
@@ -102,7 +109,6 @@ export default function Product({ product }) {
 
                         {/* Image gallery */}
                         <div>
-                            {/* Main display */}
                             <div className="relative w-full aspect-square bg-gray-100 rounded-lg overflow-hidden">
                                 {images.length > 0 ? (
                                     <img
@@ -153,7 +159,6 @@ export default function Product({ product }) {
                                 )}
                             </div>
 
-                            {/* Thumbnails */}
                             {images.length > 1 && (
                                 <div className="flex gap-2 mt-3 flex-wrap">
                                     {images.map((img, idx) => (
@@ -173,54 +178,54 @@ export default function Product({ product }) {
 
                         {/* Info */}
                         <div>
-                            <span className="text-xs font-bold text-red-600 uppercase tracking-widest">{product.category_label}</span>
-                            <h1 className="text-3xl font-black text-gray-900 mt-2 mb-4 leading-tight">{product.name}</h1>
+                            <span className="text-xs font-bold text-red-600 uppercase tracking-widest">{t.categories[product.category_slug] ?? product.category_label}</span>
+                            <h1 className="text-3xl font-black text-gray-900 mt-2 mb-4 leading-tight">{lang === 'en' && product.name_en ? product.name_en : product.name}</h1>
                             <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
 
                             <p className="text-4xl font-black text-red-600 mb-8">
                                 {product.price} <span className="text-lg font-normal text-gray-400">€</span>
                             </p>
 
-                            {/* Description */}
                             {product.description && (
-                                <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
+                                <p className="text-gray-600 leading-relaxed mb-6">
+                                    {lang === 'en' && product.description_en ? product.description_en : product.description}
+                                </p>
                             )}
 
-                            {/* Specs */}
                             <div className="bg-gray-50 rounded-lg p-5 mb-8 space-y-3">
                                 {product.material && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Medžiaga</span>
-                                        <span className="text-gray-800 font-semibold">{{ nerūdijantis: 'Nerūdijantis plienas', paprastas: 'Paprastas plienas', corten: 'Corten plienas' }[product.material] ?? product.material}</span>
+                                        <span className="text-gray-500 font-medium">{t.product.material}</span>
+                                        <span className="text-gray-800 font-semibold">{t.product.materials[product.material] ?? product.material}</span>
                                     </div>
                                 )}
                                 {product.h && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Aukštis</span>
+                                        <span className="text-gray-500 font-medium">{t.product.height}</span>
                                         <span className="text-gray-800 font-semibold">{product.h} cm</span>
                                     </div>
                                 )}
                                 {product.l && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Ilgis</span>
+                                        <span className="text-gray-500 font-medium">{t.product.length}</span>
                                         <span className="text-gray-800 font-semibold">{product.l} cm</span>
                                     </div>
                                 )}
                                 {product.w && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Plotis</span>
+                                        <span className="text-gray-500 font-medium">{t.product.width}</span>
                                         <span className="text-gray-800 font-semibold">{product.w} cm</span>
                                     </div>
                                 )}
                                 {product.thickness && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Medžiagos storis</span>
+                                        <span className="text-gray-500 font-medium">{t.product.thickness}</span>
                                         <span className="text-gray-800 font-semibold">{product.thickness} mm</span>
                                     </div>
                                 )}
                                 {product.weight && (
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Svoris</span>
+                                        <span className="text-gray-500 font-medium">{t.product.weight}</span>
                                         <span className="text-gray-800 font-semibold">{product.weight} kg</span>
                                     </div>
                                 )}
@@ -239,22 +244,21 @@ export default function Product({ product }) {
                                     onClick={() => { addItem(product, qty); setCartOpen(true); }}
                                     className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                                 >
-                                    Į Krepšelį
+                                    {t.btn.addToCart}
                                 </button>
                             </div>
 
                             <a href="/kontaktai"
                                 className="block text-center w-full py-3 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200">
-                                Užklausti dėl produkto
+                                {t.product.inquiry}
                             </a>
                         </div>
                     </div>
 
-                    {/* Back */}
                     <div className="mt-14">
                         <Link href="/produktai"
                             className="inline-block px-8 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200">
-                            ← Visi Produktai
+                            {t.btn.backToProducts}
                         </Link>
                     </div>
                 </div>
@@ -265,19 +269,17 @@ export default function Product({ product }) {
                 <div className="max-w-7xl mx-auto px-6 py-14">
                     <div className="flex flex-col md:flex-row gap-12" style={{ alignItems: 'flex-start' }}>
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">Apie ABAS</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.aboutTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-6">Rūkymai ir kepsniavimas, lauke ir namuose – VISADA SKANU!</p>
-                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">› Privatumo politika</a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-6">{t.footer.aboutDesc}</p>
+                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">{t.footer.privacy}</a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">ES Fondai</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                                SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
-                            </p>
-                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">Skaityti daugiau »</a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.footer.euFundsDesc}</p>
+                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
                             </div>

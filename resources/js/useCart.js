@@ -24,10 +24,11 @@ export function useCart() {
                 return prev.map(i => i.id === product.id ? { ...i, qty: i.qty + qty } : i);
             }
             return [...prev, {
-                id:    product.id,
-                name:  product.name,
-                price: product.price,
-                image: product.main_image_url ?? null,
+                id:      product.id,
+                name:    product.name,
+                name_en: product.name_en ?? null,
+                price:   product.price,
+                image:   product.main_image_url ?? null,
                 qty,
             }];
         });

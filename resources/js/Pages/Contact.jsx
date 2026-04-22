@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import { Link } from '@inertiajs/react';
-
-const navLinks = [
-    { label: 'Pradžia',   href: '/' },
-    { label: 'Produktai', href: '/#produktai' },
-    { label: 'Receptai',  href: '/receptai' },
-    { label: 'ES Fondai', href: '/es-fondai' },
-    { label: 'Kontaktai', href: '/kontaktai' },
-];
+import { useCart } from '../useCart';
+import CartDrawer from '../CartDrawer';
+import { useLang } from '../i18n';
+import LangSwitcher from '../LangSwitcher';
 
 export default function Contact({ settings = {} }) {
     const s = {
@@ -31,10 +26,20 @@ export default function Contact({ settings = {} }) {
         map_embed_url:       'https://maps.google.com/maps?q=Jelgavas+iela+1d,+Kandava,+LV-3120,+Latvia&t=&z=15&ie=UTF8&iwloc=&output=embed',
         ...settings,
     };
-    const [cartCount, setCartCount]   = useState(0);
+    const { items: cartItems, removeItem, updateQty, count: cartCount, total: cartTotal } = useCart();
+    const [cartOpen, setCartOpen]   = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [form, setForm] = useState({ vardas: '', email: '', zinute: '' });
     const [sent, setSent] = useState(false);
+    const { t } = useLang();
+
+    const navLinks = [
+        { label: t.nav.home,     href: '/' },
+        { label: t.nav.products, href: '/#produktai' },
+        { label: t.nav.recipes,  href: '/receptai' },
+        { label: t.nav.euFunds,  href: '/es-fondai' },
+        { label: t.nav.contacts, href: '/kontaktai' },
+    ];
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -43,6 +48,7 @@ export default function Contact({ settings = {} }) {
 
     return (
         <div className="min-h-screen bg-white" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+            <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} items={cartItems} removeItem={removeItem} updateQty={updateQty} total={cartTotal} />
 
             {/* ── NAVIGATION ── */}
             <nav className="fixed top-0 inset-x-0 z-50 bg-white shadow-md">
@@ -55,7 +61,7 @@ export default function Contact({ settings = {} }) {
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map(link => (
                             <a
-                                key={link.label}
+                                key={link.href}
                                 href={link.href}
                                 className={`text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
                                     link.href === '/kontaktai'
@@ -78,7 +84,9 @@ export default function Contact({ settings = {} }) {
                             </a>
                         </div>
 
-                        <button onClick={() => setCartCount(c => c + 1)} className="relative text-gray-600 hover:text-red-600 transition-colors">
+                        <LangSwitcher />
+
+                        <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
                                 <circle cx="9" cy="21" r="1" fill="currentColor" stroke="none"/>
@@ -104,10 +112,13 @@ export default function Contact({ settings = {} }) {
                 {mobileOpen && (
                     <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
+                            <a key={link.href} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
                                 {link.label}
                             </a>
                         ))}
+                        <div className="pt-2 border-t border-gray-100">
+                            <LangSwitcher />
+                        </div>
                     </div>
                 )}
             </nav>
@@ -119,12 +130,12 @@ export default function Contact({ settings = {} }) {
                     <div className="absolute inset-0 bg-black/60" />
                     <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16">
                         <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-wide mb-2">
-                            Kontaktai
+                            {t.contact.title}
                         </h1>
                         <p className="text-gray-300 text-sm">
-                            <a href="/" className="hover:text-red-400 transition-colors">Pradžia</a>
+                            <a href="/" className="hover:text-red-400 transition-colors">{t.contact.breadHome}</a>
                             <span className="mx-2">/</span>
-                            <span>Kontaktai</span>
+                            <span>{t.contact.title}</span>
                         </p>
                     </div>
                 </div>
@@ -146,7 +157,7 @@ export default function Contact({ settings = {} }) {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">Telefonas</p>
+                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">{t.contact.phone}</p>
                                     <a href={`tel:${s.phone}`} className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
                                         {s.phone}
                                     </a>
@@ -161,14 +172,14 @@ export default function Contact({ settings = {} }) {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">El. paštas</p>
+                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">{t.contact.email}</p>
                                     <a href={`mailto:${s.email}`} className="text-gray-800 font-semibold hover:text-red-600 transition-colors">
                                         {s.email}
                                     </a>
                                 </div>
                             </div>
 
-                            {/* Rekvizitai */}
+                            {/* Requisites */}
                             <div className="flex items-start gap-4">
                                 <div className="flex-shrink-0 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center mt-0.5">
                                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -176,18 +187,18 @@ export default function Contact({ settings = {} }) {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">Rekvizitai</p>
+                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">{t.contact.requisites}</p>
                                     <div className="text-gray-700 text-sm space-y-1 leading-relaxed">
                                         <p className="font-semibold">{s.company_name}</p>
-                                        <p>Registracijos Nr.: {s.reg_number}</p>
-                                        <p>Juridinis adresas: {s.legal_address}</p>
-                                        <p className="mt-3 font-semibold">Atsiskaitymo sąskaitos:</p>
+                                        <p>{t.contact.regNumber} {s.reg_number}</p>
+                                        <p>{t.contact.legalAddress} {s.legal_address}</p>
+                                        <p className="mt-3 font-semibold">{t.contact.bankAccounts}</p>
                                         <p className="mt-1 font-medium">{s.bank_account_1}</p>
-                                        <p>Banko kodas: {s.bank_code_1}</p>
-                                        <p>Bankas: {s.bank_name_1}</p>
+                                        <p>{t.contact.bankCode} {s.bank_code_1}</p>
+                                        <p>{t.contact.bank} {s.bank_name_1}</p>
                                         <p className="mt-2 font-medium">{s.bank_account_2}</p>
-                                        <p>Banko kodas: {s.bank_code_2}</p>
-                                        <p>Bankas: {s.bank_name_2}</p>
+                                        <p>{t.contact.bankCode} {s.bank_code_2}</p>
+                                        <p>{t.contact.bank} {s.bank_name_2}</p>
                                     </div>
                                 </div>
                             </div>
@@ -201,15 +212,15 @@ export default function Contact({ settings = {} }) {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">Adresas</p>
+                                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-2">{t.contact.address}</p>
                                     <div className="text-gray-700 text-sm space-y-2 leading-relaxed">
-                                        <p><span className="font-medium">Biuro adresas:</span> {s.office_address}</p>
+                                        <p><span className="font-medium">{t.contact.officeAddress}:</span> {s.office_address}</p>
                                         <p>
-                                            <span className="font-medium">Gamybos ir sandėlio adresas:</span> {s.production_address}<br/>
+                                            <span className="font-medium">{t.contact.productionAddress}:</span> {s.production_address}<br/>
                                             Tel: <a href={`tel:${s.production_phone}`} className="text-red-600 hover:underline">{s.production_phone}</a> {s.production_contact}
                                         </p>
                                         <p>
-                                            <span className="font-medium">Sandėlio ir parodų salės adresas:</span><br/>
+                                            <span className="font-medium">{t.contact.showroomAddress}:</span><br/>
                                             {s.showroom_address}<br/>
                                             Tel: <a href={`tel:${s.showroom_phone}`} className="text-red-600 hover:underline">{s.showroom_phone}</a>
                                         </p>
@@ -222,7 +233,7 @@ export default function Contact({ settings = {} }) {
                         {/* Right: contact form */}
                         <div>
                             <h2 className="text-2xl font-black text-gray-900 uppercase tracking-wide mb-2">
-                                Susisiekite su mumis
+                                {t.contact.formTitle}
                             </h2>
                             <div className="w-10 h-0.5 bg-red-600 mb-8" />
 
@@ -231,14 +242,14 @@ export default function Contact({ settings = {} }) {
                                     <svg className="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <p className="text-green-800 font-semibold">Žinutė išsiųsta!</p>
-                                    <p className="text-green-600 text-sm mt-1">Susisieksime su jumis kuo greičiau.</p>
+                                    <p className="text-green-800 font-semibold">{t.contact.sentSuccess}</p>
+                                    <p className="text-green-600 text-sm mt-1">{t.contact.sentSuccessDesc}</p>
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="space-y-5">
                                     <div>
                                         <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
-                                            Vardas
+                                            {t.contact.name}
                                         </label>
                                         <input
                                             type="text"
@@ -250,7 +261,7 @@ export default function Contact({ settings = {} }) {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
-                                            El. paštas
+                                            {t.contact.email}
                                         </label>
                                         <input
                                             type="email"
@@ -262,7 +273,7 @@ export default function Contact({ settings = {} }) {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
-                                            Žinutė
+                                            {t.contact.message}
                                         </label>
                                         <textarea
                                             required
@@ -276,7 +287,7 @@ export default function Contact({ settings = {} }) {
                                         type="submit"
                                         className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                                     >
-                                        Siųsti
+                                        {t.btn.send}
                                     </button>
                                 </form>
                             )}
@@ -306,26 +317,18 @@ export default function Contact({ settings = {} }) {
                     <div className="flex flex-col md:flex-row gap-12" style={{ alignItems: 'flex-start' }}>
 
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">Apie ABAS</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.aboutTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                                Rūkymai ir kepsniavimas, lauke ir namuose – VISADA SKANU!
-                            </p>
-                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
-                                › Privatumo politika
-                            </a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-6">{t.footer.aboutDesc}</p>
+                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">{t.footer.privacy}</a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>
 
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">ES Fondai</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                                SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
-                            </p>
-                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">
-                                Skaityti daugiau »
-                            </a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.footer.euFundsDesc}</p>
+                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
                             </div>
@@ -335,9 +338,7 @@ export default function Contact({ settings = {} }) {
                 </div>
 
                 <div className="bg-red-700 py-3 text-center">
-                    <span className="text-white text-xs tracking-wide">
-                        © Copyright ABAS Smoke House 2019. All Right Reserved.
-                    </span>
+                    <span className="text-white text-xs tracking-wide">© Copyright ABAS Smoke House 2019. All Right Reserved.</span>
                 </div>
             </footer>
 

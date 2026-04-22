@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class Product extends Model
 {
     protected $fillable = [
         'name',
+        'name_en',
         'description',
+        'description_en',
         'price',
         'category',
         'badge',
@@ -36,6 +39,29 @@ class Product extends Model
 
     protected $appends = ['main_image_url'];
     protected $hidden  = ['mainImage'];
+
+    protected static function booted(): void
+    {
+        static::saved(function (Product $product) {
+            if ($product->name_en && !$product->wasChanged('name') && !$product->wasChanged('description')) {
+                return;
+            }
+            try {
+                $tr = new GoogleTranslate('en');
+                $tr->setSource('lt');
+                $updates = [];
+                if (!$product->name_en || $product->wasChanged('name')) {
+                    $updates['name_en'] = $tr->translate($product->name);
+                }
+                if ($product->description && (!$product->description_en || $product->wasChanged('description'))) {
+                    $updates['description_en'] = $tr->translate($product->description);
+                }
+                if ($updates) {
+                    $product->updateQuietly($updates);
+                }
+            } catch (\Exception) {}
+        });
+    }
 
     public function images(): HasMany
     {

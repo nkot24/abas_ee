@@ -1,15 +1,9 @@
 import { useState } from 'react';
 import { useCart } from '../useCart';
 import CartDrawer from '../CartDrawer';
+import { useLang } from '../i18n';
+import LangSwitcher from '../LangSwitcher';
 
-
-const navLinks = [
-    { label: 'Pradžia',   href: '/' },
-    { label: 'Produktai', href: '/produktai' },
-    { label: 'Receptai',  href: '/receptai' },
-    { label: 'ES Fondai', href: '/es-fondai' },
-    { label: 'Kontaktai', href: '/kontaktai' },
-];
 
 function ImagePlaceholder({ className = '', text = '' }) {
     return (
@@ -22,12 +16,21 @@ function ImagePlaceholder({ className = '', text = '' }) {
     );
 }
 
-export default function Home({ featuredProducts = [], featuredRecipes = [], settings = {} }) {
+export default function Home({ featuredProducts = [], featuredRecipes = [], settings = {}, settingsEn = {} }) {
     const products = featuredProducts;
     const recipes  = featuredRecipes;
     const { items: cartItems, addItem, removeItem, updateQty, count: cartCount, total: cartTotal } = useCart();
     const [cartOpen, setCartOpen]     = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const { t, lang } = useLang();
+
+    const navLinks = [
+        { label: t.nav.home,     href: '/' },
+        { label: t.nav.products, href: '/produktai' },
+        { label: t.nav.recipes,  href: '/receptai' },
+        { label: t.nav.euFunds,  href: '/es-fondai' },
+        { label: t.nav.contacts, href: '/kontaktai' },
+    ];
 
     return (
         <div className="min-h-screen bg-white" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
@@ -46,7 +49,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map(link => (
                             <a
-                                key={link.label}
+                                key={link.href}
                                 href={link.href}
                                 className="text-gray-700 hover:text-red-600 text-sm font-medium tracking-wider uppercase transition-colors duration-200"
                             >
@@ -66,6 +69,9 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>
+
+                        {/* Language switcher */}
+                        <LangSwitcher />
 
                         {/* Cart */}
                         <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
@@ -96,51 +102,53 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 {mobileOpen && (
                     <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
+                            <a key={link.href} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
                                 {link.label}
                             </a>
                         ))}
+                        <div className="pt-2 border-t border-gray-100">
+                            <LangSwitcher />
+                        </div>
                     </div>
                 )}
             </nav>
 
             {/* ── HERO ── */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
-                {/* Background image placeholder */}
                 <div className="absolute inset-0 bg-gray-800">
                     <img src="/images/hero.jpg" alt="Hero" className="w-full h-full object-cover" />
                 </div>
-                {/* Dark gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
                 <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
                     <p className="text-red-400 text-sm font-semibold tracking-[0.3em] uppercase mb-4">
-                        Autentiški rūkyti gaminiai
+                        {t.hero.badge}
                     </p>
                     <h1 className="text-5xl md:text-7xl font-black text-white uppercase leading-tight mb-6 tracking-wide">
                         ABAS<br />
                         <span className="text-red-500">SMOKE HOUSE</span>
                     </h1>
                     <p className="text-gray-300 text-lg md:text-xl mb-10 max-w-xl mx-auto leading-relaxed">
-                        {settings.hero_subtitle || 'Tradiciniai dūminiai gaminiai iš aukščiausios kokybės ingredientų. Paragaukite tikrojo skonio.'}
+                        {lang === 'en'
+                            ? (settingsEn.hero_subtitle || t.hero.subtitle)
+                            : (settings.hero_subtitle || t.hero.subtitle)}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
                             href="/produktai"
                             className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:shadow-lg hover:shadow-red-900/40 hover:-translate-y-0.5"
                         >
-                            Pirkti Dabar
+                            {t.hero.buyNow}
                         </a>
                         <a
                             href="/receptai"
                             className="px-8 py-4 border border-white/40 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:bg-white/10"
                         >
-                            Receptai
+                            {t.hero.recipes}
                         </a>
                     </div>
                 </div>
 
-                {/* Scroll indicator */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
                     <svg className="w-6 h-6 text-white/50" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
@@ -152,23 +160,21 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
             <section id="produktai" className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
 
-                    {/* Section header */}
                     <div className="text-center mb-14">
-                        <p className="text-red-600 text-xs font-bold tracking-[0.3em] uppercase mb-2">Aukščiausia kokybė</p>
+                        <p className="text-red-600 text-xs font-bold tracking-[0.3em] uppercase mb-2">{t.home.productsBadge}</p>
                         <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-wide">
-                            Mūsų Gaminiai
+                            {t.home.productsTitle}
                         </h2>
                         <div className="mt-4 w-16 h-1 bg-red-600 mx-auto rounded-full" />
                         <p className="mt-5 text-gray-500 max-w-xl mx-auto">
-                            Visi gaminiai rūkomi tradicine technologija, naudojant tik natūralius ingredientus.
+                            {t.home.productsDesc}
                         </p>
                     </div>
 
-                    {/* Product grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {products.map(product => (
-                            <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1">
-                                <a href={`/produktai/${product.id}`} className="block">
+                            <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1 flex flex-col">
+                                <a href={`/produktai/${product.id}`} className="block flex-1">
                                     <div className="relative h-52 overflow-hidden">
                                         {product.main_image_url
                                             ? <img src={product.main_image_url} alt={product.name} className="w-full h-full object-cover" />
@@ -182,33 +188,32 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                     </div>
                                     <div className="p-5 pb-3">
                                         <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-red-600 transition-colors">
-                                            {product.name}
+                                            {lang === 'en' && product.name_en ? product.name_en : product.name}
                                         </h3>
-                                        <p className="text-2xl font-black text-red-600 mb-2">
-                                            {product.price}
-                                            <span className="text-sm font-normal text-gray-400 ml-1">{product.unit}</span>
-                                        </p>
                                     </div>
                                 </a>
                                 <div className="px-5 pb-5">
+                                    <p className="text-2xl font-black text-red-600 mb-3">
+                                        {product.price}
+                                        <span className="text-sm font-normal text-gray-400 ml-1">€</span>
+                                    </p>
                                     <button
                                         onClick={() => { addItem(product); setCartOpen(true); }}
                                         className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"
                                     >
-                                        Į Krepšelį
+                                        {t.btn.addToCart}
                                     </button>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* View all */}
                     <div className="text-center mt-12">
                         <a
                             href="/produktai"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
-                            Visi Produktai
+                            {t.btn.viewAllProducts}
                         </a>
                     </div>
                 </div>
@@ -219,19 +224,17 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
             <section id="receptai" className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
 
-                    {/* Section header */}
                     <div className="text-center mb-14">
-                        <p className="text-red-600 text-xs font-bold tracking-[0.3em] uppercase mb-2">Virtuvės įkvėpimas</p>
+                        <p className="text-red-600 text-xs font-bold tracking-[0.3em] uppercase mb-2">{t.home.recipesBadge}</p>
                         <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-wide">
-                            Receptai
+                            {t.home.recipesTitle}
                         </h2>
                         <div className="mt-4 w-16 h-1 bg-red-600 mx-auto rounded-full" />
                         <p className="mt-5 text-gray-500 max-w-xl mx-auto">
-                            Išbandykite mūsų sukurtus receptus ir atraskite naujų skonio derinių.
+                            {t.home.recipesDesc}
                         </p>
                     </div>
 
-                    {/* Recipe grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
                         {recipes.map(recipe => (
                             <a
@@ -242,10 +245,10 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                 <ImagePlaceholder className="w-full h-40" />
                                 <div className="p-4">
                                     <span className="text-red-500 text-xs font-semibold uppercase tracking-wide">
-                                        {recipe.category}
+                                        {t.recipeCategories[recipe.category?.toLowerCase()] ?? recipe.category}
                                     </span>
                                     <h3 className="mt-1 text-gray-800 font-semibold text-sm leading-snug group-hover:text-red-600 transition-colors">
-                                        {recipe.title}
+                                        {lang === 'en' && recipe.title_en ? recipe.title_en : recipe.title}
                                     </h3>
                                 </div>
                             </a>
@@ -257,7 +260,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                             href="/receptai"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
-                            Visi Receptai
+                            {t.btn.viewAllRecipes}
                         </a>
                     </div>
                 </div>
@@ -273,21 +276,21 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <div className="max-w-xl">
                         <h2 className="text-4xl md:text-5xl font-black text-white uppercase leading-tight mb-8">
-                            Susisiekite<br />
-                            <span className="text-red-500">Su Mumis</span>
+                            {t.home.contactTitle}<br />
+                            <span className="text-red-500">{t.home.contactSub}</span>
                         </h2>
                         <div className="flex flex-col sm:flex-row gap-4">
                             <a
                                 href="/kontaktai"
                                 className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center"
                             >
-                                Susisiekti
+                                {t.btn.contactUs}
                             </a>
                             <a
                                 href="/kontaktai"
                                 className="px-8 py-4 border border-white/30 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center hover:bg-white/10"
                             >
-                                Kontaktai
+                                {t.btn.contacts}
                             </a>
                         </div>
                     </div>
@@ -299,7 +302,6 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-                        {/* Image */}
                         <div className="rounded-lg overflow-hidden shadow-lg">
                             <img
                                 src="/images/about.jpg"
@@ -309,27 +311,26 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                             />
                         </div>
 
-                        {/* Text */}
                         <div>
-                            <h2 className="text-4xl font-bold text-gray-900 mb-6">Apie mus</h2>
+                            <h2 className="text-4xl font-bold text-gray-900 mb-6">{t.home.aboutTitle}</h2>
                             <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                {settings.about_text_1 || 'Mes esame kūpinimo ir grilių gamybos įmonė iš Latvijos, pavadinimu SIA „Linda-1". Mūsų verslas – namų, sodo ir viešojo maitinimo įrangos projektavimas ir gamyba – mėsos, paukštienos, žuvies, sūrio ir daržovių rūkymui bei griliavimuisi. Savo produkciją parduodame su registruotu prekių ženklu ABAS.'}
+                                {lang === 'en' ? (settingsEn.about_text_1 || t.home.aboutP1) : (settings.about_text_1 || t.home.aboutP1)}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                {settings.about_text_2 || 'Mūsų produktai yra unikalūs tarp kitų, galbūt panašių gaminių. Visų pirma, mūsų rūkyklos yra šiluminiu būdu izoliuotos, kas užtikrina energijos efektyvumą ir saugumą. Rūkymo metu mūsų produktai sunaudoja labai mažai malkų ir išskiria itin mažai šilumos nuo rūkyklos paviršiaus.'}
+                                {lang === 'en' ? (settingsEn.about_text_2 || t.home.aboutP2) : (settings.about_text_2 || t.home.aboutP2)}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                {settings.about_text_3 || 'Unikalus ir patentuotas dizainas suteikia ABAS Smokehouse naudotojams visišką temperatūros lygio ir proceso stabilumo kontrolę – oro srauto valdymas ir tiesioginis temperatūros ekranas užtikrina, kad visi rūkyti patiekalai bus skanūs ir kokybiški.'}
+                                {lang === 'en' ? (settingsEn.about_text_3 || t.home.aboutP3) : (settings.about_text_3 || t.home.aboutP3)}
                             </p>
                             <p className="text-gray-600 leading-relaxed mb-8">
-                                {settings.about_text_4 || 'Visi mūsų produktai skirti naudoti tik lauke; jie yra ilgaamžiai įvairių oro sąlygų atžvilgiu ir lengvai pernešami. Judumas priklauso nuo jūsų pasirinkto modelio.'}
+                                {lang === 'en' ? (settingsEn.about_text_4 || t.home.aboutP4) : (settings.about_text_4 || t.home.aboutP4)}
                             </p>
                             <a
                                 href="/kontaktai"
                                 className="inline-block px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                             >
-                                Susisiekti
+                                {t.btn.contactUs}
                             </a>
                         </div>
                     </div>
@@ -341,28 +342,26 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 <div className="max-w-7xl mx-auto px-6 py-14">
                     <div className="flex flex-col md:flex-row gap-12" style={{ alignItems: 'flex-start' }}>
 
-                        {/* Left column: logo + about */}
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">Apie ABAS</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.aboutTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
                             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                                Rūkymai ir kepsniavimas, lauke ir namuose – VISADA SKANU!
+                                {t.footer.aboutDesc}
                             </p>
                             <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
-                                › Privatumo politika
+                                {t.footer.privacy}
                             </a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>
 
-                        {/* Right column: EU funds */}
                         <div className="flex-1" style={{ marginTop: 0, paddingTop: 0 }}>
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">ES Fondai</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
                             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                                SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
+                                {t.footer.euFundsDesc}
                             </p>
                             <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">
-                                Skaityti daugiau »
+                                {t.footer.readMore}
                             </a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
@@ -372,7 +371,6 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     </div>
                 </div>
 
-                {/* Red copyright bar */}
                 <div className="bg-red-700 py-3 text-center">
                     <span className="text-white text-xs tracking-wide">
                         © Copyright ABAS Smoke House 2019. All Right Reserved.

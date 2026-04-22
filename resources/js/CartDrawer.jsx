@@ -1,10 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useLang } from './i18n';
 
 export default function CartDrawer({ open, onClose, items, removeItem, updateQty, total }) {
+    const { t, lang } = useLang();
+    const [enNames, setEnNames] = useState({});
+
     useEffect(() => {
         document.body.style.overflow = open ? 'hidden' : '';
         return () => { document.body.style.overflow = ''; };
     }, [open]);
+
+    useEffect(() => {
+        if (lang !== 'en' || items.length === 0) return;
+        const missing = items.filter(i => !i.name_en).map(i => i.id);
+        if (missing.length === 0) return;
+        fetch(`/api/product-names?ids=${missing.join(',')}`)
+            .then(r => r.json())
+            .then(data => setEnNames(prev => ({ ...prev, ...data })))
+            .catch(() => {});
+    }, [lang, items]);
 
     return (
         <>
@@ -20,7 +34,7 @@ export default function CartDrawer({ open, onClose, items, removeItem, updateQty
             <div className={`fixed top-24 right-0 h-[calc(100vh-6rem)] w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}>
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-lg font-bold uppercase tracking-widest text-gray-900">Krepšelis</h2>
+                    <h2 className="text-lg font-bold uppercase tracking-widest text-gray-900">{t.cart.title}</h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-900 transition-colors">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -35,7 +49,7 @@ export default function CartDrawer({ open, onClose, items, removeItem, updateQty
                             <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            <p className="text-sm font-medium">Krepšelis tuščias</p>
+                            <p className="text-sm font-medium">{t.cart.empty}</p>
                         </div>
                     ) : items.map(item => (
                         <div key={item.id} className="flex gap-3">
@@ -53,7 +67,7 @@ export default function CartDrawer({ open, onClose, items, removeItem, updateQty
 
                             {/* Info */}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2">{item.name}</p>
+                                <p className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2">{lang === 'en' ? (item.name_en || enNames[item.id] || item.name) : item.name}</p>
                                 <p className="text-red-600 font-bold text-sm mt-1">{Number(item.price).toFixed(2)} €</p>
 
                                 {/* Qty controls */}
@@ -87,14 +101,14 @@ export default function CartDrawer({ open, onClose, items, removeItem, updateQty
                 {items.length > 0 && (
                     <div className="border-t border-gray-200 px-6 py-5 space-y-4">
                         <div className="flex justify-between text-base font-bold text-gray-900">
-                            <span>Viso</span>
+                            <span>{t.cart.total}</span>
                             <span>{total.toFixed(2)} €</span>
                         </div>
                         <a
                             href="/uzsakymas"
                             className="block w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest text-center rounded-sm transition-colors"
                         >
-                            Pereiti prie apmokėjimo
+                            {t.cart.checkout}
                         </a>
                     </div>
                 )}

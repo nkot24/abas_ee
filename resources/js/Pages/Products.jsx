@@ -1,27 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useCart } from '../useCart';
 import CartDrawer from '../CartDrawer';
-
-const categories = [
-    { id: 'visi',            label: 'Visi produktai' },
-    { id: 'aksesuarai',      label: 'Aksesuarai' },
-    { id: 'sodo-baldai',     label: 'Sodo baldai' },
-    { id: 'grilis',          label: 'Grilis' },
-    { id: 'rukyklos',        label: 'Rūkyklos' },
-    { id: 'grilio-anglys',   label: 'Grilio anglys' },
-    { id: 'virykles',        label: 'Viryklės ir krosnelės' },
-    { id: 'nesiojaimos',     label: 'Nešiojamos rūkyklos' },
-    { id: 'profesionalios',  label: 'Profesionalios rūkyklos' },
-    { id: 'lauzavietes',     label: 'Laužavietės' },
-];
-
-const navLinks = [
-    { label: 'Pradžia',   href: '/' },
-    { label: 'Produktai', href: '/produktai' },
-    { label: 'Receptai',  href: '/receptai' },
-    { label: 'ES Fondai', href: '/es-fondai' },
-    { label: 'Kontaktai', href: '/kontaktai' },
-];
+import { useLang } from '../i18n';
+import LangSwitcher from '../LangSwitcher';
 
 const MAX_PRICE  = 10000;
 const MAX_HEIGHT = 300;
@@ -54,16 +35,40 @@ export default function Products({ products = [] }) {
     const [widthMin, setWidthMin]             = useState(0);
     const [widthMax, setWidthMax]             = useState(MAX_WIDTH);
     const [page, setPage]                     = useState(1);
+    const { t, lang } = useLang();
     const PER_PAGE = 15;
 
+    const navLinks = [
+        { label: t.nav.home,     href: '/' },
+        { label: t.nav.products, href: '/produktai' },
+        { label: t.nav.recipes,  href: '/receptai' },
+        { label: t.nav.euFunds,  href: '/es-fondai' },
+        { label: t.nav.contacts, href: '/kontaktai' },
+    ];
+
+    const categories = [
+        { id: 'visi',           label: t.categories.visi },
+        { id: 'aksesuarai',     label: t.categories.aksesuarai },
+        { id: 'sodo-baldai',    label: t.categories['sodo-baldai'] },
+        { id: 'grilis',         label: t.categories.grilis },
+        { id: 'rukyklos',       label: t.categories.rukyklos },
+        { id: 'grilio-anglys',  label: t.categories['grilio-anglys'] },
+        { id: 'virykles',       label: t.categories.virykles },
+        { id: 'nesiojaimos',    label: t.categories.nesiojaimos },
+        { id: 'profesionalios', label: t.categories.profesionalios },
+        { id: 'lauzavietes',    label: t.categories.lauzavietes },
+    ];
+
+    const materialOptions = [
+        { key: 'nerūdijantis', label: t.product.materials.nerūdijantis },
+        { key: 'paprastas',    label: t.product.materials.paprastas },
+        { key: 'corten',       label: t.product.materials.corten },
+    ];
 
     const toggleMaterial = (key) => setMaterials(m => ({ ...m, [key]: !m[key] }));
-
     const activeMaterials = useMemo(() => Object.keys(materials).filter(k => materials[k]), [materials]);
-
     const dimsActive = heightMin > 0 || heightMax < MAX_HEIGHT || widthMin > 0 || widthMax < MAX_WIDTH;
 
-    // Normalise DB fields (height/width) to h/w used by filters
     const normalisedProducts = useMemo(() =>
         products.map(p => ({ ...p, h: p.h ?? p.height ?? null, w: p.w ?? p.width ?? null })),
     [products]);
@@ -115,7 +120,7 @@ export default function Products({ products = [] }) {
                     </a>
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href}
+                            <a key={link.href} href={link.href}
                                 className={`text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
                                     link.href === '/produktai' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
                                 }`}>
@@ -132,6 +137,7 @@ export default function Products({ products = [] }) {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>
+                        <LangSwitcher />
                         <button onClick={() => setCartOpen(true)} className="relative text-gray-600 hover:text-red-600 transition-colors">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/>
@@ -156,10 +162,13 @@ export default function Products({ products = [] }) {
                 {mobileOpen && (
                     <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
                         {navLinks.map(link => (
-                            <a key={link.label} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
+                            <a key={link.href} href={link.href} className="text-gray-700 hover:text-red-600 text-sm font-medium uppercase tracking-wider">
                                 {link.label}
                             </a>
                         ))}
+                        <div className="pt-2 border-t border-gray-100">
+                            <LangSwitcher />
+                        </div>
                     </div>
                 )}
             </nav>
@@ -170,11 +179,11 @@ export default function Products({ products = [] }) {
                     <img src="/images/hero.jpg" alt="Produktai" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/60" />
                     <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16">
-                        <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-wide mb-2">Produktai</h1>
+                        <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-wide mb-2">{t.products.pageTitle}</h1>
                         <p className="text-gray-300 text-sm">
-                            <a href="/" className="hover:text-red-400 transition-colors">Pradžia</a>
+                            <a href="/" className="hover:text-red-400 transition-colors">{t.product.breadHome}</a>
                             <span className="mx-2">/</span>
-                            <span>Produktai</span>
+                            <span>{t.products.pageTitle}</span>
                         </p>
                     </div>
                 </div>
@@ -191,7 +200,7 @@ export default function Products({ products = [] }) {
                         </svg>
                         <input
                             type="text"
-                            placeholder="Ieškoti produktų..."
+                            placeholder={t.products.search}
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-sm text-sm focus:outline-none focus:border-red-500 transition-colors"
@@ -205,7 +214,7 @@ export default function Products({ products = [] }) {
 
                             {/* Categories */}
                             <div>
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Kategorijos</h3>
+                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">{t.products.categories}</h3>
                                 <div className="w-8 h-0.5 bg-red-600 mb-4" />
                                 <ul className="space-y-0.5">
                                     {categories.map(cat => (
@@ -230,7 +239,7 @@ export default function Products({ products = [] }) {
 
                             {/* Price range */}
                             <div>
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Kaina</h3>
+                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">{t.products.price}</h3>
                                 <div className="w-8 h-0.5 bg-red-600 mb-4" />
                                 <div className="flex items-center gap-2 mb-3">
                                     <input
@@ -240,7 +249,7 @@ export default function Products({ products = [] }) {
                                         value={priceMin}
                                         onChange={e => setPriceMin(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Nuo €"
+                                        placeholder={t.products.from}
                                     />
                                     <span className="text-gray-400 text-sm">–</span>
                                     <input
@@ -250,7 +259,7 @@ export default function Products({ products = [] }) {
                                         value={priceMax}
                                         onChange={e => setPriceMax(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Iki €"
+                                        placeholder={t.products.to}
                                     />
                                 </div>
                                 <input
@@ -269,14 +278,10 @@ export default function Products({ products = [] }) {
 
                             {/* Material */}
                             <div>
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Medžiaga</h3>
+                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">{t.products.material}</h3>
                                 <div className="w-8 h-0.5 bg-red-600 mb-4" />
                                 <div className="space-y-2">
-                                    {[
-                                        { key: 'nerūdijantis', label: 'Nerūdijantis plienas' },
-                                        { key: 'paprastas',    label: 'Paprastas plienas' },
-                                        { key: 'corten',       label: 'Corten plienas' },
-                                    ].map(({ key, label }) => (
+                                    {materialOptions.map(({ key, label }) => (
                                         <label key={key} className="flex items-center gap-2.5 cursor-pointer group">
                                             <input
                                                 type="checkbox"
@@ -292,23 +297,23 @@ export default function Products({ products = [] }) {
 
                             {/* Dimensions */}
                             <div>
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Matmenys (cm)</h3>
+                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">{t.products.dimensions}</h3>
                                 <div className="w-8 h-0.5 bg-red-600 mb-4" />
 
-                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Aukštis</p>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{t.products.height}</p>
                                 <div className="flex items-center gap-2 mb-3">
                                     <input
                                         type="number" min={0} max={heightMax} value={heightMin}
                                         onChange={e => setHeightMin(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Nuo"
+                                        placeholder={t.products.fromDim}
                                     />
                                     <span className="text-gray-400 text-sm">–</span>
                                     <input
                                         type="number" min={heightMin} max={MAX_HEIGHT} value={heightMax}
                                         onChange={e => setHeightMax(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Iki"
+                                        placeholder={t.products.toDim}
                                     />
                                 </div>
                                 <input type="range" min={0} max={MAX_HEIGHT} value={heightMax}
@@ -316,20 +321,20 @@ export default function Products({ products = [] }) {
                                     className="w-full accent-red-600 mb-4"
                                 />
 
-                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Plotis</p>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{t.products.width}</p>
                                 <div className="flex items-center gap-2 mb-3">
                                     <input
                                         type="number" min={0} max={widthMax} value={widthMin}
                                         onChange={e => setWidthMin(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Nuo"
+                                        placeholder={t.products.fromDim}
                                     />
                                     <span className="text-gray-400 text-sm">–</span>
                                     <input
                                         type="number" min={widthMin} max={MAX_WIDTH} value={widthMax}
                                         onChange={e => setWidthMax(Number(e.target.value))}
                                         className="w-full border border-gray-300 rounded-sm px-2 py-1.5 text-sm focus:outline-none focus:border-red-500"
-                                        placeholder="Iki"
+                                        placeholder={t.products.toDim}
                                     />
                                 </div>
                                 <input type="range" min={0} max={MAX_WIDTH} value={widthMax}
@@ -343,7 +348,7 @@ export default function Products({ products = [] }) {
                                 onClick={resetFilters}
                                 className="w-full py-2 border border-gray-300 hover:border-red-500 hover:text-red-600 text-gray-500 text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-150"
                             >
-                                Išvalyti filtrus
+                                {t.products.clearFilters}
                             </button>
 
                         </aside>
@@ -352,7 +357,7 @@ export default function Products({ products = [] }) {
                         <div className="flex-1">
                             <div className="flex items-center justify-between mb-6">
                                 <p className="text-sm text-gray-500">
-                                    Rodoma <span className="font-semibold text-gray-800">{(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)}</span> iš <span className="font-semibold text-gray-800">{filtered.length}</span> produktų
+                                    {t.products.showing} <span className="font-semibold text-gray-800">{(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)}</span> {t.products.of} <span className="font-semibold text-gray-800">{filtered.length}</span>
                                 </p>
                             </div>
 
@@ -361,8 +366,8 @@ export default function Products({ products = [] }) {
                                     <svg className="w-16 h-16 mx-auto mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <p className="font-semibold text-gray-500">Produktų nerasta</p>
-                                    <p className="text-sm mt-1">Pabandykite pakeisti filtrus</p>
+                                    <p className="font-semibold text-gray-500">{t.products.noResults}</p>
+                                    <p className="text-sm mt-1">{t.products.noResultsHint}</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -378,7 +383,7 @@ export default function Products({ products = [] }) {
                                                     )}
                                                     {product.material && product.material !== null && (
                                                         <span className="absolute top-3 right-3 bg-gray-900/70 text-white text-xs px-2 py-1 rounded-sm">
-                                                            {{ nerūdijantis: 'Nerūd.', paprastas: 'Paprastas', corten: 'Corten' }[product.material] ?? product.material}
+                                                            {t.product.materials[product.material] ?? product.material}
                                                         </span>
                                                     )}
                                                 </div>
@@ -387,7 +392,7 @@ export default function Products({ products = [] }) {
                                                         <p className="text-xs text-gray-400 mb-1">{product.h} × {product.w} cm</p>
                                                     )}
                                                     <h3 className="font-bold text-gray-900 text-sm group-hover:text-red-600 transition-colors leading-snug">
-                                                        {product.name}
+                                                        {lang === 'en' && product.name_en ? product.name_en : product.name}
                                                     </h3>
                                                 </div>
                                             </a>
@@ -399,7 +404,7 @@ export default function Products({ products = [] }) {
                                                     onClick={() => { addItem(product); setCartOpen(true); }}
                                                     className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"
                                                 >
-                                                    Į Krepšelį
+                                                    {t.btn.addToCart}
                                                 </button>
                                             </div>
                                         </div>
@@ -452,19 +457,17 @@ export default function Products({ products = [] }) {
                 <div className="max-w-7xl mx-auto px-6 py-14">
                     <div className="flex flex-col md:flex-row gap-12" style={{ alignItems: 'flex-start' }}>
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">Apie ABAS</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.aboutTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-6">Rūkymai ir kepsniavimas, lauke ir namuose – VISADA SKANU!</p>
-                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">› Privatumo politika</a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-6">{t.footer.aboutDesc}</p>
+                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">{t.footer.privacy}</a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">ES Fondai</h3>
+                            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
-                            <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                                SIA „Linda-1" 2016 m. gegužės 2 d. pasirašė sutartį Nr. SKV-L-2016/193 su Latvijos investicijų ir plėtros agentūra dėl paramos gavimo pagal priemonę „Tarptautinio konkurencingumo skatinimas", kurią bendrai finansuoja Europos regioninės plėtros fondas.
-                            </p>
-                            <a href="#" className="text-red-500 hover:text-red-400 text-sm transition-colors">Skaityti daugiau »</a>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.footer.euFundsDesc}</p>
+                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
                             </div>

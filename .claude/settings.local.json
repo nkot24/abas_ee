@@ -74,7 +74,10 @@
       "Bash(curl -s http://127.0.0.1:4040/api/tunnels)",
       "PowerShell(Invoke-WebRequest -Uri \"https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip\" -OutFile \"$env:TEMP\\\\ngrok.zip\"; Expand-Archive -Path \"$env:TEMP\\\\ngrok.zip\" -DestinationPath \"C:\\\\Users\\\\niksi\\\\ngrok\" -Force; Write-Host \"Done: $\\(Get-Item 'C:\\\\Users\\\\niksi\\\\ngrok\\\\ngrok.exe'\\)\")",
       "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderConfirmed --markdown=emails.order-confirmed)",
-      "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderPlaced --markdown=emails.order-placed)"
+      "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderPlaced --markdown=emails.order-placed)",
+      "Bash(php composer.phar require stichoza/google-translate-php)",
+      "Bash(composer.bat require *)",
+      "PowerShell(composer require stichoza/google-translate-php 2>&1)"
     ]
   }
 }
