@@ -3,7 +3,7 @@ import { useCart } from '../useCart';
 import { useLang } from '../i18n';
 import LangSwitcher from '../LangSwitcher';
 
-const OMNIVA_COUNTRIES = ['LT', 'LV', 'EE'];
+const LP_LOCKER_COUNTRIES = ['LV', 'LT'];
 
 function SectionCard({ title, children }) {
     return (
@@ -56,7 +56,7 @@ function MastercardIcon() {
     );
 }
 
-function OmnivaSelector({ country, onSelect, error }) {
+function LockerSelector({ country, onSelect, error }) {
     const { t } = useLang();
     const [locations, setLocations] = useState([]);
     const [search, setSearch] = useState('');
@@ -66,16 +66,14 @@ function OmnivaSelector({ country, onSelect, error }) {
     const ref = useRef(null);
 
     useEffect(() => {
-        if (!OMNIVA_COUNTRIES.includes(country)) { setLocations([]); return; }
+        if (!LP_LOCKER_COUNTRIES.includes(country)) { setLocations([]); return; }
         setLoading(true);
         setSelected(null);
         onSelect(null);
-        fetch('/omniva/locations')
+        const url = country === 'LV' ? '/lp/stations' : '/lp/terminals';
+        fetch(url)
             .then(r => r.json())
-            .then(data => {
-                const countryMap = { LT: 'Lietuva', LV: 'Latvija', EE: 'Eesti' };
-                setLocations(data.filter(l => l.A0_NAME === countryMap[country]));
-            })
+            .then(data => setLocations(Array.isArray(data) ? data : []))
             .finally(() => setLoading(false));
     }, [country]);
 
@@ -85,9 +83,10 @@ function OmnivaSelector({ country, onSelect, error }) {
         return () => document.removeEventListener('mousedown', handler);
     }, []);
 
-    const filtered = locations.filter(l =>
-        `${l.NAME} ${l.A2_NAME}`.toLowerCase().includes(search.toLowerCase())
-    ).slice(0, 50);
+    const filtered = locations.filter(l => {
+        const text = `${l.title ?? ''} ${l.address ?? ''} ${l.city ?? ''}`.toLowerCase();
+        return text.includes(search.toLowerCase());
+    }).slice(0, 60);
 
     const choose = (loc) => {
         setSelected(loc);
@@ -96,22 +95,22 @@ function OmnivaSelector({ country, onSelect, error }) {
         setOpen(false);
     };
 
-    if (!OMNIVA_COUNTRIES.includes(country)) return null;
-    if (loading) return <p className="text-xs text-gray-400 mt-2">{t.checkout.loadingLockers}</p>;
+    if (!LP_LOCKER_COUNTRIES.includes(country)) return null;
+    if (loading) return <p className="text-xs text-gray-400 mt-3">{t.checkout.loadingLockers}</p>;
 
     return (
         <div ref={ref} className="relative mt-4">
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                {t.checkout.omnivaLabel}
+                {t.checkout.lockerLabel}
             </label>
             <div
                 className={`w-full px-3.5 py-2.5 border rounded-md text-sm bg-white cursor-pointer flex justify-between items-center ${error ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
                 onClick={() => setOpen(o => !o)}
             >
                 <span className={selected ? 'text-gray-900' : 'text-gray-400'}>
-                    {selected ? `${selected.NAME}, ${selected.A2_NAME}` : t.checkout.selectLocker}
+                    {selected ? `${selected.title}${selected.city ? ', ' + selected.city : ''}` : t.checkout.selectLocker}
                 </span>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
                 </svg>
             </div>
@@ -134,12 +133,12 @@ function OmnivaSelector({ country, onSelect, error }) {
                         )}
                         {filtered.map(loc => (
                             <li
-                                key={loc.ZIP}
+                                key={loc.id}
                                 onClick={() => choose(loc)}
                                 className="px-4 py-2.5 text-sm cursor-pointer hover:bg-red-50 hover:text-red-700"
                             >
-                                <span className="font-medium">{loc.NAME}</span>
-                                <span className="text-gray-400 ml-1">— {loc.A2_NAME}</span>
+                                <span className="font-medium">{loc.title}</span>
+                                {loc.address && <span className="text-gray-400 ml-1 text-xs">— {loc.address}</span>}
                             </li>
                         ))}
                     </ul>
@@ -149,9 +148,27 @@ function OmnivaSelector({ country, onSelect, error }) {
     );
 }
 
+function StepIndicator({ step }) {
+    const { t } = useLang();
+    return (
+        <div className="flex items-center gap-0 mb-8">
+            <div className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${step >= 1 ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
+                <span className={`text-xs font-semibold uppercase tracking-wider ${step === 1 ? 'text-gray-900' : 'text-gray-400'}`}>{t.checkout.step1Label}</span>
+            </div>
+            <div className="flex-1 h-px bg-gray-200 mx-4" />
+            <div className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${step >= 2 ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
+                <span className={`text-xs font-semibold uppercase tracking-wider ${step === 2 ? 'text-gray-900' : 'text-gray-400'}`}>{t.checkout.step2Label}</span>
+            </div>
+        </div>
+    );
+}
+
 export default function Checkout() {
     const { items, clearCart, total } = useCart();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors]         = useState({});
     const [serverError, setServerError] = useState(null);
@@ -194,7 +211,7 @@ export default function Checkout() {
 
     const [form, setForm] = useState({
         first_name: '', last_name: '', email: '', phone: '',
-        address: '', city: '', postal_code: '', country: 'LT',
+        address: '', city: '', postal_code: '', country: 'LV',
     });
 
     const set = (field) => (e) => {
@@ -202,7 +219,12 @@ export default function Checkout() {
         setErrors(e => { const n = { ...e }; delete n[field]; return n; });
     };
 
-    const grandTotal = total + (shippingCost ?? 0);
+    // When country changes reset delivery method if locker not available
+    useEffect(() => {
+        if (!LP_LOCKER_COUNTRIES.includes(form.country) && deliveryMethod === 'locker') {
+            setDeliveryMethod('courier');
+        }
+    }, [form.country]);
 
     const fetchShipping = useCallback(() => {
         if (!items.length || !form.country) return;
@@ -226,9 +248,13 @@ export default function Checkout() {
             .finally(() => setShippingLoading(false));
     }, [items, form.country, deliveryMethod]);
 
-    useEffect(() => { fetchShipping(); }, [fetchShipping]);
+    useEffect(() => {
+        if (step === 2) fetchShipping();
+    }, [fetchShipping, step]);
 
-    const validate = () => {
+    const grandTotal = total + (shippingCost ?? 0);
+
+    const validateStep1 = () => {
         const e = {};
         if (!form.first_name.trim())  e.first_name  = t.checkout.required;
         if (!form.last_name.trim())   e.last_name   = t.checkout.required;
@@ -238,14 +264,34 @@ export default function Checkout() {
         if (!form.address.trim())     e.address     = t.checkout.required;
         if (!form.city.trim())        e.city        = t.checkout.required;
         if (!form.postal_code.trim()) e.postal_code = t.checkout.required;
-        if (deliveryMethod === 'locker' && OMNIVA_COUNTRIES.includes(form.country) && !selectedLocker) e.parcel_locker = t.checkout.selectLockerError;
         return e;
+    };
+
+    const validateStep2 = () => {
+        const e = {};
+        if (deliveryMethod === 'locker' && LP_LOCKER_COUNTRIES.includes(form.country) && !selectedLocker) {
+            e.parcel_locker = t.checkout.selectLockerError;
+        }
+        return e;
+    };
+
+    const handleNext = () => {
+        const errs = validateStep1();
+        if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+        setErrors({});
+        setStep(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleBack = () => {
+        setStep(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const submit = async (e) => {
         e.preventDefault();
         setServerError(null);
-        const errs = validate();
+        const errs = { ...validateStep1(), ...validateStep2() };
         if (Object.keys(errs).length > 0) { setErrors(errs); return; }
         if (items.length === 0) return;
         if (shippingCost === null) { setServerError(t.checkout.waitShipping); return; }
@@ -263,9 +309,9 @@ export default function Checkout() {
                     items,
                     total,
                     shipping_cost:      shippingCost,
-                    parcel_locker_id:   deliveryMethod === 'locker' ? (selectedLocker?.ZIP ?? null) : null,
+                    parcel_locker_id:   deliveryMethod === 'locker' && selectedLocker ? String(selectedLocker.id) : null,
                     parcel_locker_name: deliveryMethod === 'locker' && selectedLocker
-                        ? `${selectedLocker.NAME}, ${selectedLocker.A2_NAME}`
+                        ? `${selectedLocker.title}${selectedLocker.address ? ', ' + selectedLocker.address : ''}`
                         : deliveryMethod === 'pickup' ? 'Kandava, Jelgavas iela 1J' : null,
                     payment_method: 'paysera',
                     lang,
@@ -285,7 +331,7 @@ export default function Checkout() {
         }
     };
 
-    const deliveryLabel = deliveryMethod === 'locker' ? 'Omniva' : deliveryMethod === 'courier' ? t.checkout.courier : t.checkout.pickup;
+    const deliveryLabel = deliveryMethod === 'locker' ? t.checkout.lpLocker : deliveryMethod === 'courier' ? t.checkout.courier : t.checkout.pickup;
 
     return (
         <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
@@ -325,9 +371,15 @@ export default function Checkout() {
             <div className="pt-24">
                 <div className="bg-white border-b border-gray-100">
                     <div className="max-w-6xl mx-auto px-6 py-5 flex items-center gap-3">
-                        <a href="/produktai" className="text-gray-400 hover:text-gray-600 transition-colors">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
-                        </a>
+                        {step === 1 ? (
+                            <a href="/produktai" className="text-gray-400 hover:text-gray-600 transition-colors">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
+                            </a>
+                        ) : (
+                            <button onClick={handleBack} className="text-gray-400 hover:text-gray-600 transition-colors">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                        )}
                         <h1 className="text-lg font-black text-gray-900 uppercase tracking-widest">{t.checkout.title}</h1>
                     </div>
                 </div>
@@ -351,133 +403,180 @@ export default function Checkout() {
                             {/* ── LEFT COLUMN ── */}
                             <div className="lg:col-span-3 space-y-6">
 
-                                {/* Contact */}
-                                <SectionCard title={t.checkout.contactSection}>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Field label={t.checkout.firstName} error={errors.first_name} half>
-                                            <Input value={form.first_name} onChange={set('first_name')} error={errors.first_name} placeholder="Jonas" />
-                                        </Field>
-                                        <Field label={t.checkout.lastName} error={errors.last_name} half>
-                                            <Input value={form.last_name} onChange={set('last_name')} error={errors.last_name} placeholder="Jonaitis" />
-                                        </Field>
-                                        <Field label={t.checkout.email} error={errors.email}>
-                                            <Input type="email" value={form.email} onChange={set('email')} error={errors.email} placeholder="jonas@example.lt" />
-                                        </Field>
-                                        <Field label={t.checkout.phone} error={errors.phone}>
-                                            <Input type="tel" value={form.phone} onChange={set('phone')} error={errors.phone} placeholder="+370 600 00000" />
-                                        </Field>
-                                    </div>
-                                </SectionCard>
+                                <StepIndicator step={step} />
 
-                                {/* Shipping */}
-                                <SectionCard title={t.checkout.shippingSection}>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Field label={t.checkout.street} error={errors.address}>
-                                            <Input value={form.address} onChange={set('address')} error={errors.address} placeholder="Gedimino pr. 1" />
-                                        </Field>
-                                        <Field label={t.checkout.city} error={errors.city}>
-                                            <Input value={form.city} onChange={set('city')} error={errors.city} placeholder="Vilnius" />
-                                        </Field>
-                                        <Field label={t.checkout.postalCode} error={errors.postal_code} half>
-                                            <Input value={form.postal_code} onChange={set('postal_code')} error={errors.postal_code} placeholder="01234" />
-                                        </Field>
-                                        <Field label={t.checkout.country} half>
-                                            <select value={form.country} onChange={set('country')}
-                                                className="w-full px-3.5 py-2.5 border border-gray-200 hover:border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all">
-                                                {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
-                                            </select>
-                                        </Field>
-                                    </div>
+                                {/* STEP 1 */}
+                                {step === 1 && (
+                                    <>
+                                        <SectionCard title={t.checkout.contactSection}>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Field label={t.checkout.firstName} error={errors.first_name} half>
+                                                    <Input value={form.first_name} onChange={set('first_name')} error={errors.first_name} placeholder="Jānis" />
+                                                </Field>
+                                                <Field label={t.checkout.lastName} error={errors.last_name} half>
+                                                    <Input value={form.last_name} onChange={set('last_name')} error={errors.last_name} placeholder="Bērziņš" />
+                                                </Field>
+                                                <Field label={t.checkout.email} error={errors.email}>
+                                                    <Input type="email" value={form.email} onChange={set('email')} error={errors.email} placeholder="janis@example.lv" />
+                                                </Field>
+                                                <Field label={t.checkout.phone} error={errors.phone}>
+                                                    <Input type="tel" value={form.phone} onChange={set('phone')} error={errors.phone} placeholder="+371 20 000 000" />
+                                                </Field>
+                                            </div>
+                                        </SectionCard>
 
-                                    {/* Delivery method */}
-                                    <div className="mt-5">
-                                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t.checkout.deliveryMethod}</p>
-                                        <div className="space-y-2">
-                                            {OMNIVA_COUNTRIES.includes(form.country) && (
-                                                <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'locker' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                                        <SectionCard title={t.checkout.shippingSection}>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Field label={t.checkout.country} half>
+                                                    <select value={form.country} onChange={set('country')}
+                                                        className="w-full px-3.5 py-2.5 border border-gray-200 hover:border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all">
+                                                        {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
+                                                    </select>
+                                                </Field>
+                                                <Field label={t.checkout.city} error={errors.city} half>
+                                                    <Input value={form.city} onChange={set('city')} error={errors.city} placeholder="Rīga" />
+                                                </Field>
+                                                <Field label={t.checkout.street} error={errors.address}>
+                                                    <Input value={form.address} onChange={set('address')} error={errors.address} placeholder="Brīvības iela 1" />
+                                                </Field>
+                                                <Field label={t.checkout.postalCode} error={errors.postal_code} half>
+                                                    <Input value={form.postal_code} onChange={set('postal_code')} error={errors.postal_code} placeholder="LV-1010" />
+                                                </Field>
+                                            </div>
+                                        </SectionCard>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleNext}
+                                            className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black text-sm uppercase tracking-widest rounded-md transition-colors shadow-sm flex items-center justify-center gap-2"
+                                        >
+                                            {t.checkout.nextBtn}
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+                                            </svg>
+                                        </button>
+                                    </>
+                                )}
+
+                                {/* STEP 2 */}
+                                {step === 2 && (
+                                    <>
+                                        {/* Delivery method */}
+                                        <SectionCard title={t.checkout.deliveryMethod}>
+                                            <div className="space-y-2">
+                                                {LP_LOCKER_COUNTRIES.includes(form.country) && (
+                                                    <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'locker' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                                                        <div className="flex items-center gap-3">
+                                                            <input type="radio" name="delivery" value="locker" checked={deliveryMethod === 'locker'} onChange={() => setDeliveryMethod('locker')} className="accent-red-600" />
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-800">{t.checkout.lpLocker}</p>
+                                                                <p className="text-xs text-gray-400">{t.checkout.lpLockerSmall}</p>
+                                                            </div>
+                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-700 ml-4 flex-shrink-0">
+                                                            {shippingLoading ? '...' : deliveryMethod === 'locker' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
+                                                        </span>
+                                                    </label>
+                                                )}
+                                                <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'courier' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
                                                     <div className="flex items-center gap-3">
-                                                        <input type="radio" name="delivery" value="locker" checked={deliveryMethod === 'locker'} onChange={() => setDeliveryMethod('locker')} className="accent-red-600" />
+                                                        <input type="radio" name="delivery" value="courier" checked={deliveryMethod === 'courier'} onChange={() => setDeliveryMethod('courier')} className="accent-red-600" />
                                                         <div>
-                                                            <p className="text-sm font-semibold text-gray-800">{t.checkout.omnivaLocker}</p>
-                                                            <p className="text-xs text-gray-400">{t.checkout.omnivaSmall}</p>
+                                                            <p className="text-sm font-semibold text-gray-800">{t.checkout.courier}</p>
+                                                            <p className="text-xs text-gray-400">
+                                                                {t.checkout.courierLarge}
+                                                                {deliveryMethod === 'courier' && shippingWeight ? ` · ${shippingWeight} kg` : ''}
+                                                            </p>
                                                         </div>
                                                     </div>
-                                                    <span className="text-sm font-bold text-gray-700">
-                                                        {deliveryMethod === 'locker' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : '...'}
+                                                    <span className="text-sm font-bold text-gray-700 ml-4 flex-shrink-0">
+                                                        {shippingLoading ? '...' : deliveryMethod === 'courier' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
                                                     </span>
                                                 </label>
+                                                <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'pickup' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        <input type="radio" name="delivery" value="pickup" checked={deliveryMethod === 'pickup'} onChange={() => setDeliveryMethod('pickup')} className="accent-red-600" />
+                                                        <div>
+                                                            <p className="text-sm font-semibold text-gray-800">{t.checkout.pickup}</p>
+                                                            <p className="text-xs text-gray-400">{t.checkout.pickupAddress}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-sm font-bold text-green-600 ml-4 flex-shrink-0">{t.checkout.free}</span>
+                                                </label>
+                                            </div>
+
+                                            {deliveryMethod === 'locker' && (
+                                                <LockerSelector
+                                                    country={form.country}
+                                                    onSelect={setSelectedLocker}
+                                                    error={errors.parcel_locker}
+                                                />
                                             )}
-                                            <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'courier' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                                                <div className="flex items-center gap-3">
-                                                    <input type="radio" name="delivery" value="courier" checked={deliveryMethod === 'courier'} onChange={() => setDeliveryMethod('courier')} className="accent-red-600" />
-                                                    <div>
-                                                        <p className="text-sm font-semibold text-gray-800">{t.checkout.courier}</p>
-                                                        <p className="text-xs text-gray-400">
-                                                            {t.checkout.courierLarge}
-                                                            {deliveryMethod === 'courier' && shippingWeight ? ` · ${shippingWeight} kg` : ''}
-                                                        </p>
-                                                    </div>
+                                            {deliveryMethod === 'courier' && (
+                                                <p className="mt-3 text-xs text-gray-400">{t.checkout.courierNote}</p>
+                                            )}
+                                            {deliveryMethod === 'pickup' && (
+                                                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
+                                                    {t.checkout.pickupNote}<br/>
+                                                    <strong>Kandava, Jelgavas iela 1J</strong>
                                                 </div>
-                                                <span className="text-sm font-bold text-gray-700">
-                                                    {deliveryMethod === 'courier' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : '...'}
-                                                </span>
-                                            </label>
-                                            <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'pickup' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                                                <div className="flex items-center gap-3">
-                                                    <input type="radio" name="delivery" value="pickup" checked={deliveryMethod === 'pickup'} onChange={() => setDeliveryMethod('pickup')} className="accent-red-600" />
-                                                    <div>
-                                                        <p className="text-sm font-semibold text-gray-800">{t.checkout.pickup}</p>
-                                                        <p className="text-xs text-gray-400">{t.checkout.pickupAddress}</p>
-                                                    </div>
+                                            )}
+                                        </SectionCard>
+
+                                        {/* Payment */}
+                                        <SectionCard title={t.checkout.paymentSection}>
+                                            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <p className="text-sm font-semibold text-gray-700">{t.checkout.paymentVia}</p>
+                                                    <span className="text-xl font-black text-[#F26522]">Paysera</span>
                                                 </div>
-                                                <span className="text-sm font-bold text-green-600">{t.checkout.free}</span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <VisaIcon />
+                                                    <MastercardIcon />
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-bold text-gray-700 shadow-sm">G Pay</span>
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-black rounded text-xs font-bold text-white shadow-sm">⌘ Pay</span>
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Swedbank</span>
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">SEB</span>
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Luminor</span>
+                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Citadele</span>
+                                                </div>
+                                                <p className="text-xs text-gray-400 mt-3">{t.checkout.payseraRedirect}</p>
+                                            </div>
+                                        </SectionCard>
 
-                                    {/* Omniva locker selector */}
-                                    {deliveryMethod === 'locker' && (
-                                        <OmnivaSelector
-                                            country={form.country}
-                                            onSelect={setSelectedLocker}
-                                            error={errors.parcel_locker}
-                                        />
-                                    )}
+                                        {serverError && (
+                                            <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 break-all">
+                                                {serverError}
+                                            </div>
+                                        )}
 
-                                    {deliveryMethod === 'courier' && (
-                                        <p className="mt-3 text-xs text-gray-400">{t.checkout.courierNote}</p>
-                                    )}
-                                    {deliveryMethod === 'pickup' && (
-                                        <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
-                                            {t.checkout.pickupNote}<br/>
-                                            <strong>Kandava, Jelgavas iela 1J</strong>
+                                        <div className="flex gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={handleBack}
+                                                className="px-6 py-4 border border-gray-300 hover:border-gray-400 text-gray-700 font-bold text-sm uppercase tracking-widest rounded-md transition-colors"
+                                            >
+                                                {t.checkout.backBtn}
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                disabled={submitting}
+                                                className="flex-1 py-4 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-black text-sm uppercase tracking-widest rounded-md transition-colors shadow-sm"
+                                            >
+                                                {submitting ? t.checkout.processing : t.checkout.confirmOrder}
+                                            </button>
                                         </div>
-                                    )}
-                                </SectionCard>
-
-                                {/* Payment */}
-                                <SectionCard title={t.checkout.paymentSection}>
-                                    <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <p className="text-sm font-semibold text-gray-700">{t.checkout.paymentVia}</p>
-                                            <span className="text-xl font-black text-[#F26522]">Paysera</span>
+                                        <div className="flex items-center justify-center gap-1.5 text-xs text-gray-400">
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                            </svg>
+                                            {t.checkout.securePayment}
                                         </div>
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <VisaIcon />
-                                            <MastercardIcon />
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-bold text-gray-700 shadow-sm">G Pay</span>
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-black rounded text-xs font-bold text-white shadow-sm">⌘ Pay</span>
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Swedbank</span>
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">SEB</span>
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Luminor</span>
-                                            <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Citadele</span>
-                                        </div>
-                                        <p className="text-xs text-gray-400 mt-3">{t.checkout.payseraRedirect}</p>
-                                    </div>
-                                </SectionCard>
+                                    </>
+                                )}
                             </div>
 
-                            {/* ── RIGHT COLUMN ── */}
+                            {/* ── RIGHT COLUMN — order summary ── */}
                             <div className="lg:col-span-2">
                                 <div className="bg-white rounded-lg shadow-sm border border-gray-100 sticky top-28">
                                     <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 rounded-t-lg">
@@ -514,31 +613,18 @@ export default function Checkout() {
                                             <span>{total.toFixed(2)} €</span>
                                         </div>
                                         <div className="flex justify-between text-gray-500">
-                                            <span>{t.checkout.shipping} ({deliveryLabel})</span>
+                                            <span>{t.checkout.shipping} {step === 2 ? `(${deliveryLabel})` : ''}</span>
                                             <span className="font-semibold text-gray-700">
-                                                {shippingLoading ? '...' : shippingCost != null ? `${shippingCost.toFixed(2)} €` : '—'}
+                                                {step === 1 ? '—' : shippingLoading ? '...' : shippingCost != null ? `${shippingCost.toFixed(2)} €` : '—'}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="px-6 py-4 border-t border-gray-100">
-                                        <div className="flex justify-between font-black text-gray-900 text-lg mb-5">
+                                        <div className="flex justify-between font-black text-gray-900 text-lg">
                                             <span>{t.checkout.total}</span>
-                                            <span className="text-red-600">{grandTotal.toFixed(2)} €</span>
-                                        </div>
-                                        {serverError && (
-                                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 break-all">
-                                                {serverError}
-                                            </div>
-                                        )}
-                                        <button type="submit" disabled={submitting}
-                                            className="w-full py-4 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-black text-sm uppercase tracking-widest rounded-md transition-colors shadow-sm">
-                                            {submitting ? t.checkout.processing : t.checkout.confirmOrder}
-                                        </button>
-                                        <div className="flex items-center justify-center gap-1.5 mt-3 text-xs text-gray-400">
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                            </svg>
-                                            {t.checkout.securePayment}
+                                            <span className="text-red-600">
+                                                {step === 1 ? `${total.toFixed(2)} €` : `${grandTotal.toFixed(2)} €`}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

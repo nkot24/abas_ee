@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -138,17 +139,22 @@ Route::get('/api/product-names', function (Request $request) {
     );
 });
 
-Route::get('/omniva/locations', function () {
-    $cacheKey = 'omniva_locations';
-    $locations = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () {
-        $json = file_get_contents('https://www.omniva.ee/locations.json');
-        $all  = json_decode($json, true);
-        return array_values(array_filter($all, fn($l) =>
-            in_array($l['A0_NAME'] ?? '', ['Latvija', 'Lietuva', 'Eesti']) &&
-            ($l['TYPE'] ?? '') == '0'
-        ));
+Route::get('/lp/stations', function () {
+    $data = \Illuminate\Support\Facades\Cache::remember('lp_stations', 3600, function () {
+        return \Illuminate\Support\Facades\Http::timeout(10)
+            ->get('https://express.pasts.lv/stationApi/index')
+            ->json();
     });
-    return response()->json($locations);
+    return response()->json($data ?? []);
+});
+
+Route::get('/lp/terminals', function () {
+    $data = \Illuminate\Support\Facades\Cache::remember('lp_terminals', 3600, function () {
+        return \Illuminate\Support\Facades\Http::timeout(10)
+            ->get('https://express.pasts.lv/terminalApi/index')
+            ->json();
+    });
+    return response()->json($data ?? []);
 });
 
 Route::post('/shipping/calculate', function (Request $request) {
@@ -168,35 +174,47 @@ Route::post('/shipping/calculate', function (Request $request) {
         return response()->json(['cost' => $rate]);
     }
 
-    // Courier: calculate by chargeable weight (actual vs volumetric)
+    // Courier: Baltic uses actual weight; EU uses chargeable (max of actual vs volumetric)
     $totalWeight = 0;
-    $maxVolumetric = 0;
+    $isBaltic = in_array($country, $BALTIC);
 
     foreach ($request->items as $item) {
         $product = Product::find($item['id']);
         if (!$product) continue;
 
         $qty = $item['qty'];
-        $actualWeight = (float) ($product->weight ?? 1) * $qty;
+        $actualWeight = (float) ($product->weight ?? 5) * $qty;
 
-        // Volumetric weight = L×W×H / 5000 (cm → kg)
-        $l = (float) ($product->length ?? 30);
-        $w = (float) ($product->width  ?? 30);
-        $h = (float) ($product->height ?? 30);
-        $volumetric = ($l * $w * $h / 5000) * $qty;
-
-        $totalWeight += max($actualWeight, $volumetric);
+        if ($isBaltic) {
+            $totalWeight += $actualWeight;
+        } else {
+            // Volumetric weight = L×W×H / 5000 (cm → kg)
+            $l = (float) ($product->length ?? 30);
+            $w = (float) ($product->width  ?? 30);
+            $h = (float) ($product->height ?? 30);
+            $volumetric = ($l * $w * $h / 5000) * $qty;
+            $totalWeight += max($actualWeight, $volumetric);
+        }
     }
 
-    // Rate tables
+    // Rate tables — LV domestic, LT/EE cross-border Baltic, EU international
+    $lvRates = [
+        [5,    5.99],
+        [10,   7.99],
+        [20,  10.99],
+        [31.5, 14.99],
+        [50,  19.99],
+        [70,  29.99],
+        [PHP_INT_MAX, 44.99],
+    ];
     $balticRates = [
-        [5,   6.99],
-        [10,  8.99],
-        [20, 12.99],
-        [31.5, 16.99],
-        [50, 24.99],
-        [70, 34.99],
-        [PHP_INT_MAX, 49.99],
+        [5,    8.99],
+        [10,  12.99],
+        [20,  17.99],
+        [31.5, 22.99],
+        [50,  32.99],
+        [70,  44.99],
+        [PHP_INT_MAX, 59.99],
     ];
     $euRates = [
         [5,   14.99],
@@ -208,7 +226,11 @@ Route::post('/shipping/calculate', function (Request $request) {
         [PHP_INT_MAX, 79.99],
     ];
 
-    $table = in_array($country, $BALTIC) ? $balticRates : $euRates;
+    $table = match(true) {
+        $country === 'LV'                    => $lvRates,
+        in_array($country, ['LT', 'EE'])     => $balticRates,
+        default                              => $euRates,
+    };
     $cost  = end($table)[1];
     foreach ($table as [$limit, $price]) {
         if ($totalWeight <= $limit) { $cost = $price; break; }
@@ -294,6 +316,7 @@ Route::post('/paysera/callback', function (Request $request) {
                 ]);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
                 Mail::to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))->send(new OrderPlaced($order));
+                app('shipping')->registerShipment($order);
                 \Illuminate\Support\Facades\Log::info('Emails sent for order ' . $order->id);
             }
         }

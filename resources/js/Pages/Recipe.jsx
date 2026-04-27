@@ -127,44 +127,40 @@ export default function Recipe({ recipe }) {
                     <h2 className="text-3xl font-black text-gray-900 mb-4">{lang === 'en' && recipe.title_en ? recipe.title_en : recipe.title}</h2>
                     <div className="w-12 h-1 bg-red-600 mb-8 rounded-full" />
 
-                    <div className="w-full h-80 bg-gray-200 rounded-lg flex items-center justify-center mb-10">
-                        <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </div>
+                    {recipe.image_url && (
+                        <div className="w-full h-80 rounded-lg overflow-hidden mb-10">
+                            <img src={recipe.image_url} alt={recipe.title} className="w-full h-full object-cover" />
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
                         <div>
                             <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4">{t.recipe.ingredients}</h3>
                             <ul className="space-y-2 text-gray-600 text-sm">
-                                <li className="flex items-start gap-2"><span className="text-red-500 font-bold">•</span> {t.recipe.ing1}</li>
-                                <li className="flex items-start gap-2"><span className="text-red-500 font-bold">•</span> {t.recipe.ing2}</li>
-                                <li className="flex items-start gap-2"><span className="text-red-500 font-bold">•</span> {t.recipe.ing3}</li>
-                                <li className="flex items-start gap-2"><span className="text-red-500 font-bold">•</span> {t.recipe.ing4}</li>
-                                <li className="flex items-start gap-2"><span className="text-red-500 font-bold">•</span> {t.recipe.ing5}</li>
+                                {(lang === 'en' && recipe.ingredients_en?.length
+                                    ? recipe.ingredients_en
+                                    : recipe.ingredients ?? []
+                                ).map((ing, i) => (
+                                    <li key={i} className="flex items-start gap-2">
+                                        <span className="text-red-500 font-bold">•</span> {ing.item}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
                         <div className="md:col-span-2">
                             <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4">{t.recipe.preparation}</h3>
                             <ol className="space-y-4 text-gray-600 text-sm">
-                                <li className="flex gap-3">
-                                    <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                                    <p>{t.recipe.step1}</p>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                                    <p>{t.recipe.step2}</p>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                                    <p>{t.recipe.step3}</p>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                                    <p>{t.recipe.step4}</p>
-                                </li>
+                                {(lang === 'en' && recipe.steps_en?.length
+                                    ? recipe.steps_en
+                                    : recipe.steps ?? []
+                                ).map((s, i) => (
+                                    <li key={i} className="flex gap-3">
+                                        <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                                        <p>{s.step}</p>
+                                    </li>
+                                ))}
                             </ol>
                         </div>
                     </div>

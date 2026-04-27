@@ -1,0 +1,1386 @@
+@media all and (max-width: 1240px) {
+	.slider-nav-enabled.rt-owl-nav-2,
+	.slider-nav-enabled.rt-owl-nav-2 {
+		padding: 0 70px;
+	}
+	.slider-nav-enabled.rt-owl-nav-3,
+	.slider-nav-enabled.rt-owl-nav-3 {
+		padding: 0 50px;
+	}
+}
+@media all and (max-width: 1199px) {
+	/* Header */
+	.site-header .main-navigation ul li a {
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+	.additional-menu-area {
+		margin-left: 16px;
+	}
+	.header-icon-seperator {
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	.title-color {
+		font-size: 42px;
+	}
+	.about-title-sign{
+		padding-top: 130px;
+	}
+	.about-page-left{
+		background-size:cover;
+		min-height: 482px;
+		min-width: auto;
+		padding: 47px;
+	}
+	.about-layout-two .about2-award-box {
+		padding-left: 0;
+	}
+	.about-layout-two .about2-award-box .media a i:before {
+		padding-left: 0;
+	}
+	.overlapinner{
+		margin-top:-195px;
+	}
+	.overlapparent .vc_column-inner{
+		padding-bottom:0px !important;
+		padding-top:0px !important;
+	}
+	.innercounter{
+		padding-left:40px; 
+		padding-right:40px;
+		padding-top:0px;
+	}
+	.innercounter .vc_column-inner {
+		padding-top: 0px !important;
+	}
+	.about-page-area> img {
+		display: none;
+	}
+	.about-page2-content h2 {
+		font-size: 34px;
+	}
+	.recipe-of-the-day-img-holder {
+		display: none;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box:before {
+		display: none;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content-inner {
+		margin: 26px 0 0 0;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content {
+		border: none;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-img {
+		display: none;
+	}
+	.chef-box .chef-box-content ul li {
+		margin: 0 15px;
+	}
+	.single-chef-bottom-area {
+		padding: 80px 0 90px;
+	}
+	.table-reservation3-area .table-reservation3-right {
+		padding: 0 200px;
+		margin: 0;
+		width: 100%;
+	}
+	.reservation-page-area {
+		padding: 90px 0 0 0;
+	}
+	.food-menu3-area .food-menu3-box {
+		display: inherit;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-img img {
+		width: 100%;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding: 30px 30px 30px 25px;
+	}
+	.food-menu4-area .food-menu4-box .food-menu4-box-title {
+		top: 78%;
+	}
+	.food-menu4-area .food-menu4-box:hover .food-menu4-box-title {
+		padding-top: 10%;
+	}
+	.food-menu2-area .food-menu2-box .food-menu2-title-holder h3 {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.contact-us-left ul> li {
+		padding: 13px 0 4px 30px;
+	}
+	.footer-area-top {
+		padding: 82px 0 45px;
+	}
+	.footer-area-top .footer-social li a {
+		line-height: 45px;
+		width: 45px;
+		height: 45px;
+	}	
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content {
+		min-height: 520px;
+	}
+}
+@media all and (max-width: 991px) {
+	.pb-10-tab{
+		padding-bottom:10px;
+	}
+	/* Header 1 */
+	.header-icon-seperator {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
+	.additional-menu-area {
+		margin-left: 28px;
+	}
+	/* Header 5 */
+	.header-style-5 .header-menu-btn {
+		display: none;
+	}
+	.header-style-5 .site-header .main-navigation ul.menu > li > a {
+		border-left: none;
+	}
+	.main-comments ul.children {
+		margin-left: 20px;
+	}
+	.title-color {
+		font-size: 36px;
+	}
+	.ghost-btn {
+		padding: 8px 36px;
+		font-size: 14px;
+	}
+	.about-layout-two .about2-award-box {
+		width: 240px;
+	}
+	.about-layout-two .about2-award-box .media a {
+		padding-right: 0;
+	}
+	.about-layout-two .about2-award-box .media a i:before {
+		margin-left: 0;
+		font-size: 50px;
+		padding: 30px 15px 0 0;
+	}
+	.about2-award-box .media-body h2 {
+		font-size: 48px;
+	}
+	.about-page-area> img {
+		display: none;
+	}
+	.about-page2-content h2 {
+		font-size: 32px;
+	}
+	.tasty-menu-inner {
+		padding: 70px 15px 0 15px;
+	}
+	.tasty-menu-inner> div:last-child {
+		padding-left: 20px;
+	}
+	.tasty-menu-inner:before {
+		border: 5px solid #f8f8f8;
+	}
+	.tasty-menu-inner:after {
+		width: 5px;
+		border-left: none;
+		background: #f8f8f8;
+		height: 96%;
+		top: 20px;
+		border-image: none;
+	}
+	.tasty-menu-inner ul {
+		padding: 30px 0;
+	}
+	.recipe-of-the-day-img-holder {
+		display: none;
+	}
+	.recipe-of-the-day2-area .content-box2 .content-box2-bottom-content-holder {
+		min-height: 337px;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content,
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content-inner{
+		max-height:initial;
+		min-height:initial;
+	}
+	.single-chef-bottom-area {
+		padding: 70px 0 80px;
+	}
+	.table-reservation1-area .reservation-form {
+		margin-bottom: 20px;
+	}
+	.table-reservation1-area .reservation-form .reservation-input-box input {
+		margin-bottom: 15px;
+	}
+	.table-reservation2-right {
+		padding: 140px 0;
+	}
+	.table-reservation2-area .table-reservation2-right .reservation2-banner {
+		display: none;
+	}
+	.table-reservation3-area .table-reservation3-right {
+		padding: 0 0 0 40px;
+	}
+	.table-reservation1-area .reservation-form .reservation-input-box .mb-tab-0{
+		margin-bottom:0px;
+	}
+	.content-box2 .content-box2-social {
+		top: 18%;
+	}	
+	.food-menu1-area .food-menu1-box ul {
+		padding: 5px 10px;
+	}
+	.special-dish-box span.amount{
+		right:35px;
+	}
+	.special-dish-area .owl-controls .owl-prev {
+		left: -13px;
+	}
+	.special-dish-area .owl-controls .owl-next {
+		right: -13px;
+	}
+	.fmp-layout-carousel3 .fmp-row.fmp-even .even-grid-item{
+		margin-bottom:20px;
+	}
+	.client-reviews-area .client-reviews-right{
+		margin-left:10px;
+	}
+	.content-area .single-blog-middle .single-blog-tag {
+		margin-bottom: 10px;
+	}
+	.content-area .single-blog-middle .single-blog-tag ul li {
+		margin-bottom: 5px;
+	}
+	.content-area .single-blog-middle .single-blog-social {
+		text-align: left;
+	}
+	.content-area .single-blog-middle .single-blog-social ul li {
+		margin: 0 5px 0 0;
+	}
+	.content-area .single-blog-bottom {
+		margin-bottom: 30px;
+	}
+	.contact-us-left ul> li {
+		padding: 15px 0 4px 30px;
+		margin-bottom: 0;
+	}
+	.contact-us-left ul> li> i {
+		top: 20px;
+	}
+	.contact-us-left ul> li .contact-social li {
+		margin-right: -2px;
+	}
+	.footer-area-top {
+		padding: 72px 0 35px;
+	}
+	.footer-area-top .footer-box {
+		padding-right: 0;
+	}
+	.footer-area-top .footer-social li a {
+		line-height: 36px;
+		width: 36px;
+		height: 36px;
+	}
+	.rt-owl-nav-3 .section-title {
+		margin-bottom: 30px;
+	}
+	.rt-owl-nav-3 .owl-custom-nav-title {
+		font-size: 25px;
+		margin-bottom: 0;
+	}
+	#sticker {
+		display: none;
+	}
+	.rt-owl-team-3 .vc-overly> ul {
+		top: 40%;
+	}
+	.fm-title-content{
+		padding: 0 21px;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding:0;
+	}
+	.fmp-layout-custom-layout-redchili .fm-title-content {
+		float: left;
+		width: 100%;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content h3 {
+		float: left;
+		width: 100%;
+	}	
+	.food-menu3-area .food-menu3-box .food-menu3-box-img{
+		padding: 0;
+		width:100%;
+	}
+	.about-title-sign h2{
+		line-height: 1.2;
+	}
+	.about-page-right {
+		left: 0;
+		position: relative;
+		top: 25px;
+	}
+	.about-page-area .about-page-left{
+		background:none !important;
+	}
+	.about-page-left{		
+		min-height: initial;
+		padding:0 47px 10px;
+	}
+	.about-2-page-left {
+		margin-bottom: 30px;
+		position: relative;
+	}
+	.about-2-page-right {
+		color: #ffffff;
+		left: inherit;
+		padding: 56px 68px;
+		position: inherit;
+		text-align: center;
+		top: inherit;
+		margin-top
+	}
+	.about-layout-two .about2-top {
+		position: inherit;
+		display: inline-block;
+		background: #ffffff;
+		padding: 20px 0 30px;
+		margin-bottom: 50px;
+	}
+	.about-page-img-holder img{
+		width:100%;
+	}	
+	.about-title-sign {
+		padding-top: 0;
+	}
+	.about-page-left h2 {
+		font-size: 36px;
+	}
+	.table-reservation1-area .reservation-form {
+		margin-bottom: 0px;
+	}	
+	.table-reservation2-area .reservation-form2 {		
+		padding: 50px 30px 32px;
+	}	
+	.table-reservation2-area .table-reservation2-left .reservation-form2 h2{
+		font-size: 34px;
+	}
+	.fmp-layout-carousel3{
+		margin: 0 30px;
+	}	
+	.table-reservation2-area .reservation-form2 span{
+		font-size:24px;
+	}
+	.table-reservation2-area .reservation-form2 h2{
+		font-size:28px;
+	}
+	.tasty-menu-inner ul li .media-body h4 {
+		margin-bottom: 30px;		
+	}
+	.overlapinner{
+		margin-top:0;
+	}
+	body .vc_inner.overlapinner{
+		background:#fff !important;
+	}
+	.overlapparent .innercounter{
+		padding-left:0px; 
+		padding-right:0px;		
+		padding-top:70px !important;
+	}
+	.overlapinner .info-box-1{
+		margin-bottom:0px;
+		padding:0;
+	}
+	.overlapinner{
+		padding-top:20px;
+	}
+	.fmp-layout-grid-by-cat ul li .media-body span.amount {
+		left: -2px;
+		position: relative;
+		right: inherit;
+		top: -117px;
+	}
+	.wfmc-layout-3 .card-menu-title ,
+	.card-menu-title {
+		float: left;
+		padding-right: 0px;
+		width: 100%;
+	}
+	.wfmc-layout-3 .card-menu-title .fmp-title,
+	.card-menu-title .fmp-title{
+		margin-bottom:6px;
+	}
+	.wfmc-layout-3 .card-menu-price ,
+	.card-menu-price {
+		float: left;
+		margin-bottom: 12px;
+		overflow-wrap: break-word;
+		text-align: left;
+		width: 100%;
+	}
+	body .overlapright{
+		padding-bottom: 65px !important;
+	}
+	.about-2-page-left{
+		margin-bottom:0;
+	}
+	.contact-us-left ul > li .contact-social li a{
+		margin:5px;
+	}
+	/* woocommerce */
+	.woo-shop-top {
+		padding: 10px 0 15px;
+	}
+	.woo-shop-top .sort-list select {
+		margin-top: 5px;
+		width: 100%;
+	}
+	.woocommerce .woo-shop-top .woocommerce-result-count {
+		line-height: 1.1;
+		padding-top: 7px;
+	}
+	.woocommerce.has-sidebar.product-grid-view ul.products li.product {
+		width: 49%;
+	}
+	.woocommerce.product-grid-view ul.products li.product.first {
+		clear: none;
+	}
+	.woocommerce.has-sidebar.product-grid-view ul.products li.product:nth-child(2n+1) {
+		clear: both;
+	}
+	.woocommerce.no-sidebar.product-grid-view ul.products li.product {
+		width: 32.3%;
+	}
+	.woocommerce.no-sidebar.product-grid-view ul.products li.product:nth-child(3n+1) {
+		clear: both;
+	}
+	.woocommerce.has-sidebar.product-list-view .product-thumb-area {
+		max-width: 200px;
+	}
+	.woocommerce form .form-row-first,
+	.woocommerce form .form-row-last,
+	.woocommerce-page form .form-row-first,
+	.woocommerce-page form .form-row-last {
+		float: none;
+		width: 100%;
+	}
+}
+@media all and (max-width: 767px) {
+	/* Topbar 1 */
+	#tophead .tophead-contact,
+	#tophead .tophead-right {
+		text-align: center;
+		float: none;
+	}
+	/* Topbar 3 */
+	.topbar-style-3 #tophead .topbar-logo {
+		display: none;
+	}
+	.topbar-style-3 #tophead .tophead-right {
+		text-align: center;
+	}
+
+	/* Header 1 */
+	.site-header .site-branding,
+	.stick .site-header .site-branding {
+		display: block;
+		height: inherit;
+		padding: 10px 0;
+		text-align: center;
+	}
+	.stick .site-header .site-branding {
+		padding: 5px 0;
+	}
+	.site-header .site-branding a {
+		display: block;
+		vertical-align: inherit;
+	}
+	.site-header .main-navigation ul {
+		text-align: center;
+	}
+	.site-header .main-navigation ul li a,
+	.stick .site-header .main-navigation ul li a {
+		padding-bottom: 10px;
+		padding-top: 10px;
+	}
+	.header-icon-area {
+		display: none;
+	}
+	/* Header 2 */
+	.header-style-2 .masthead-container {
+		padding-top: 10px;
+	}
+	.header-style-2 .site-header .main-navigation ul {
+		text-align: center;
+	}
+	.header-style-2 .site-header .main-navigation ul li a {
+		padding: 10px 15px;
+	}
+	/* Header 3 */
+	.header-style-3 .header-firstrow {
+		padding: 15px 0 10px;
+	}
+	.header-style-3 .site-header .site-branding,
+	.header-style-3 .header-firstrow-right {
+		display: block;
+		height: inherit;
+	}
+	.header-style-3 .site-header .site-branding {
+		padding: 0 0 10px 0px;
+	}
+	.header-style-3 .header-firstrow-right-contents {
+		display: block;
+	}
+	.header-style-3 .header-firstrow-right-contents ul {
+		display: block;
+		padding: 0;
+		text-align: center;
+	}
+	.header-style-3 .header-contact li {
+		display: block;
+		margin-left: 0;
+	}
+	.header-style-3 .menu-sep {
+		margin-bottom: 10px;
+	}
+	.header-style-3 .site-header .main-navigation ul {
+		text-align: center;
+	}
+	.header-style-3 .site-header .main-navigation ul li a {
+		padding: 10px 15px;
+	}
+	/* Header 4 */
+	.header-style-4 .header-firstrow-wrap {
+		padding-top: 10px;
+	}
+	.header-style-4 .site-header .site-branding,
+	.header-style-4 .header-firstrow {
+		display: block;
+		height: inherit;
+		text-align: center;
+		padding-top: 0;
+		padding-bottom: 10px;
+	}
+	.header-style-4 .header-firstrow-contents {
+		display: block;
+	}
+	.header-style-4 .header-contact li {
+		display: block;
+		margin-right: 0;
+	}
+	.header-style-4 .header-firstrow-contents-right {
+		text-align: center;
+	}
+	.header-style-4 .header-firstrow-contents-right .header-icon-area {
+		display: none;
+	}
+	/* Header 5 */
+	.header-style-5 .site-header .site-branding {
+		float: none;
+		height: inherit;
+	}
+	.header-style-5 .site-header .main-navigation {
+		float: none;
+	}
+	.header-style-5 .site-header .main-navigation ul.menu > li > a {
+		padding: 10px 15px;
+		border-left: none;
+	}
+	.header-style-5 .header-menu-btn {
+		display: none;
+	}
+	.rc-sidebar {
+		margin-top: 50px;
+	}	
+	.main-comments ul.children {
+		margin-left: 20px;
+	}
+	.imgholder img{
+		max-width:80px;
+	}
+	.comments-area .main-comments .imgholder {
+		margin-bottom: 10px;
+		margin-right: 10px;
+	}
+	.title-color {
+		font-size: 32px;
+	}
+	.inner-sub-title {
+		font-size: 26px;
+	}
+	.about-page-area> img {
+		display: none;
+	}
+	.title-sidebar {
+		font-size: 22px;
+	}
+	.inner-page-banner-area .pagination-area h2 {
+		font-size: 44px;
+	}
+	.inner-page-banner-area .pagination-area h2 {
+		font-size: 40px;
+	}
+	.about-one-area img {
+		margin: 0 auto;
+	}
+	.about-layout-two {
+		padding: 0 0 55px;
+	}
+	.chef-signature > .vc_column-inner {
+		padding-bottom: 0px !important;
+	}
+	.about-layout-two .about2-top {
+		padding: 40px 0 30px;
+	}
+	.about-layout-two .about2-top {
+		padding: 40px 0 30px;
+	}
+	.about-page-left h2 {
+		font-size: 32px;
+	}
+	.about-page2-img-holder {
+		padding: 0 40px;
+	}
+	.about-page2-content h2 {
+		font-size: 30px;
+	}
+	.footer-area-top .single-widget{
+		padding:15px 0;
+	}
+	.tasty-menu-inner {
+		padding: 70px 30px 0 30px;
+	}
+	.tasty-menu-inner> div:last-child {
+		padding-left: 15px;
+	}
+	.tasty-menu-inner:after {
+		display: none;
+	}
+	.recipe-of-the-day-area {
+		padding: 0px 0 10px;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content h2{
+		margin-bottom:56px;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content-inner{
+		padding: 30px 19px 1px;
+	}
+	.recipe-of-the-day-img-holder {
+		display: none;
+	}
+	.chef-box .chef-box-content ul li {
+		margin: 0;
+	}
+	.chef-box img{
+		width:100%;
+	}
+	.single-chef-top-area .single-chef-top-img {
+		margin-bottom: 30px;
+	}
+	.single-chef-top-area .single-chef-top-img img {
+		margin: 0 auto;
+	}
+	.single-chef-top-area .single-chef-top-content h2 {
+		font-size: 40px;
+	}
+	.single-chef-bottom-area {
+		padding: 60px 0 55px;
+	}
+	.table-reservation1-area .reservation-form {
+		margin-bottom: 0px;
+	}
+	.table-reservation2-area {
+		padding: 0;
+	}
+	.table-reservation2-area .table-reservation2-inner {
+		display: inherit;
+	}
+	.table-reservation2-area .table-reservation2-left {
+		position: inherit;
+		margin-bottom: 30px;
+	}
+	.table-reservation2-right {
+		padding: 0;
+		margin-left: 0;
+	}
+	.table-reservation3-area {
+		padding: 70px 0;
+	}
+	.table-reservation3-area .table-reservation3-right {
+		padding: 0 100px;
+	}
+	.reservation-page-area {
+		padding: 70px 0 0 0;
+	}
+	.client-reviews-area .client-reviews-right .owl-controls .owl-dots {
+		right: 0;
+	}
+	.fmp-layout-carousel3 .fmp-row.fmp-even .even-grid-item,
+	.fmp-layout-custom-grid-by-cat4.fmp-row.fmp-even .even-grid-item ,
+	.fmp-layout-custom-grid-by-cat3.fmp-row.fmp-even .even-grid-item,
+	.fmp-layout-custom-grid-by-cat2.fmp-row.fmp-even .even-grid-item {
+		margin-bottom: 30px;
+	}
+	.fmp-row.fmp-even .even-grid-item {
+		margin-bottom: 0px;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding: 0px;
+	}
+	.food-menu4-area .food-menu4-box .food-menu4-box-title {
+		top: 82%;
+	}
+	.food-menu5-area .food-menu5-box .food-menu5-title-area .food-menu5-title-holder h2 {
+		font-size: 32px;
+	}
+	.food-menu4-area .food-menu4-box ,
+	.fmp-layout-custom-isotope-redchili-2 .food-menu2-area {
+		margin: 0 auto 30px;
+		max-width: 400px;
+	}
+	.food-menu2-area .food-menu2-box .food-menu2-title-holder span.amount {
+		top: -51px;
+	}
+	.food-menu2-area .food-menu2-box .food-menu2-title-holder h3 {
+		margin-top: -30px;
+	}
+	.food-menu2-area .food-menu2-box .food-menu2-img-holder .food-menu2-more-holder ul {
+		top: 41%;
+	}
+	.single-menu-area .single-menu-inner .related-products {
+		margin-bottom: 30px;
+	}
+	.special-dish-area .special-dish-box span {
+		right: 0;
+		left: 0;
+		top: 0;
+		margin: 0 auto;
+	}
+	.content-area .entry-blog-post {
+		margin-bottom: 30px;
+	}
+	.content-area .single-blog-bottom .form-group {
+		margin-bottom: 15px;
+	}
+	.page-error-area .page-error-top span {
+		font-size: 220px;
+	}
+	.contact-us-left {
+		margin-bottom: 30px;
+	}
+	.contact-us-left ul> li {
+		padding: 13px 0 4px 30px;
+		margin-bottom: 0;
+	}
+	.contact-us-left ul> li h3 {
+		font-size: 20px;
+	}
+	.contact-us-left ul> li p {
+		margin-bottom: 5px;
+	}	
+	.contact-us-left ul> li .contact-social li {
+		margin-right: 10px;
+	}
+	.footer-area-top {
+		padding: 62px 0 25px;
+	}
+	.footer-area-top .footer-social li a {
+		line-height: 40px;
+		width: 40px;
+		height: 40px;
+	}
+	.footer-area-bottom {
+		text-align: center;
+		padding: 17px 0;
+	}
+	.footer-area-bottom p {
+		margin-bottom: 10px;
+	}
+	.title-bar-big-left:before{
+		margin:0 auto;
+		right:0;
+	}
+	.about-one-area {		
+		text-align: center;
+	}
+	.fmp-layout-custom-layout-redchili .food-menu3-area .food-menu3-box{
+		max-width:400px;
+		margin:0 auto 30px;
+	}
+	.infobox-style2 .about-page-bottom-box {
+		margin-bottom: 0px;
+	}
+	.fmp-layout-carousel3{
+		margin: 0 30px;
+	}
+	.event-map span,
+	.event-info span,
+	.event-social span {
+		display: block;
+	}
+	.tasty-menu-inner ul li .media-body h4 {
+		margin-bottom: 10px;
+	}
+	.fmp-layout-grid-by-cat ul li .media-body span.amount {
+		left: inherit;
+		position: absolute;
+		right: 10px;
+		top: 10px;
+	}
+	/* woocommerce */
+	.woocommerce.product-grid-view ul.products {
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 565px;
+	}
+	.woocommerce ul.products li.product h3 {
+		margin: 15px 0 9px;
+	}
+	.woocommerce.no-sidebar.product-grid-view ul.products li.product {
+		width: 49%;
+	}
+	.woocommerce.product-list-view .product-thumb-area {
+		max-width: 200px;
+	}
+	.woocommerce #respond input#submit,
+	.woocommerce a.button,
+	.woocommerce button.button,
+	.woocommerce input.button {
+		padding: 10px 20px;
+	}
+	.woocommerce div.product .woocommerce-tabs ul.tabs li a {
+		padding: 10px 20px;
+	}
+	.woocommerce div.product div.images img {
+		width: inherit;
+	}
+	.woocommerce #content div.product div.thumbnails a,
+	.woocommerce div.product div.thumbnails a,
+	.woocommerce-page #content div.product div.thumbnails a,
+	.woocommerce-page div.product div.thumbnails a {
+		width: inherit;
+		max-width: 32%;
+	}
+	.woocommerce div.product div.images,
+	.woocommerce div.product div.summary {
+		margin-bottom: 40px;
+	}
+	.woocommerce-cart .woocommerce table.shop_table_responsive.cart {
+		margin-bottom: 50px;
+	}
+	.woocommerce-cart .woocommerce table.shop_table_responsive.cart,
+	.woocommerce-account .woocommerce .shop_table_responsive {
+		border: 1px solid #ccc;
+		padding: 10px 20px 20px;
+	}
+	.woocommerce-cart .woocommerce table.shop_table_responsive.cart tr,
+	.woocommerce-account .woocommerce table.shop_table_responsive tr {
+		border-right: 1px solid #ccc;
+		border-top: 1px solid #ccc;
+		margin-top: 10px;
+	}
+	.woocommerce-cart .woocommerce table.shop_table_responsive a.remove {
+		display: inline-block;
+	}
+
+	.woocommerce .cart-collaterals .cart_totals {
+		margin-bottom: 30px;
+	}
+	.woocommerce .cart-collaterals .cart_totals h2 {
+		margin-bottom: 20px;
+	}
+	.woocommerce .cart-collaterals .cross-sells ul.products li {
+		margin-bottom: 0;
+	}
+	#add_payment_method .wc-proceed-to-checkout a.checkout-button,
+	.woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
+	.woocommerce-checkout .wc-proceed-to-checkout a.checkout-button {
+		padding: 10px;
+	}
+	.woocommerce-account .woocommerce-MyAccount-navigation ul li a {
+		padding: 5px 10px;
+	}
+	.woocommerce-account .woocommerce table.shop_table_responsive tr td.order-actions {
+		text-align: right !important;
+	}	
+}
+@media only screen and (max-width: 640px) {
+	.main-comments ul.children {
+		margin-left: 18px;
+	}
+	.imgholder img{
+		max-width:70px;
+	}	
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding: 0px;
+	}
+	.fmp-layout-custom-grid-by-cat4 .card-menu-title .fmp-price{
+		display:none;
+	}	
+	.reservation-page-area .reservation-page-inner {
+		display: inherit;
+	}
+	.reservation-page-area .reservation-page-inner .reservation-page-right {
+		display: none;
+	}
+	.subtitle-line-lt,
+	.subtitle-line-rt{
+		display:none;
+	}
+}
+@media all and (max-width: 480px) {
+	.table-reservation2-area{
+		margin-bottom: 40px;
+	}
+	.title-color {
+		font-size: 28px;
+	}
+	.main-comments p{
+		margin-bottom:0px;
+	}
+	.inner-sub-title {
+		font-size: 24px;
+	}
+	.title-sidebar {
+		font-size: 20px;
+	}
+	.ghost-btn {
+		padding: 7px 30px;
+		font-size: 13px;
+	}
+	.inner-page-banner-area .pagination-area h2 {
+		font-size: 36px;
+	}
+	.card-menu-title .fmp-title {
+		margin-bottom: 20px;
+	}
+	.about2-award-box {
+		padding: 0 23%;
+	}
+	.about-layout-two .about2-top {
+		padding: 30px 0;
+	}
+	.about-page-left h2 {
+		font-size: 28px;
+	}
+	.infobox-style2 {
+		margin-top: 0px;
+	}
+	.widget ul li,
+	.widget_categories ul li,
+	.categories ul li {
+		padding-bottom: 0;
+		padding-right: 0;
+	}
+	.about-title-sign{
+		padding-top: 0px;
+	}
+	.about-2-page-right {
+		color: #ffffff;
+		left: inherit;
+		padding: 43px 40px;
+		position: inherit;
+		text-align: center;
+		top: inherit;
+	}
+	.about-page-area> img {
+		display: none;
+	}
+	.about-layout-two .counter-fix {
+		position: relative;
+		top: 33px;
+	}
+	.about-layout-two {
+		padding: 0 0 45px;
+	}
+	.about-layout-two .about2-top {
+		padding: 30px 0;
+	}
+	.single-recipe-bottom-area .chef-box .chef-box-content {
+		min-height: 65px;
+	}
+	.about-page2-content h2 {
+		font-size: 28px;
+	}
+	.chef-box .chef-box-content {
+		min-height: 158px;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding: 0px;
+	}
+	.fmp-layout-custom-grid-by-cat4 .card-menu-price{
+		display:none;
+	}
+	.fmp-layout-custom-grid-by-cat4 .card-menu-title{
+		width:100%;		
+		padding-right:0px;
+	}
+	.fmp-layout-custom-grid-by-cat4 .card-menu-title .fmp-price{
+		display:inline;
+		vertical-align:sub;
+	}
+	.about-page-left h2 {
+		line-height: 1;
+	}
+	.chef-box .chef-box-content {
+		min-height: 151px;
+	}
+	.chef-area .owl-nav .owl-next {
+		right: -44px;
+	}
+	.chef-area .owl-nav .owl-prev{
+		left: -44px;
+	}	
+	.tasty-menu-inner {
+		padding: 35px 0px 30px;
+	}
+	.tasty-menu-inner {
+		text-align: center;
+	}
+	.tasty-menu-inner:before {
+		height: 99%;
+	}
+	.tasty-menu-inner ul {
+		padding: 30px 0;
+	}
+	.tasty-menu-inner ul li .media {
+		text-align: center;
+		position: relative;
+	}
+	.tasty-menu-inner ul li .media a {
+		float: inherit!important;
+	}
+	.tasty-menu-inner ul li .media a img {
+		margin: 0 auto;
+	}
+	.tasty-menu-inner ul li .media-body {
+		position: initial;
+	}
+	.tasty-menu-inner ul li .media-body span.amount {
+		position:initial;
+	}
+	.tasty-menu-inner ul li .media-body h4 {
+		margin-bottom: 10px;
+		margin-top: 20px;
+		padding-bottom: 10px;
+	}
+	.tasty-menu-inner .fmp-layout-custom-grid-by-cat1 .card-menu-title h3{
+		margin-bottom:10px;
+	}
+	.tasty-menu-inner .fmp-layout-custom-grid-by-cat1 .card-menu-price{
+		text-align:center;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content,
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content-inner{
+		max-height:initial;
+		min-height:initial;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content h2{
+		margin-bottom: 75px;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content-inner{
+		margin: 15px 0 0;
+		padding: 30px 0px 1px;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content .recipe-of-the-day-content-details {
+		padding: 0;
+	}
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content .awards-box ul li {
+		display: block;
+	}
+	.recipe-of-the-day2-area .owl-nav .owl-prev{
+		left: -40px;
+	}
+	.recipe-of-the-day2-area .owl-nav .owl-next{
+		right: -40px;
+	}
+	.chef-box .chef-box-content {
+		bottom: -100px;
+		min-height:158px;
+		padding:4px 0 0;
+	}
+	.chef-box .chef-box-content ul li {
+		height: 30px;
+		width: 30px;
+		line-height: 30px;
+	}
+	.chef-box .chef-box-content span {
+		display: none;
+	}
+	.chef-box .chef-box-content h3 a{
+		padding: 0 15px;
+	}
+	.single-chef-top-area .single-chef-top-content h2 {
+		font-size: 36px;
+	}
+	.single-chef-bottom-area {
+		padding: 50px 0 45px;
+	}	
+	.table-reservation1-area{
+		margin-bottom:5px;
+	}
+	.table-reservation1-area .reservation-form {
+		margin-bottom: 0px;
+	}
+	.table-reservation1-area .form-response .alert-success {
+		letter-spacing: 0;
+	}	
+	.table-reservation2-area {
+		padding: 10px 0;
+	}
+	.table-reservation2-area .form-response .alert-success {
+		letter-spacing: 0;
+	}
+	.table-reservation3-area {
+		padding: 20px 0;
+	}
+	.table-reservation3-area .table-reservation3-right {
+		padding: 0px;
+	}
+	.table-reservation3-area .form-response .alert-success {
+		letter-spacing: 1;
+	}	
+	.reservation-page-area {
+		padding: 30px 0;
+	}
+	.reservation-page-area .reservation-page-inner .reservation-page-left .reservation-page-form .form-response .alert-success {
+		letter-spacing: 0;
+	}
+	.reservation-page-area .reservation-page-inner .reservation-page-right {
+		display: none;
+	}	
+	.client-reviews-area .client-reviews-right ul li .media-body .rating {
+		top: 20px;
+	}
+	.client-reviews-area .client-reviews-right{
+		margin-left:0px;
+	}
+	.client-reviews-area .media-body{
+		float:left;
+		width:100%;
+	}
+	.our-recipes-area .row > div {
+		margin:0 auto;
+		width:100%;
+		max-width:370px;
+		float: initial;
+	}
+	.food-menu-title span:before {
+		width: 65px;
+		left: 25px;
+	}
+	.food-menu-title span:after {
+		width: 65px;
+		right: 25px;
+	}
+	.food-menu1-area .food-menu1-box ul li .media {
+		text-align: center;
+		position: relative;
+	}
+	.food-menu1-area .food-menu1-box ul li .media a {
+		float: inherit!important;
+	}
+	.food-menu1-area .food-menu1-box ul li .media a img {
+		margin: 0 auto;
+	}
+	.food-menu1-area .food-menu1-box ul li .media-body {
+		position: initial;
+	}
+	.food-menu1-area .card-menu-title,
+	.tasty-menu-inner .card-menu-title{
+		width:100%;
+		width: calc(100% - 0px);
+	}
+	.food-menu1-area .food-menu1-box ul li .media-body h4 {
+		padding: 15px 0 0;
+	}
+	.food-menu1-area .food-menu1-box ul li .media-body span.amount{
+		font-size:20px;
+	}
+	.food-menu1-area .card-menu-price{
+		position: absolute;
+		right: 0;		
+		top: 20px;
+		width: 67px;
+	}
+	.food-menu3-area .food-menu3-box .food-menu3-box-content {
+		padding: 0px;
+	}	
+	.food-menu4-area .col-xs-6 {
+		width: 100%;
+	}
+	.food-menu4-area .food-menu4-box .food-menu4-box-title {
+		top: 85%;
+	}
+	.food-menu5-area .food-menu5-box .food-menu5-title-area .food-menu5-title-holder h2 {
+		font-size: 30px;
+	}
+	.blog-page-box h2 {
+		font-size: 28px;
+	}
+	.content-area .entry-blog-post {
+		margin-bottom: 10px;
+	}
+	.content-area .entry-blog-post h2 {
+		font-size: 28px;
+	}	
+	.single-recipe-area .single-recipe-inner {
+		margin-bottom: 50px;
+	}	
+	.page-error-area .page-error-top {
+		padding: 60px 0;
+	}	
+	.page-error-area .page-error-top span {
+		font-size: 150px;
+		line-height: 150px;
+	}
+	.contact-us-left ul> li h3 {
+		font-size: 18px;
+	}
+	.contact-us-right .contact-form .form-response .alert-success {
+		letter-spacing: 1px;
+	}
+	.footer-area-top {
+		padding: 52px 0 15px;
+	}
+	.other-menu .owl-custom-nav-bar,
+	.rt-owl-nav-3 .owl-custom-nav-bar {
+		display: none;
+	}
+	.other-menu .owl-custom-nav,
+	.rt-owl-nav-3 .owl-custom-nav {
+		padding-left: 20px;
+	}
+	.slider-nav-enabled.rt-owl-nav-2,
+	.slider-nav-enabled.rt-owl-nav-2 {
+		padding: 0 40px;
+	}
+	.owl-theme .owl-controls .owl-next	
+	.rt-owl-testimonial-2 .rating {
+		top: 20px;
+	}
+	.rt-owl-chef-3 .vc-overly > ul{
+		top: 33%;
+	}
+	/* woocommerce */
+	.woocommerce.has-sidebar.product-grid-view ul.products li.product,
+	.woocommerce.no-sidebar.product-grid-view ul.products li.product {
+		float: none;
+		margin: 0 auto 40px;
+		max-width: 280px;
+		width: 100%;
+	}
+	.woocommerce.product-list-view ul.products {
+		max-width: 280px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.woocommerce.has-sidebar ul.products li.product,
+	.woocommerce.no-sidebar ul.products li.product,
+	.woocommerce ul.products li.product {
+		width: 100%;
+		text-align: center;
+	}
+	.woocommerce ul.products li.product .star-rating {
+		display: inline-block;
+	}
+	.woocommerce.product-list-view .product-thumb-area {
+		float: none;
+		margin-right: 0;
+	}
+	.woocommerce.product-list-view .product-thumb-area,
+	.woocommerce.has-sidebar.product-list-view .product-thumb-area {
+		max-width: inherit;
+	}
+	.woocommerce.product-list-view ul.products li.product h3 {
+		margin: 15px 0 9px;
+	}
+}
+@media only screen and (max-width: 360px) {
+	.recipe-of-the-day-area .recipe-of-the-day-box .recipe-of-the-day-content .time-needs li {
+		margin-bottom: 10px;
+	}
+	.no-pad-360 {
+		padding: 0;
+	}
+}
+@media only screen and (max-width: 320px) {	
+	.main-comments ul.children {
+		margin-left: 15px;
+	}
+	.imgholder img{
+		max-width:50px;
+	}
+	.comments-area .main-comments .imgholder {
+		margin-bottom: 10px;
+		margin-right: 10px;
+	}
+	.chef-box .chef-box-content h3 {
+		font-size: 20px;
+	}	
+	.chef-box .chef-box-content ul li {
+		height: 20px;
+		width: 20px;
+		line-height: 20px;
+	}
+	.chef-box:hover .chef-box-content {
+		bottom: -10px;
+	}
+	.tasty-menu-inner .card-menu-title {
+		float: left;
+		text-align: center;
+		width: 100%;
+	}
+	.tasty-menu-inner ul li .media-body h4 {
+		margin-bottom: 20px;
+	}
+	.special-dish-box span.amount {
+		right: 0px;
+	}
+	.food-menu4-area .food-menu4-box .food-menu4-box-title {
+		top: 80%;
+	}
+	.food-menu4-area .food-menu4-box:hover .food-menu4-box-title {
+		padding-top: 5%;
+	}
+	.isotope-home .media .fmp-popup {
+		text-align: center;
+		width: 100%;
+	}
+	.page-error-area .page-error-top span {
+		font-size: 100px;
+	}
+	.page-error-area .page-error-top p {
+		font-size: 24px;
+	}
+	.slider-nav-enabled.rt-owl-nav-2,
+	.slider-nav-enabled.rt-owl-nav-2 {
+		padding: 0 30px;
+	}
+	.single-menu-area .single-menu-inner .single-menu-inner-content .price{
+		top: 12px;
+	}
+	.about2-award-box {
+		padding: 0 6%;
+		margin-bottom:20px;
+	}
+	.about2-award-box .media-body h2{
+		margin-bottom:15px;
+	}
+}
+
+/* Header style when Admin Bar is active */
+@media screen and ( max-width: 782px ) {
+	.admin-bar.stick .site-header,
+	.admin-bar.stick .mean-container {
+		top: 46px !important;
+	}
+}
+@media screen and ( max-width: 600px ) {
+	.admin-bar.stick .site-header,
+	.admin-bar.stick .mean-container {
+		top: 0 !important;
+	}
+}

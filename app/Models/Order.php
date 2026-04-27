@@ -9,7 +9,7 @@ class Order extends Model
     protected $fillable = [
         'items', 'total', 'shipping_cost', 'parcel_locker_id', 'parcel_locker_name',
         'first_name', 'last_name', 'email', 'phone', 'address', 'city', 'postal_code', 'country', 'lang',
-        'payment_method', 'status', 'payment_id',
+        'payment_method', 'status', 'payment_id', 'tracking_number', 'label_path',
     ];
 
     protected $casts = [

@@ -1,0 +1,37 @@
+/*
+Template:       redchili
+Theme Name:     RedChili Child Theme
+Theme URI:      http://radiustheme.com/demo/wordpress/redchili
+Author:         RadiusTheme
+Author URI:     http://radiustheme.com
+Description:    Red Chili is a clean and modern theme for all kinds of Restaurant, Hotel & Fast Food Company. It is perfect for any kind Restaurant, Catering Service, Fast Food, Pizza, Food Court, Bakery, Pastry Shop, Coffee Shop any Food Business and Personal Chef websites etc
+Version:        1.0
+Text Domain:    redchili
+Tags: left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, translation-ready
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+.home-cats {
+    text-align: center;
+}
+.home-cats a {
+	background-color: #ffffff;
+    padding: 10px 30px;
+    font-size: 16px;
+    color: #646464;
+    margin: 0 2px 5px 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    border: 1px solid #bdbdbd;
+    font-weight: 500;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -ms-transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+.home-cats a:hover {
+	background-color: #da1f26;
+	color: #fff;
+}

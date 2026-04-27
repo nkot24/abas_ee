@@ -77,7 +77,16 @@
       "Bash(php /c/Users/niksi/programming/abas_lt/artisan make:mail OrderPlaced --markdown=emails.order-placed)",
       "Bash(php composer.phar require stichoza/google-translate-php)",
       "Bash(composer.bat require *)",
-      "PowerShell(composer require stichoza/google-translate-php 2>&1)"
+      "PowerShell(composer require stichoza/google-translate-php 2>&1)",
+      "Bash(grep -r \"Filament\\\\\\\\Schemas\\\\|Filament\\\\\\\\Forms\" c:/Users/niksi/programming/abas_lt/app/Filament --include=\"*.php\")",
+      "Bash(composer show *)",
+      "Bash(php composer.phar show filament/filament)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/storage/products/01KPDNBFJ8VNHAS27NEDK7TB1C.jpg)",
+      "Bash(git checkout *)",
+      "Bash(git reset *)",
+      "Bash(php -r ' *)",
+      "WebSearch",
+      "WebFetch(domain:express.pasts.lv)"
     ]
   }
 }

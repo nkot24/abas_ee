@@ -242,7 +242,12 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                 href={`/receptai/${recipe.id}`}
                                 className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                             >
-                                <ImagePlaceholder className="w-full h-40" />
+                                <div className="w-full h-40 bg-gray-200 overflow-hidden">
+                                    {recipe.image_url
+                                        ? <img src={recipe.image_url} alt={recipe.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        : <ImagePlaceholder className="w-full h-full" />
+                                    }
+                                </div>
                                 <div className="p-4">
                                     <span className="text-red-500 text-xs font-semibold uppercase tracking-wide">
                                         {t.recipeCategories[recipe.category?.toLowerCase()] ?? recipe.category}
@@ -267,11 +272,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
             </section>
 
             {/* ── WHOLESALE / CONTACT CTA ── */}
-            <section id="kontaktai" className="relative py-28 overflow-hidden">
-                <div className="absolute inset-0 bg-gray-900">
-                    <ImagePlaceholder className="w-full h-full opacity-30" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+            <section id="kontaktai" className="relative py-28 overflow-hidden bg-black">
 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <div className="max-w-xl">

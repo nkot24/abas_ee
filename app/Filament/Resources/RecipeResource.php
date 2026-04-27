@@ -6,7 +6,9 @@ use App\Filament\Resources\RecipeResource\Pages;
 use App\Models\Recipe;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -23,18 +25,18 @@ class RecipeResource extends Resource
     protected static ?string $model = Recipe::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-book-open';
-    protected static ?string $navigationLabel = 'Recipes';
-    protected static ?string $pluralModelLabel = 'Recipes';
-    protected static ?string $modelLabel = 'Recipe';
-    protected static string|\UnitEnum|null $navigationGroup = 'Content';
+    protected static ?string $navigationLabel = 'Receptai';
+    protected static ?string $pluralModelLabel = 'Receptai';
+    protected static ?string $modelLabel = 'Receptas';
+    protected static string|\UnitEnum|null $navigationGroup = 'Turinys';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $form): Schema
     {
         return $form->schema([
-            Section::make('Image')->schema([
+            Section::make('Nuotrauka')->schema([
                 FileUpload::make('image')
-                    ->label('Recipe image')
+                    ->label('Recepto nuotrauka')
                     ->image()
                     ->disk('public')
                     ->directory('recipes')
@@ -45,27 +47,50 @@ class RecipeResource extends Resource
 
             Section::make()->schema([
                 TextInput::make('title')
-                    ->label('Title')
+                    ->label('Pavadinimas')
                     ->required()
                     ->maxLength(255),
 
                 Select::make('category')
-                    ->label('Category')
+                    ->label('Kategorija')
                     ->required()
                     ->options([
-                        'Pagrindinis' => 'Main course',
-                        'Užkandžiai'  => 'Snacks',
-                        'Garnyras'    => 'Side dish',
-                        'Salotos'     => 'Salads',
-                        'Žuvis'       => 'Fish',
-                        'Marinatas'   => 'Marinade',
-                        'Sriubos'     => 'Soups',
+                        'Pagrindinis' => 'Pagrindinis patiekalas',
+                        'Užkandžiai'  => 'Užkandžiai',
+                        'Garnyras'    => 'Garnyras',
+                        'Salotos'     => 'Salotos',
+                        'Žuvis'       => 'Žuvis',
+                        'Marinatas'   => 'Marinatas',
+                        'Sriubos'     => 'Sriubos',
                     ]),
 
                 Toggle::make('active')
-                    ->label('Visible on website')
+                    ->label('Rodomas svetainėje')
                     ->default(true),
             ])->columns(2),
+
+            Section::make('Ingredientai')->schema([
+                Repeater::make('ingredients')
+                    ->schema([
+                        TextInput::make('item')
+                            ->label('Ingredientas')
+                            ->required(),
+                    ])
+                    ->addActionLabel('Pridėti ingredientą')
+                    ->columnSpanFull(),
+            ]),
+
+            Section::make('Gaminimo žingsniai')->schema([
+                Repeater::make('steps')
+                    ->schema([
+                        Textarea::make('step')
+                            ->label('Žingsnis')
+                            ->required()
+                            ->rows(2),
+                    ])
+                    ->addActionLabel('Pridėti žingsnį')
+                    ->columnSpanFull(),
+            ]),
         ]);
     }
 
@@ -78,17 +103,17 @@ class RecipeResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('title')
-                    ->label('Title')
+                    ->label('Pavadinimas')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('category')
-                    ->label('Category')
+                    ->label('Kategorija')
                     ->badge()
                     ->sortable(),
 
                 IconColumn::make('active')
-                    ->label('Active')
+                    ->label('Aktyvus')
                     ->boolean(),
             ])
             ->filters([])
