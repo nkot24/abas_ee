@@ -131,6 +131,30 @@ Route::get('/uzsakymas', function () {
     return Inertia::render('Checkout');
 });
 
+Route::get('/api/address-search', function (Request $request) {
+    $q       = $request->query('q', '');
+    $country = strtolower($request->query('country', 'lv'));
+    $type    = $request->query('type', 'address'); // 'address' or 'city'
+    $city    = $request->query('city', '');
+    $postal  = $request->query('postal', '');
+    if (strlen($q) < 3) return response()->json([]);
+
+    $suffix = $postal ?: $city;
+    $query = ($type === 'address' && $suffix) ? "{$q}, {$suffix}" : $q;
+
+    $response = \Illuminate\Support\Facades\Http::withHeaders([
+        'User-Agent' => 'ABAS Home Smokehouse/1.0 (niksindriksons2006@gmail.com)',
+    ])->timeout(5)->get('https://nominatim.openstreetmap.org/search', [
+        'q'              => $query,
+        'countrycodes'   => $country,
+        'format'         => 'json',
+        'addressdetails' => 1,
+        'limit'          => 7,
+    ]);
+
+    return response()->json($response->successful() ? $response->json() : []);
+});
+
 Route::get('/api/product-names', function (Request $request) {
     $ids = array_filter(array_map('intval', explode(',', $request->query('ids', ''))));
     if (empty($ids)) return response()->json([]);
@@ -170,7 +194,7 @@ Route::post('/shipping/calculate', function (Request $request) {
     $country = strtoupper($request->country);
 
     if ($request->method === 'locker') {
-        $rate = in_array($country, $BALTIC) ? 3.49 : 3.49;
+        $rate = $country === 'LV' ? 2.50 : 3.05;
         return response()->json(['cost' => $rate]);
     }
 
@@ -197,24 +221,24 @@ Route::post('/shipping/calculate', function (Request $request) {
         }
     }
 
-    // Rate tables — LV domestic, LT/EE cross-border Baltic, EU international
+    // Rate tables from LP contract (excl. VAT, excl. oversized surcharge)
     $lvRates = [
-        [5,    5.99],
-        [10,   7.99],
-        [20,  10.99],
-        [31.5, 14.99],
-        [50,  19.99],
-        [70,  29.99],
-        [PHP_INT_MAX, 44.99],
+        [1,    3.91],
+        [5,    5.50],
+        [10,   7.49],
+        [20,   9.73],
+        [31.5, 13.98],
+        [50,  17.15],
+        [PHP_INT_MAX, 17.15],
     ];
     $balticRates = [
-        [5,    8.99],
-        [10,  12.99],
-        [20,  17.99],
-        [31.5, 22.99],
-        [50,  32.99],
-        [70,  44.99],
-        [PHP_INT_MAX, 59.99],
+        [1,    5.20],
+        [5,    5.70],
+        [10,   6.50],
+        [20,   7.50],
+        [31.5, 8.50],
+        [50,  14.00],
+        [PHP_INT_MAX, 14.00],
     ];
     $euRates = [
         [5,   14.99],
@@ -314,9 +338,9 @@ Route::post('/paysera/callback', function (Request $request) {
                     'status'     => 'paid',
                     'payment_id' => $response['payment'] ?? null,
                 ]);
+                app('shipping')->registerShipment($order);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
                 Mail::to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))->send(new OrderPlaced($order));
-                app('shipping')->registerShipment($order);
                 \Illuminate\Support\Facades\Log::info('Emails sent for order ' . $order->id);
             }
         }
@@ -334,6 +358,7 @@ Route::get('/uzsakymas/sekmingai/{id}', function ($id) {
 
     if ($order->status === 'pending') {
         $order->update(['status' => 'paid']);
+        app('shipping')->registerShipment($order);
         Mail::to($order->email)->send(new OrderConfirmed($order));
         Mail::to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))->send(new OrderPlaced($order));
     }
@@ -342,6 +367,10 @@ Route::get('/uzsakymas/sekmingai/{id}', function ($id) {
 });
 
 // Cancel page
+Route::get('/privatuma-politika', function () {
+    return Inertia::render('PrivacyPolicy');
+});
+
 Route::get('/uzsakymas/atsaukta', function () {
     return Inertia::render('OrderCancelled');
 });

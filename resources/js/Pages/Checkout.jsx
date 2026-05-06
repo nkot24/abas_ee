@@ -5,9 +5,42 @@ import LangSwitcher from '../LangSwitcher';
 
 const LP_LOCKER_COUNTRIES = ['LV', 'LT'];
 
+function validatePhone(phone, dialCode) {
+    const digits = phone.replace(/\D/g, '');
+    if (!digits) return null;
+    switch (dialCode) {
+        case '+371': return digits.length === 8 ? null : 'Latvian number must be 8 digits';
+        case '+370': return (digits.length === 8 && /^6/.test(digits)) ? null : 'Lithuanian mobile: 8 digits starting with 6';
+        case '+372': return (digits.length >= 7 && digits.length <= 8) ? null : 'Estonian number: 7–8 digits';
+        default:     return digits.length >= 6 ? null : 'Too short';
+    }
+}
+
+function validatePostal(postal, country) {
+    const v = postal.trim();
+    if (!v) return null;
+    switch (country) {
+        case 'LV': return /^(LV-?)?\d{4}$/.test(v) ? null : 'Format: LV-XXXX';
+        case 'LT': return /^\d{5}$/.test(v) ? null : '5 digits required';
+        case 'EE': return /^\d{5}$/.test(v) ? null : '5 digits required';
+        default:   return null;
+    }
+}
+
+const PHONE_CODES = [
+    { code: 'LV', dial: '+371', flag: '🇱🇻' },
+    { code: 'LT', dial: '+370', flag: '🇱🇹' },
+    { code: 'EE', dial: '+372', flag: '🇪🇪' },
+    { code: 'PL', dial: '+48',  flag: '🇵🇱' },
+    { code: 'DE', dial: '+49',  flag: '🇩🇪' },
+    { code: 'FI', dial: '+358', flag: '🇫🇮' },
+    { code: 'SE', dial: '+46',  flag: '🇸🇪' },
+    { code: 'NO', dial: '+47',  flag: '🇳🇴' },
+];
+
 function SectionCard({ title, children }) {
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
                 <h2 className="text-xs font-black uppercase tracking-widest text-gray-700">{title}</h2>
             </div>
@@ -35,26 +68,6 @@ function Input({ error, ...props }) {
     );
 }
 
-function VisaIcon() {
-    return (
-        <svg viewBox="0 0 38 24" className="h-7 w-auto rounded shadow-sm">
-            <rect width="38" height="24" rx="3" fill="#1A1F71"/>
-            <path d="M14.5 16.5l1.5-9h2.4l-1.5 9zM22.5 7.7c-.5-.2-1.3-.4-2.2-.4-2.4 0-4.1 1.3-4.1 3.1 0 1.4 1.2 2.1 2.2 2.6 1 .5 1.3.8 1.3 1.2 0 .6-.8 1-1.5 1-.9 0-1.4-.1-2.2-.5l-.3-.1-.3 2c.6.3 1.6.5 2.7.5 2.6 0 4.2-1.3 4.2-3.2 0-1.1-.6-1.9-2-2.5-.8-.4-1.3-.7-1.3-1.2 0-.4.4-.8 1.3-.8.7 0 1.3.1 1.7.3l.2.1.3-1.9zM27.5 7.6h-1.9c-.6 0-1 .2-1.3.7l-3.6 8.2h2.5s.4-1.1.5-1.4h3.1c.1.3.3 1.4.3 1.4H29l-1.5-8.9zm-3.1 5.5c.2-.5.9-2.5.9-2.5s.2-.5.3-.8l.2.7s.4 2 .5 2.6h-1.9zM12.5 7.6l-2.4 6.1-.3-1.3c-.4-1.4-1.8-3-3.3-3.7l2.2 8.3h2.6l3.8-9.4h-2.6z" fill="#fff"/>
-            <path d="M8.2 7.6H4.1l-.1.3c3.2.8 5.3 2.8 6.2 5.1L9.3 8.3c-.2-.5-.6-.7-1.1-.7z" fill="#F9A533"/>
-        </svg>
-    );
-}
-
-function MastercardIcon() {
-    return (
-        <svg viewBox="0 0 38 24" className="h-7 w-auto rounded shadow-sm">
-            <rect width="38" height="24" rx="3" fill="#252525"/>
-            <circle cx="15" cy="12" r="7" fill="#EB001B"/>
-            <circle cx="23" cy="12" r="7" fill="#F79E1B"/>
-            <path d="M19 6.8a7 7 0 010 10.4A7 7 0 0119 6.8z" fill="#FF5F00"/>
-        </svg>
-    );
-}
 
 function LockerSelector({ country, onSelect, error }) {
     const { t } = useLang();
@@ -148,6 +161,100 @@ function LockerSelector({ country, onSelect, error }) {
     );
 }
 
+function AddressAutocomplete({ value, onChange, onSelect, error, country, placeholder, type = 'address', cityHint = '', postalHint = '' }) {
+    const [suggestions, setSuggestions] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const ref = useRef(null);
+    const timer = useRef(null);
+
+    useEffect(() => {
+        const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    const handleChange = (e) => {
+        const val = e.target.value;
+        onChange(val);
+        clearTimeout(timer.current);
+        if (val.length < 3) { setSuggestions([]); setOpen(false); return; }
+        timer.current = setTimeout(() => {
+            setLoading(true);
+            const params = new URLSearchParams({ q: val, country, type });
+            if (type === 'address' && postalHint) params.set('postal', postalHint);
+            else if (type === 'address' && cityHint) params.set('city', cityHint);
+            fetch(`/api/address-search?${params}`)
+                .then(r => r.json())
+                .then(data => { setSuggestions(data); setOpen(data.length > 0); })
+                .catch(() => setSuggestions([]))
+                .finally(() => setLoading(false));
+        }, 350);
+    };
+
+    const extractCity = (a) => a.city || a.town || a.village || a.municipality || '';
+    const extractStreet = (a, displayName) => {
+        const road = a.road || a.pedestrian || a.footway || displayName.split(',')[0];
+        return a.house_number ? `${road} ${a.house_number}` : road;
+    };
+
+    const select = (item) => {
+        const a = item.address ?? {};
+        if (type === 'city') {
+            const city   = extractCity(a);
+            const postal = a.postcode || '';
+            onSelect({ city, postal });
+            onChange(city);
+        } else {
+            const street = extractStreet(a, item.display_name);
+            const city   = extractCity(a);
+            const postal = a.postcode || '';
+            const display = city ? `${street}, ${city}` : street;
+            onSelect({ street, city, postal });
+            onChange(display);
+        }
+        setSuggestions([]);
+        setOpen(false);
+    };
+
+    return (
+        <div ref={ref} className="relative">
+            <input
+                type="text"
+                value={value}
+                onChange={handleChange}
+                placeholder={placeholder}
+                className={`w-full px-3.5 py-2.5 border rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all ${error ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
+            />
+            {loading && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg className="w-4 h-4 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    </svg>
+                </div>
+            )}
+            {open && suggestions.length > 0 && (
+                <ul className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-52 overflow-y-auto">
+                    {suggestions.map((item, i) => {
+                        const a = item.address ?? {};
+                        const label = type === 'city'
+                            ? extractCity(a) || item.display_name.split(',')[0]
+                            : extractStreet(a, item.display_name);
+                        const sub = type === 'city' ? (a.postcode || '') : extractCity(a);
+                        return (
+                            <li key={i} onClick={() => select(item)} className="px-4 py-2.5 text-sm cursor-pointer hover:bg-red-50 hover:text-red-700">
+                                <span className="font-medium">{label}</span>
+                                {sub && <span className="text-gray-400 text-xs ml-1">— {sub}</span>}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
+    );
+}
+
 function StepIndicator({ step }) {
     const { t } = useLang();
     return (
@@ -199,20 +306,24 @@ export default function Checkout() {
     ];
 
     const COUNTRIES = [
-        { code: 'LT', label: t.countries.LT },
         { code: 'LV', label: t.countries.LV },
+        { code: 'LT', label: t.countries.LT },
         { code: 'EE', label: t.countries.EE },
-        { code: 'PL', label: t.countries.PL },
-        { code: 'DE', label: t.countries.DE },
-        { code: 'FI', label: t.countries.FI },
-        { code: 'SE', label: t.countries.SE },
-        { code: 'NO', label: t.countries.NO },
+        { code: 'OTHER', label: t.countries.other ?? 'Other' },
     ];
 
+    const [showNoShipping, setShowNoShipping] = useState(false);
+    const [phoneCode, setPhoneCode] = useState('+371');
     const [form, setForm] = useState({
         first_name: '', last_name: '', email: '', phone: '',
         address: '', city: '', postal_code: '', country: 'LV',
     });
+
+    // Auto-switch phone code when country changes
+    useEffect(() => {
+        const match = PHONE_CODES.find(p => p.code === form.country);
+        if (match) setPhoneCode(match.dial);
+    }, [form.country]);
 
     const set = (field) => (e) => {
         setForm(f => ({ ...f, [field]: e.target.value }));
@@ -260,10 +371,19 @@ export default function Checkout() {
         if (!form.last_name.trim())   e.last_name   = t.checkout.required;
         if (!form.email.trim())       e.email       = t.checkout.required;
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = t.checkout.invalidEmail;
-        if (!form.phone.trim())       e.phone       = t.checkout.required;
+        if (!form.phone.trim()) {
+            e.phone = t.checkout.required;
+        } else {
+            const phoneErr = validatePhone(form.phone, phoneCode);
+            if (phoneErr) e.phone = phoneErr;
+        }
         if (!form.address.trim())     e.address     = t.checkout.required;
-        if (!form.city.trim())        e.city        = t.checkout.required;
-        if (!form.postal_code.trim()) e.postal_code = t.checkout.required;
+        if (!form.postal_code.trim()) {
+            e.postal_code = t.checkout.required;
+        } else {
+            const postalErr = validatePostal(form.postal_code, form.country);
+            if (postalErr) e.postal_code = postalErr;
+        }
         return e;
     };
 
@@ -306,6 +426,7 @@ export default function Checkout() {
                 },
                 body: JSON.stringify({
                     ...form,
+                    phone: phoneCode + form.phone.replace(/^0/, ''),
                     items,
                     total,
                     shipping_cost:      shippingCost,
@@ -334,6 +455,46 @@ export default function Checkout() {
     const deliveryLabel = deliveryMethod === 'locker' ? t.checkout.lpLocker : deliveryMethod === 'courier' ? t.checkout.courier : t.checkout.pickup;
 
     return (
+        <>
+        {showNoShipping && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
+                <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-8 text-center">
+                    <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-black text-gray-900 mb-2">
+                        {lang === 'en' ? 'International shipping' : 'Tarptautinis pristatymas'}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-3">
+                        {lang === 'en'
+                            ? 'We currently only have shipping contracts for Latvia, Lithuania and Estonia. For other countries, please contact us and we will calculate the shipping cost individually.'
+                            : 'Šiuo metu turime pristatymo sutartis tik Latvijai, Lietuvai ir Estijai. Kitoms šalims susisiekite su mumis ir mes apskaičiuosime pristatymo kainą individualiai.'}
+                    </p>
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-5 text-left">
+                        <p className="text-xs font-semibold text-gray-700 mb-1">
+                            {lang === 'en' ? 'How it works:' : 'Kaip tai veikia:'}
+                        </p>
+                        <ol className="text-xs text-gray-500 space-y-1 list-decimal list-inside">
+                            <li>{lang === 'en' ? 'Email us the products you are interested in and your delivery address' : 'Parašykite mums produktus, kurie jus domina, ir pristatymo adresą'}</li>
+                            <li>{lang === 'en' ? 'We will reply with the total shipping cost' : 'Mes atsakysime su bendra pristatymo kaina'}</li>
+                            <li>{lang === 'en' ? 'If you approve — we send you an invoice' : 'Jei sutinkate — išsiunčiame sąskaitą faktūrą'}</li>
+                        </ol>
+                        <a href="mailto:info@abas.lv" className="inline-block mt-2 text-xs font-bold text-red-600 hover:text-red-700">
+                            info@abas.lv
+                        </a>
+                    </div>
+                    <button
+                        onClick={() => setShowNoShipping(false)}
+                        className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black text-sm uppercase tracking-widest rounded-md transition-colors"
+                    >
+                        OK
+                    </button>
+                </div>
+            </div>
+        )}
+
         <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
 
             {/* Nav */}
@@ -420,7 +581,24 @@ export default function Checkout() {
                                                     <Input type="email" value={form.email} onChange={set('email')} error={errors.email} placeholder="janis@example.lv" />
                                                 </Field>
                                                 <Field label={t.checkout.phone} error={errors.phone}>
-                                                    <Input type="tel" value={form.phone} onChange={set('phone')} error={errors.phone} placeholder="+371 20 000 000" />
+                                                    <div className="flex gap-2">
+                                                        <select
+                                                            value={phoneCode}
+                                                            onChange={e => setPhoneCode(e.target.value)}
+                                                            className="px-2 py-2.5 border border-gray-200 hover:border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 flex-shrink-0"
+                                                        >
+                                                            {PHONE_CODES.map(p => (
+                                                                <option key={p.code} value={p.dial}>{p.flag} {p.dial}</option>
+                                                            ))}
+                                                        </select>
+                                                        <Input
+                                                            type="tel"
+                                                            value={form.phone}
+                                                            onChange={set('phone')}
+                                                            error={errors.phone}
+                                                            placeholder="20 000 000"
+                                                        />
+                                                    </div>
                                                 </Field>
                                             </div>
                                         </SectionCard>
@@ -428,19 +606,38 @@ export default function Checkout() {
                                         <SectionCard title={t.checkout.shippingSection}>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <Field label={t.checkout.country} half>
-                                                    <select value={form.country} onChange={set('country')}
+                                                    <select
+                                                        value={form.country}
+                                                        onChange={e => {
+                                                            if (e.target.value === 'OTHER') { setShowNoShipping(true); return; }
+                                                            set('country')(e);
+                                                        }}
                                                         className="w-full px-3.5 py-2.5 border border-gray-200 hover:border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all">
                                                         {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
                                                     </select>
                                                 </Field>
-                                                <Field label={t.checkout.city} error={errors.city} half>
-                                                    <Input value={form.city} onChange={set('city')} error={errors.city} placeholder="Rīga" />
-                                                </Field>
-                                                <Field label={t.checkout.street} error={errors.address}>
-                                                    <Input value={form.address} onChange={set('address')} error={errors.address} placeholder="Brīvības iela 1" />
-                                                </Field>
                                                 <Field label={t.checkout.postalCode} error={errors.postal_code} half>
                                                     <Input value={form.postal_code} onChange={set('postal_code')} error={errors.postal_code} placeholder="LV-1010" />
+                                                </Field>
+                                                <Field label={t.checkout.street} error={errors.address}>
+                                                    <AddressAutocomplete
+                                                        type="address"
+                                                        postalHint={form.postal_code}
+                                                        value={form.address}
+                                                        onChange={(val) => { setForm(f => ({ ...f, address: val })); setErrors(e => { const n = { ...e }; delete n.address; return n; }); }}
+                                                        onSelect={({ street, city, postal }) => {
+                                                            setForm(f => ({
+                                                                ...f,
+                                                                address:     street || f.address,
+                                                                city:        city   || f.city,
+                                                                postal_code: postal || f.postal_code,
+                                                            }));
+                                                            setErrors(e => { const n = { ...e }; delete n.address; delete n.city; delete n.postal_code; return n; });
+                                                        }}
+                                                        error={errors.address}
+                                                        country={form.country}
+                                                        placeholder="Brīvības iela 1"
+                                                    />
                                                 </Field>
                                             </div>
                                         </SectionCard>
@@ -473,9 +670,12 @@ export default function Checkout() {
                                                                 <p className="text-xs text-gray-400">{t.checkout.lpLockerSmall}</p>
                                                             </div>
                                                         </div>
-                                                        <span className="text-sm font-bold text-gray-700 ml-4 flex-shrink-0">
-                                                            {shippingLoading ? '...' : deliveryMethod === 'locker' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
-                                                        </span>
+                                                        <div className="flex items-center gap-3 ml-4 flex-shrink-0">
+                                                            <img src="/images/LatvijasPasts_Logo_Zils2_RGB.png" alt="Latvijas Pasts" className="h-5 w-auto" />
+                                                            <span className="text-sm font-bold text-gray-700">
+                                                                {shippingLoading ? '...' : deliveryMethod === 'locker' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
+                                                            </span>
+                                                        </div>
                                                     </label>
                                                 )}
                                                 <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'courier' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
@@ -489,9 +689,12 @@ export default function Checkout() {
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <span className="text-sm font-bold text-gray-700 ml-4 flex-shrink-0">
-                                                        {shippingLoading ? '...' : deliveryMethod === 'courier' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
-                                                    </span>
+                                                    <div className="flex items-center gap-3 ml-4 flex-shrink-0">
+                                                        <img src="/images/LatvijasPasts_Logo_Zils2_RGB.png" alt="Latvijas Pasts" className="h-5 w-auto" />
+                                                        <span className="text-sm font-bold text-gray-700">
+                                                            {shippingLoading ? '...' : deliveryMethod === 'courier' && shippingCost != null ? `${shippingCost.toFixed(2)} €` : ''}
+                                                        </span>
+                                                    </div>
                                                 </label>
                                                 <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'pickup' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
                                                     <div className="flex items-center gap-3">
@@ -528,17 +731,23 @@ export default function Checkout() {
                                             <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                                                 <div className="flex items-center justify-between mb-4">
                                                     <p className="text-sm font-semibold text-gray-700">{t.checkout.paymentVia}</p>
-                                                    <span className="text-xl font-black text-[#F26522]">Paysera</span>
+                                                    <img src="/images/1_Paysera logo for light background.png" alt="Paysera" className="h-7 w-auto" />
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <VisaIcon />
-                                                    <MastercardIcon />
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-bold text-gray-700 shadow-sm">G Pay</span>
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-black rounded text-xs font-bold text-white shadow-sm">⌘ Pay</span>
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Swedbank</span>
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">SEB</span>
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Luminor</span>
-                                                    <span className="inline-flex items-center px-2.5 py-1 bg-white border border-gray-200 rounded text-xs font-semibold text-gray-600 shadow-sm">Citadele</span>
+                                                    {[
+                                                        { src: '/images/visa-brandmark-blue-1960x622.webp', alt: 'Visa' },
+                                                        { src: '/images/ma_symbol_opt_45_3x.png', alt: 'Mastercard' },
+                                                        { src: '/images/Google_Pay_Logo.svg.png', alt: 'Google Pay' },
+                                                        { src: '/images/Apple_Pay_logo.svg.png', alt: 'Apple Pay' },
+                                                        { src: '/images/Swedbank.png', alt: 'Swedbank' },
+                                                        { src: '/images/20201201225537!SEB_logo.svg.png', alt: 'SEB' },
+                                                        { src: '/images/Luminor_logo.svg.png', alt: 'Luminor' },
+                                                        { src: '/images/Citadele_logo_RGB.png', alt: 'Citadele' },
+                                                    ].map(({ src, alt, bg }) => (
+                                                        <div key={alt} className={`h-8 flex items-center justify-center rounded px-2 border border-gray-200 bg-white`} style={{ minWidth: '3rem' }}>
+                                                            <img src={src} alt={alt} className="h-5 w-auto max-w-[4rem] object-contain" />
+                                                        </div>
+                                                    ))}
                                                 </div>
                                                 <p className="text-xs text-gray-400 mt-3">{t.checkout.payseraRedirect}</p>
                                             </div>
@@ -635,5 +844,6 @@ export default function Checkout() {
                 </div>
             </div>
         </div>
+        </>
     );
 }

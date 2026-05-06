@@ -5,9 +5,11 @@ namespace App\Mail;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class OrderPlaced extends Mailable
 {
@@ -30,6 +32,13 @@ class OrderPlaced extends Mailable
 
     public function attachments(): array
     {
+        if ($this->order->label_path && Storage::exists($this->order->label_path)) {
+            return [
+                Attachment::fromStorage($this->order->label_path)
+                    ->as('label_order_' . $this->order->id . '.pdf')
+                    ->withMime('application/pdf'),
+            ];
+        }
         return [];
     }
 }

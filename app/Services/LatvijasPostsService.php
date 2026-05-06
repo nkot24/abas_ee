@@ -44,28 +44,40 @@ class LatvijasPostsService
                 return null;
             }
 
-            $internalId = 'order-' . $order->id;
+            $internalId = 'order' . $order->id;
             $parcel     = $this->buildParcel($order, $countryId);
 
             $response = Http::asForm()
                 ->timeout(15)
                 ->post(self::BASE_URL . '/parcelsApi/create', [
-                    'secret'                     => $this->secret,
-                    'parcels[' . $internalId . ']' => $parcel,
+                    'secret'  => $this->secret,
+                    'parcels' => [$internalId => $parcel],
                 ]);
 
+            Log::info('LatvijasPassts: API response for order ' . $order->id, [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
             if (!$response->successful()) {
-                Log::error('LatvijasPassts: create failed for order ' . $order->id, [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
+                Log::error('LatvijasPassts: create failed for order ' . $order->id);
                 return null;
             }
 
             $data = $response->json();
 
+            // API returns { "internalId": "CE123LV" } on success or { "internalId": { "field": "error" } } on failure
             if (isset($data[$internalId]) && is_array($data[$internalId])) {
-                Log::error('LatvijasPassts: API validation error for order ' . $order->id, $data[$internalId]);
+                $errors = $data[$internalId];
+                Log::error('LatvijasPassts: API validation error for order ' . $order->id, $errors);
+                $this->notifyAdminOfFailure($order, $errors);
+                return null;
+            }
+
+            // Also handle top-level error like { "error": "Unknown user" }
+            if (isset($data['error'])) {
+                Log::error('LatvijasPassts: API error for order ' . $order->id . ': ' . $data['error']);
+                $this->notifyAdminOfFailure($order, ['error' => $data['error']]);
                 return null;
             }
 
@@ -73,6 +85,7 @@ class LatvijasPostsService
 
             if (!$tracking || !is_string($tracking)) {
                 Log::error('LatvijasPassts: no tracking number in response for order ' . $order->id, $data);
+                $this->notifyAdminOfFailure($order, ['error' => 'No tracking number returned', 'response' => $data]);
                 return null;
             }
 
@@ -105,12 +118,17 @@ class LatvijasPostsService
         $parcel = [
             'type'         => $type,
             'name_surname' => $order->first_name . ' ' . $order->last_name,
-            'phone'        => $order->phone,
             'email'        => $order->email,
             'country_id'   => $countryId,
-            'zipcode'      => $order->postal_code,
-            'sms_invite'   => 1,
+            'zipcode'      => $this->formatPostalCode($order->postal_code, $country),
         ];
+
+        $parcel['phone'] = preg_replace('/[^\d]/', '', $order->phone);
+
+        // SMS invite only for Latvia (other countries require local phone format for SMS)
+        if ($country === 'LV') {
+            $parcel['sms_invite'] = 1;
+        }
 
         if ($isLocker && $country === 'LV') {
             $parcel['station_id'] = $order->parcel_locker_id;
@@ -138,9 +156,9 @@ class LatvijasPostsService
             $response = Http::asForm()
                 ->timeout(15)
                 ->post(self::BASE_URL . '/parcelsDocumentsApi/stickers', [
-                    'secret'      => $this->secret,
-                    'size'        => '150x100',
-                    'parcels[0]'  => $tracking,
+                    'secret'  => $this->secret,
+                    'size'    => '150x100',
+                    'parcels' => [$tracking],
                 ]);
 
             if ($response->successful()) {
@@ -174,12 +192,49 @@ class LatvijasPostsService
         return null;
     }
 
+    private function notifyAdminOfFailure(Order $order, array $errors): void
+    {
+        $errorLines = implode("\n", array_map(
+            fn($field, $msg) => "  • {$field}: {$msg}",
+            array_keys($errors),
+            array_values($errors)
+        ));
+
+        \Illuminate\Support\Facades\Mail::raw(
+            "Latvijas Pasts label generation FAILED for order #{$order->id}\n\n" .
+            "Customer: {$order->first_name} {$order->last_name} ({$order->email})\n" .
+            "Destination: {$order->address}, {$order->city}, {$order->country}\n\n" .
+            "Errors:\n{$errorLines}\n\n" .
+            "Please create the label manually in the Latvijas Pasts portal.",
+            fn($msg) => $msg
+                ->to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))
+                ->subject("⚠ Label failed – Order #{$order->id}")
+        );
+    }
+
+    private function formatPostalCode(string $postal, string $country): string
+    {
+        $postal = trim($postal);
+
+        if ($country === 'LV') {
+            // LP expects LV-XXXX format
+            $digits = preg_replace('/[^\d]/', '', $postal);
+            if (strlen($digits) === 4) {
+                return 'LV-' . $digits;
+            }
+        }
+
+        return $postal;
+    }
+
     private function splitAddress(string $address): array
     {
-        // Try to split "Street name 12" or "Street name 12-5" into [street, house]
-        if (preg_match('/^(.+?)\s+(\d+\S*)$/', trim($address), $m)) {
+        // Strip city suffix after comma: "Sabiles iela 2, Kandava" -> "Sabiles iela 2"
+        $streetPart = trim(explode(',', $address)[0]);
+
+        if (preg_match('/^(.+?)\s+(\d+\S*)$/', $streetPart, $m)) {
             return [$m[1], $m[2]];
         }
-        return [$address, ''];
+        return [$streetPart, ''];
     }
 }
