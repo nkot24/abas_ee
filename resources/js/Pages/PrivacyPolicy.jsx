@@ -3,6 +3,7 @@ import { useCart } from '../useCart';
 import CartDrawer from '../CartDrawer';
 import { useLang } from '../i18n';
 import LangSwitcher from '../LangSwitcher';
+import axios from 'axios';
 
 const content = {
     lt: {
@@ -86,6 +87,14 @@ const content = {
         s8p2: 'Visais su Privatumo politika ar duomenų tvarkymu susijusiais klausimais ir problemomis spręsti, taip pat tais atvejais, kai klientas nori atsisakyti komercinių pranešimų gavimo arba visiškai ištrinti savo duomenis iš profilio, prašome susisiekti su mumis elektroniniu paštu',
         s8p3: 'Turite teisę bet kuriuo metu kreiptis į Valstybinę duomenų apsaugos inspekciją arba teismą, siekdami apsaugoti savo duomenis. Valstybinė duomenų apsaugos inspekcija yra valstybės institucija, į kurią galite kreiptis ir tuo atveju, kai jums reikalinga konsultacija ar pagalba asmens duomenų apsaugos klausimais.',
         footer: '© {year} SIA Linda-1. Visos teisės saugomos.',
+        s9title: 'Duomenų ištrynimo prašymas',
+        s9p1: 'Norėdami pasinaudoti teise į duomenų ištrynimą (BDAR 17 str.), užpildykite žemiau esančią formą. Įveskite el. pašto adresą, naudotą perkant, ir bet kurio savo užsakymo numerį patvirtinimui.',
+        s9email: 'El. paštas',
+        s9order: 'Užsakymo numeris',
+        s9submit: 'Prašyti ištrynimo',
+        s9success: 'Prašymas gautas. Jei duomenys rasti, gausite patvirtinimą el. paštu.',
+        s9error: 'Klaida. Bandykite dar kartą.',
+        s9sending: 'Siunčiama...',
     },
     en: {
         title: 'Privacy Policy',
@@ -168,6 +177,14 @@ const content = {
         s8p2: 'For the resolution of all questions and problems related to the Privacy Policy or data processing, as well as in cases where a customer wishes to opt out of receiving commercial communications or to completely delete their data from their profile, please contact us by email at',
         s8p3: 'You have the right to contact the Data State Inspectorate or a court at any time to protect your data. The Data State Inspectorate is a state authority that you can also contact when you need advice or assistance in connection with the protection of personal data.',
         footer: '© {year} SIA Linda-1. All rights reserved.',
+        s9title: 'Data Deletion Request',
+        s9p1: 'To exercise your right to erasure (GDPR Art. 17), fill in the form below. Enter the email address used when ordering and any one of your order numbers for verification.',
+        s9email: 'Email address',
+        s9order: 'Order number',
+        s9submit: 'Request deletion',
+        s9success: 'Request received. If your data was found, you will receive a confirmation by email.',
+        s9error: 'An error occurred. Please try again.',
+        s9sending: 'Sending...',
     },
 };
 
@@ -311,6 +328,11 @@ export default function PrivacyPolicy() {
                         <p className="mt-3">{c.s8p3}</p>
                     </Section>
 
+                    <Section title={c.s9title}>
+                        <p>{c.s9p1}</p>
+                        <DeletionForm c={c} />
+                    </Section>
+
                 </div>
 
                 <footer className="bg-gray-900 text-gray-400 text-xs text-center py-6 mt-12">
@@ -327,5 +349,66 @@ function Section({ title, children }) {
             <h2 className="text-base font-black uppercase tracking-widest text-gray-900 mb-3 pb-2 border-b border-gray-200">{title}</h2>
             <div className="space-y-2 text-sm">{children}</div>
         </div>
+    );
+}
+
+function DeletionForm({ c }) {
+    const [email, setEmail]       = useState('');
+    const [orderId, setOrderId]   = useState('');
+    const [status, setStatus]     = useState('idle'); // idle | sending | success | error
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setStatus('sending');
+        try {
+            await axios.post('/gdpr/delete', { email, order_id: parseInt(orderId, 10) });
+            setStatus('success');
+        } catch {
+            setStatus('error');
+        }
+    };
+
+    if (status === 'success') {
+        return (
+            <p className="mt-4 p-3 bg-green-50 border border-green-200 rounded text-green-800 text-sm">
+                {c.s9success}
+            </p>
+        );
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className="mt-4 space-y-3 max-w-sm">
+            <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider">{c.s9email}</label>
+                <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                />
+            </div>
+            <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider">{c.s9order}</label>
+                <input
+                    type="number"
+                    required
+                    min="1"
+                    value={orderId}
+                    onChange={e => setOrderId(e.target.value)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                />
+            </div>
+            {status === 'error' && (
+                <p className="text-red-600 text-xs">{c.s9error}</p>
+            )}
+            <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="bg-red-600 text-white text-sm font-semibold px-5 py-2 rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+            >
+                {status === 'sending' ? c.s9sending : c.s9submit}
+            </button>
+        </form>
     );
 }

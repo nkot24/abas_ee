@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\DataDeleted;
 use App\Mail\OrderConfirmed;
 use App\Mail\OrderPlaced;
 use App\Models\Order;
@@ -131,7 +132,7 @@ Route::get('/uzsakymas', function () {
     return Inertia::render('Checkout');
 });
 
-Route::get('/api/address-search', function (Request $request) {
+Route::middleware('throttle:address-search')->get('/api/address-search', function (Request $request) {
     $q       = $request->query('q', '');
     $country = strtolower($request->query('country', 'lv'));
     $type    = $request->query('type', 'address'); // 'address' or 'city'
@@ -181,7 +182,7 @@ Route::get('/lp/terminals', function () {
     return response()->json($data ?? []);
 });
 
-Route::post('/shipping/calculate', function (Request $request) {
+Route::middleware('throttle:shipping-calc')->post('/shipping/calculate', function (Request $request) {
     $request->validate([
         'items'   => 'required|array|min:1',
         'items.*.id'  => 'required|integer',
@@ -263,17 +264,13 @@ Route::post('/shipping/calculate', function (Request $request) {
     return response()->json(['cost' => $cost, 'weight' => round($totalWeight, 2)]);
 });
 
-Route::post('/uzsakymas', function (Request $request) {
+Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $request) {
     $data = $request->validate([
         'items'               => 'required|array|min:1',
         'items.*.id'          => 'required|integer',
-        'items.*.name'        => 'required|string',
-        'items.*.price'       => 'required|numeric|min:0',
-        'items.*.qty'         => 'required|integer|min:1',
-        'total'               => 'required|numeric|min:0',
-        'shipping_cost'       => 'required|numeric|min:0',
-        'parcel_locker_id'    => 'nullable|string',
-        'parcel_locker_name'  => 'nullable|string',
+        'items.*.qty'         => 'required|integer|min:1|max:99',
+        'parcel_locker_id'    => 'nullable|string|max:100',
+        'parcel_locker_name'  => 'nullable|string|max:255',
         'first_name'          => 'required|string|max:100',
         'last_name'           => 'required|string|max:100',
         'email'               => 'required|email|max:255',
@@ -281,12 +278,77 @@ Route::post('/uzsakymas', function (Request $request) {
         'address'             => 'required|string|max:255',
         'city'                => 'required|string|max:100',
         'postal_code'         => 'required|string|max:20',
-        'country'             => 'required|string|max:2',
+        'country'             => 'required|string|size:2',
         'lang'                => 'nullable|in:lt,en',
         'payment_method'      => 'required|in:paysera',
     ]);
 
-    $order = Order::create($data);
+    // Recalculate prices server-side — never trust client-sent prices
+    $ids      = array_column($data['items'], 'id');
+    $products = Product::where('active', true)->whereIn('id', $ids)->get()->keyBy('id');
+
+    if ($products->count() !== count(array_unique($ids))) {
+        return response()->json(['message' => 'One or more products are unavailable.'], 422);
+    }
+
+    $items = [];
+    $itemsTotal = 0;
+    foreach ($data['items'] as $item) {
+        $product = $products[$item['id']];
+        $items[] = [
+            'id'    => $product->id,
+            'name'  => $product->name,
+            'price' => (float) $product->price,
+            'qty'   => (int) $item['qty'],
+        ];
+        $itemsTotal += $product->price * $item['qty'];
+    }
+
+    // Recalculate shipping server-side using the same logic as /shipping/calculate
+    $BALTIC  = ['LT', 'LV', 'EE'];
+    $country = strtoupper($data['country']);
+    $method  = $data['parcel_locker_id'] ? 'locker' : 'courier';
+
+    if ($method === 'locker') {
+        $shippingCost = $country === 'LV' ? 2.50 : 3.05;
+    } else {
+        $totalWeight = 0;
+        $isBaltic    = in_array($country, $BALTIC);
+        foreach ($data['items'] as $item) {
+            $product      = $products[$item['id']];
+            $qty          = (int) $item['qty'];
+            $actualWeight = (float) ($product->weight ?? 5) * $qty;
+            if ($isBaltic) {
+                $totalWeight += $actualWeight;
+            } else {
+                $l = (float) ($product->length ?? 30);
+                $w = (float) ($product->width  ?? 30);
+                $h = (float) ($product->height ?? 30);
+                $totalWeight += max($actualWeight, ($l * $w * $h / 5000) * $qty);
+            }
+        }
+
+        $lvRates     = [[1,3.91],[5,5.50],[10,7.49],[20,9.73],[31.5,13.98],[50,17.15],[PHP_INT_MAX,17.15]];
+        $balticRates = [[1,5.20],[5,5.70],[10,6.50],[20,7.50],[31.5,8.50],[50,14.00],[PHP_INT_MAX,14.00]];
+        $euRates     = [[5,14.99],[10,18.99],[20,24.99],[31.5,32.99],[50,44.99],[70,59.99],[PHP_INT_MAX,79.99]];
+
+        $table = match(true) {
+            $country === 'LV'                => $lvRates,
+            in_array($country, ['LT','EE']) => $balticRates,
+            default                         => $euRates,
+        };
+        $shippingCost = end($table)[1];
+        foreach ($table as [$limit, $price]) {
+            if ($totalWeight <= $limit) { $shippingCost = $price; break; }
+        }
+    }
+
+    $order = Order::create([
+        ...$data,
+        'items'         => $items,
+        'total'         => round($itemsTotal, 2),
+        'shipping_cost' => $shippingCost,
+    ]);
 
     // Build Paysera payment URL — charge items total + shipping
     $grandTotal  = $order->total + $order->shipping_cost;
@@ -321,7 +383,6 @@ Route::post('/uzsakymas', function (Request $request) {
 
 // Paysera callback — called server-to-server when payment is confirmed
 Route::post('/paysera/callback', function (Request $request) {
-    \Illuminate\Support\Facades\Log::info('Paysera callback received', $request->all());
     try {
         $response = \WebToPay::validateAndParseData(
             $request->all(),
@@ -329,10 +390,12 @@ Route::post('/paysera/callback', function (Request $request) {
             env('PAYSERA_SIGN_PASSWORD')
         );
 
-        \Illuminate\Support\Facades\Log::info('Paysera validated', $response);
+        $orderId = $response['orderid'] ?? null;
+        $status  = $response['status']  ?? null;
+        \Illuminate\Support\Facades\Log::info("Paysera callback: order={$orderId} status={$status}");
 
-        if ($response['status'] == 1) {
-            $order = Order::find($response['orderid']);
+        if ($status == 1) {
+            $order = Order::find($orderId);
             if ($order && $order->status === 'pending') {
                 $order->update([
                     'status'     => 'paid',
@@ -340,30 +403,22 @@ Route::post('/paysera/callback', function (Request $request) {
                 ]);
                 app('shipping')->registerShipment($order);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
-                Mail::to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))->send(new OrderPlaced($order));
-                \Illuminate\Support\Facades\Log::info('Emails sent for order ' . $order->id);
+                Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
+                \Illuminate\Support\Facades\Log::info("Order {$order->id} paid, emails sent");
             }
         }
 
         return response('OK', 200);
     } catch (\Exception $e) {
         \Illuminate\Support\Facades\Log::error('Paysera callback error: ' . $e->getMessage());
-        return response('Error: ' . $e->getMessage(), 400);
+        return response('Error', 400);
     }
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class]);
 
-// Success page after payment
+// Success page after payment — order processing happens only via Paysera callback
 Route::get('/uzsakymas/sekmingai/{id}', function ($id) {
     $order = Order::findOrFail($id);
-
-    if ($order->status === 'pending') {
-        $order->update(['status' => 'paid']);
-        app('shipping')->registerShipment($order);
-        Mail::to($order->email)->send(new OrderConfirmed($order));
-        Mail::to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))->send(new OrderPlaced($order));
-    }
-
-    return Inertia::render('OrderSuccess', ['order' => $order->only('id', 'first_name', 'email', 'total')]);
+    return Inertia::render('OrderSuccess', ['order' => $order->only('id', 'first_name', 'email', 'total', 'status')]);
 });
 
 // Cancel page
@@ -373,4 +428,42 @@ Route::get('/privatuma-politika', function () {
 
 Route::get('/uzsakymas/atsaukta', function () {
     return Inertia::render('OrderCancelled');
+});
+
+// GDPR data deletion request
+Route::middleware('throttle:gdpr-delete')->post('/gdpr/delete', function (Request $request) {
+    $data = $request->validate([
+        'email'    => 'required|email|max:255',
+        'order_id' => 'required|integer',
+    ]);
+
+    // Verify the requester owns at least one order with this email + order ID combo
+    $verified = Order::where('email', $data['email'])
+        ->where('id', $data['order_id'])
+        ->where('anonymized', false)
+        ->exists();
+
+    if (!$verified) {
+        // Return the same response whether the order exists or not (prevents enumeration)
+        return response()->json(['message' => 'ok']);
+    }
+
+    $count = Order::where('email', $data['email'])
+        ->where('anonymized', false)
+        ->update([
+            'first_name'  => 'Deleted',
+            'last_name'   => 'User',
+            'email'       => 'deleted@deleted.invalid',
+            'phone'       => '000',
+            'address'     => 'Deleted',
+            'city'        => 'Deleted',
+            'postal_code' => '000',
+            'anonymized'  => true,
+        ]);
+
+    \Illuminate\Support\Facades\Log::info("GDPR deletion: {$count} orders anonymized for {$data['email']}");
+
+    Mail::to($data['email'])->send(new DataDeleted($count));
+
+    return response()->json(['message' => 'ok']);
 });

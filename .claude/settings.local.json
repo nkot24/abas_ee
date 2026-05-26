@@ -87,7 +87,11 @@
       "Bash(php -r ' *)",
       "WebSearch",
       "WebFetch(domain:express.pasts.lv)",
-      "WebFetch(domain:www.manspasts.lv)"
+      "WebFetch(domain:www.manspasts.lv)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\" -Depth 2 -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(grep -r \"include\\\\|require\\\\|file_get_contents.*\\\\$\" \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\routes\" --include=\"*.php\" -i)",
+      "Bash(grep -r 'eval\\\\|exec\\\\|$_GET\\\\|$_POST\\\\|$_SERVER\\\\|preg_replace.*\\\\/e' c:/Users/niksi/programming/abas_lt/app c:/Users/niksi/programming/abas_lt/routes)"
     ]
   }
 }
