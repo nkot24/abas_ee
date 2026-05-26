@@ -210,6 +210,10 @@ const translations = {
             nothingFound: 'Nieko nerasta',
             selectLockerError: 'Pasirinkite paštomatą',
             waitShipping: 'Palaukite kol bus apskaičiuotos pristatymo kainos.',
+            errorTitle: 'Mokėjimas nepavyko',
+            errorCancelled: 'Mokėjimas atšauktas. Jūsų krepšelis išsaugotas – galite bandyti dar kartą.',
+            errorPaymentInit: 'Nepavyko inicijuoti mokėjimo. Bandykite dar kartą.',
+            errorNetwork: 'Ryšio klaida. Patikrinkite internetą ir bandykite dar kartą.',
         },
         countries: {
             LT: 'Lietuva',
@@ -226,6 +230,8 @@ const translations = {
             orderNo: 'Užsakymo nr.',
             amount: 'Suma:',
             confirmSent: 'Patvirtinimas bus išsiųstas į',
+            pendingTitle: 'Mokėjimas apdorojamas...',
+            pendingNote: 'Mokėjimas dar apdorojamas. Patvirtinimas bus išsiųstas el. paštu.',
         },
         orderCancelled: {
             title: 'Mokėjimas atšauktas',
@@ -442,6 +448,10 @@ const translations = {
             nothingFound: 'Nothing found',
             selectLockerError: 'Please select a parcel locker',
             waitShipping: 'Please wait while shipping costs are being calculated.',
+            errorTitle: 'Payment failed',
+            errorCancelled: 'Payment was cancelled. Your cart has been saved — you can try again.',
+            errorPaymentInit: 'Could not initiate payment. Please try again.',
+            errorNetwork: 'Connection error. Check your internet connection and try again.',
         },
         countries: {
             LT: 'Lithuania',
@@ -458,6 +468,8 @@ const translations = {
             orderNo: 'Order no.',
             amount: 'Amount:',
             confirmSent: 'Confirmation will be sent to',
+            pendingTitle: 'Payment processing...',
+            pendingNote: 'Your payment is still being processed. A confirmation will be sent to your email.',
         },
         orderCancelled: {
             title: 'Payment cancelled',

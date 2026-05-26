@@ -351,34 +351,40 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
     ]);
 
     // Build Paysera payment URL — charge items total + shipping
-    $grandTotal  = $order->total + $order->shipping_cost;
-    $amountCents = (int) round($grandTotal * 100);
+    try {
+        $grandTotal  = $order->total + $order->shipping_cost;
+        $amountCents = (int) round($grandTotal * 100);
 
-    $params = \WebToPay::buildRequest([
-        'projectid'     => (int) env('PAYSERA_PROJECT_ID'),
-        'sign_password' => env('PAYSERA_SIGN_PASSWORD'),
-        'orderid'       => $order->id,
-        'amount'        => $amountCents,
-        'currency'      => 'EUR',
-        'country'       => strtoupper($order->country),
-        'accepturl'     => env('APP_URL') . '/uzsakymas/sekmingai/' . $order->id,
-        'cancelurl'     => env('APP_URL') . '/uzsakymas/atsaukta',
-        'callbackurl'   => env('APP_URL') . '/paysera/callback',
-        'test'          => env('PAYSERA_TEST', false) ? 1 : 0,
-        'p_firstname'   => $order->first_name,
-        'p_lastname'    => $order->last_name,
-        'p_email'       => $order->email,
-        'p_phone'       => $order->phone,
-        'p_street'      => $order->address,
-        'p_city'        => $order->city,
-        'p_zip'         => $order->postal_code,
-        'p_countrycode' => strtoupper($order->country),
-        'lang'          => 'LIT',
-    ]);
+        $params = \WebToPay::buildRequest([
+            'projectid'     => (int) env('PAYSERA_PROJECT_ID'),
+            'sign_password' => env('PAYSERA_SIGN_PASSWORD'),
+            'orderid'       => $order->id,
+            'amount'        => $amountCents,
+            'currency'      => 'EUR',
+            'country'       => strtoupper($order->country),
+            'accepturl'     => \Illuminate\Support\Facades\URL::signedRoute('order.success', ['id' => $order->id]),
+            'cancelurl'     => \Illuminate\Support\Facades\URL::signedRoute('order.cancel', ['id' => $order->id]),
+            'callbackurl'   => env('APP_URL') . '/paysera/callback',
+            'test'          => env('PAYSERA_TEST', false) ? 1 : 0,
+            'p_firstname'   => $order->first_name,
+            'p_lastname'    => $order->last_name,
+            'p_email'       => $order->email,
+            'p_phone'       => $order->phone,
+            'p_street'      => $order->address,
+            'p_city'        => $order->city,
+            'p_zip'         => $order->postal_code,
+            'p_countrycode' => strtoupper($order->country),
+            'lang'          => 'LIT',
+        ]);
 
-    $payseraUrl = \WebToPay::getPaymentUrl('LIT') . '?' . http_build_query($params);
+        $payseraUrl = \WebToPay::getPaymentUrl('LIT') . '?' . http_build_query($params);
 
-    return response()->json(['redirect' => $payseraUrl]);
+        return response()->json(['redirect' => $payseraUrl]);
+    } catch (\Exception $e) {
+        $order->delete();
+        \Illuminate\Support\Facades\Log::error('Paysera buildRequest failed: ' . $e->getMessage());
+        return response()->json(['message' => 'payment_init_failed'], 500);
+    }
 });
 
 // Paysera callback — called server-to-server when payment is confirmed
@@ -394,8 +400,9 @@ Route::post('/paysera/callback', function (Request $request) {
         $status  = $response['status']  ?? null;
         \Illuminate\Support\Facades\Log::info("Paysera callback: order={$orderId} status={$status}");
 
+        $order = Order::find($orderId);
+
         if ($status == 1) {
-            $order = Order::find($orderId);
             if ($order && $order->status === 'pending') {
                 $order->update([
                     'status'     => 'paid',
@@ -406,6 +413,12 @@ Route::post('/paysera/callback', function (Request $request) {
                 Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
                 \Illuminate\Support\Facades\Log::info("Order {$order->id} paid, emails sent");
             }
+        } elseif (in_array($status, [0, 2, 3])) {
+            // 0 = payment started but not complete, 2 = payment rejected, 3 = payment failed
+            if ($order && $order->status === 'pending') {
+                $order->delete();
+                \Illuminate\Support\Facades\Log::info("Order {$orderId} deleted after failed/rejected payment (status={$status})");
+            }
         }
 
         return response('OK', 200);
@@ -415,20 +428,27 @@ Route::post('/paysera/callback', function (Request $request) {
     }
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class]);
 
-// Success page after payment — order processing happens only via Paysera callback
-Route::get('/uzsakymas/sekmingai/{id}', function ($id) {
+// Success page after payment — requires valid signed URL from Paysera redirect
+Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
+    abort_unless($request->hasValidSignature(), 403);
     $order = Order::findOrFail($id);
     return Inertia::render('OrderSuccess', ['order' => $order->only('id', 'first_name', 'email', 'total', 'status')]);
-});
+})->name('order.success');
 
 // Cancel page
 Route::get('/privatuma-politika', function () {
     return Inertia::render('PrivacyPolicy');
 });
 
-Route::get('/uzsakymas/atsaukta', function () {
-    return Inertia::render('OrderCancelled');
-});
+// Paysera cancel redirect — delete the pending order and send user back to checkout
+Route::get('/uzsakymas/atsaukta/{id}', function (Request $request, $id) {
+    abort_unless($request->hasValidSignature(), 403);
+    $order = Order::find($id);
+    if ($order && $order->status === 'pending') {
+        $order->delete();
+    }
+    return redirect('/uzsakymas?error=cancelled');
+})->name('order.cancel');
 
 // GDPR data deletion request
 Route::middleware('throttle:gdpr-delete')->post('/gdpr/delete', function (Request $request) {

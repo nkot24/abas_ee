@@ -279,6 +279,7 @@ export default function Checkout() {
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors]         = useState({});
     const [serverError, setServerError] = useState(null);
+    const [toast, setToast] = useState(null);
     const [selectedLocker, setSelectedLocker] = useState(null);
     const [deliveryMethod, setDeliveryMethod] = useState('locker');
     const [shippingCost, setShippingCost] = useState(null);
@@ -296,6 +297,15 @@ export default function Checkout() {
             .then(data => setEnNames(prev => ({ ...prev, ...data })))
             .catch(() => {});
     }, [lang, items]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const err = params.get('error');
+        if (err === 'cancelled') {
+            setToast(t.checkout.errorCancelled ?? 'Mokėjimas atšauktas. Jūsų krepšelis išsaugotas – galite bandyti dar kartą.');
+            window.history.replaceState({}, '', '/uzsakymas');
+        }
+    }, []);
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
@@ -440,13 +450,12 @@ export default function Checkout() {
             });
             const data = await res.json();
             if (res.ok && data.redirect) {
-                clearCart();
                 window.location.href = data.redirect;
             } else {
-                setServerError(data.message || JSON.stringify(data));
+                setServerError(t.checkout.errorPaymentInit ?? 'Nepavyko inicijuoti mokėjimo. Bandykite dar kartą.');
             }
-        } catch (err) {
-            setServerError(err.message);
+        } catch {
+            setServerError(t.checkout.errorNetwork ?? 'Ryšio klaida. Patikrinkite internetą ir bandykite dar kartą.');
         } finally {
             setSubmitting(false);
         }
@@ -456,6 +465,26 @@ export default function Checkout() {
 
     return (
         <>
+        {toast && (
+            <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[200] w-full max-w-md px-4">
+                <div className="bg-white border border-red-200 rounded-xl shadow-2xl p-5 flex items-start gap-4">
+                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center shrink-0">
+                        <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        </svg>
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-900 mb-1">{t.checkout.errorTitle ?? 'Mokėjimas nepavyko'}</p>
+                        <p className="text-sm text-gray-600">{toast}</p>
+                    </div>
+                    <button onClick={() => setToast(null)} className="text-gray-400 hover:text-gray-600 shrink-0 mt-0.5">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        )}
         {showNoShipping && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
                 <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-8 text-center">
