@@ -184,84 +184,26 @@ Route::get('/lp/terminals', function () {
 
 Route::middleware('throttle:shipping-calc')->post('/shipping/calculate', function (Request $request) {
     $request->validate([
-        'items'   => 'required|array|min:1',
+        'items'       => 'required|array|min:1',
         'items.*.id'  => 'required|integer',
         'items.*.qty' => 'required|integer|min:1',
-        'country' => 'required|string|max:2',
-        'method'  => 'required|in:locker,courier',
+        'country'     => 'required|string|max:2',
+        'method'      => 'required|in:locker,courier',
     ]);
 
-    $BALTIC = ['LT', 'LV', 'EE'];
-    $country = strtoupper($request->country);
+    $ids      = array_column($request->items, 'id');
+    $products = Product::whereIn('id', $ids)->get()->keyBy('id');
 
-    if ($request->method === 'locker') {
-        $rate = $country === 'LV' ? 2.50 : 3.05;
-        return response()->json(['cost' => $rate]);
+    $cost   = \App\Services\ShippingCalculator::calculate($request->country, $request->method, $request->items, $products);
+    $weight = \App\Services\ShippingCalculator::calcWeight($request->country, $request->items, $products);
+
+    try {
+        $lockerEligible = \App\Services\ShippingCalculator::lockerEligible($request->items, $products);
+    } catch (\Throwable) {
+        $lockerEligible = true;
     }
 
-    // Courier: Baltic uses actual weight; EU uses chargeable (max of actual vs volumetric)
-    $totalWeight = 0;
-    $isBaltic = in_array($country, $BALTIC);
-
-    foreach ($request->items as $item) {
-        $product = Product::find($item['id']);
-        if (!$product) continue;
-
-        $qty = $item['qty'];
-        $actualWeight = (float) ($product->weight ?? 5) * $qty;
-
-        if ($isBaltic) {
-            $totalWeight += $actualWeight;
-        } else {
-            // Volumetric weight = L×W×H / 5000 (cm → kg)
-            $l = (float) ($product->length ?? 30);
-            $w = (float) ($product->width  ?? 30);
-            $h = (float) ($product->height ?? 30);
-            $volumetric = ($l * $w * $h / 5000) * $qty;
-            $totalWeight += max($actualWeight, $volumetric);
-        }
-    }
-
-    // Rate tables from LP contract (excl. VAT, excl. oversized surcharge)
-    $lvRates = [
-        [1,    3.91],
-        [5,    5.50],
-        [10,   7.49],
-        [20,   9.73],
-        [31.5, 13.98],
-        [50,  17.15],
-        [PHP_INT_MAX, 17.15],
-    ];
-    $balticRates = [
-        [1,    5.20],
-        [5,    5.70],
-        [10,   6.50],
-        [20,   7.50],
-        [31.5, 8.50],
-        [50,  14.00],
-        [PHP_INT_MAX, 14.00],
-    ];
-    $euRates = [
-        [5,   14.99],
-        [10,  18.99],
-        [20,  24.99],
-        [31.5, 32.99],
-        [50,  44.99],
-        [70,  59.99],
-        [PHP_INT_MAX, 79.99],
-    ];
-
-    $table = match(true) {
-        $country === 'LV'                    => $lvRates,
-        in_array($country, ['LT', 'EE'])     => $balticRates,
-        default                              => $euRates,
-    };
-    $cost  = end($table)[1];
-    foreach ($table as [$limit, $price]) {
-        if ($totalWeight <= $limit) { $cost = $price; break; }
-    }
-
-    return response()->json(['cost' => $cost, 'weight' => round($totalWeight, 2)]);
+    return response()->json(['cost' => $cost, 'weight' => round($weight, 2), 'locker_eligible' => $lockerEligible]);
 });
 
 Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $request) {
@@ -304,44 +246,9 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
         $itemsTotal += $product->price * $item['qty'];
     }
 
-    // Recalculate shipping server-side using the same logic as /shipping/calculate
-    $BALTIC  = ['LT', 'LV', 'EE'];
-    $country = strtoupper($data['country']);
-    $method  = $data['parcel_locker_id'] ? 'locker' : 'courier';
-
-    if ($method === 'locker') {
-        $shippingCost = $country === 'LV' ? 2.50 : 3.05;
-    } else {
-        $totalWeight = 0;
-        $isBaltic    = in_array($country, $BALTIC);
-        foreach ($data['items'] as $item) {
-            $product      = $products[$item['id']];
-            $qty          = (int) $item['qty'];
-            $actualWeight = (float) ($product->weight ?? 5) * $qty;
-            if ($isBaltic) {
-                $totalWeight += $actualWeight;
-            } else {
-                $l = (float) ($product->length ?? 30);
-                $w = (float) ($product->width  ?? 30);
-                $h = (float) ($product->height ?? 30);
-                $totalWeight += max($actualWeight, ($l * $w * $h / 5000) * $qty);
-            }
-        }
-
-        $lvRates     = [[1,3.91],[5,5.50],[10,7.49],[20,9.73],[31.5,13.98],[50,17.15],[PHP_INT_MAX,17.15]];
-        $balticRates = [[1,5.20],[5,5.70],[10,6.50],[20,7.50],[31.5,8.50],[50,14.00],[PHP_INT_MAX,14.00]];
-        $euRates     = [[5,14.99],[10,18.99],[20,24.99],[31.5,32.99],[50,44.99],[70,59.99],[PHP_INT_MAX,79.99]];
-
-        $table = match(true) {
-            $country === 'LV'                => $lvRates,
-            in_array($country, ['LT','EE']) => $balticRates,
-            default                         => $euRates,
-        };
-        $shippingCost = end($table)[1];
-        foreach ($table as [$limit, $price]) {
-            if ($totalWeight <= $limit) { $shippingCost = $price; break; }
-        }
-    }
+    // Recalculate shipping server-side from DB rates
+    $method       = $data['parcel_locker_id'] ? 'locker' : 'courier';
+    $shippingCost = \App\Services\ShippingCalculator::calculate($data['country'], $method, $data['items'], $products);
 
     $order = Order::create([
         ...$data,

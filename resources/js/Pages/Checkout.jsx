@@ -285,6 +285,8 @@ export default function Checkout() {
     const [shippingCost, setShippingCost] = useState(null);
     const [shippingWeight, setShippingWeight] = useState(null);
     const [shippingLoading, setShippingLoading] = useState(false);
+    const [lockerEligible, setLockerEligible] = useState(false);
+    const fetchIdRef = useRef(0);
     const [enNames, setEnNames] = useState({});
     const { t, lang } = useLang();
 
@@ -340,16 +342,27 @@ export default function Checkout() {
         setErrors(e => { const n = { ...e }; delete n[field]; return n; });
     };
 
-    // When country changes reset delivery method if locker not available
+    // Auto-switch away from locker when it becomes unavailable
     useEffect(() => {
-        if (!LP_LOCKER_COUNTRIES.includes(form.country) && deliveryMethod === 'locker') {
+        if ((!LP_LOCKER_COUNTRIES.includes(form.country) || !lockerEligible) && deliveryMethod === 'locker') {
             setDeliveryMethod('courier');
         }
-    }, [form.country]);
+    }, [form.country, lockerEligible, deliveryMethod]);
 
     const fetchShipping = useCallback(() => {
         if (!items.length || !form.country) return;
-        if (deliveryMethod === 'pickup') { setShippingCost(0); setShippingWeight(null); return; }
+
+        if (deliveryMethod === 'pickup') {
+            fetchIdRef.current++;          // invalidate any in-flight price fetch
+            setShippingCost(0);
+            setShippingWeight(null);
+            setShippingLoading(false);
+            // lockerEligible stays as-is — it was set by the last real fetch
+            return;
+        }
+
+        const myId = ++fetchIdRef.current;
+        setShippingCost(null);
         setShippingLoading(true);
         fetch('/shipping/calculate', {
             method: 'POST',
@@ -365,8 +378,21 @@ export default function Checkout() {
             }),
         })
             .then(r => r.json())
-            .then(d => { setShippingCost(d.cost); setShippingWeight(d.weight ?? null); })
-            .finally(() => setShippingLoading(false));
+            .then(d => {
+                if (myId !== fetchIdRef.current) return;
+                setShippingCost(d.cost ?? null);
+                setShippingWeight(d.weight ?? null);
+                setLockerEligible(d.locker_eligible ?? false);
+            })
+            .catch(() => {
+                if (myId !== fetchIdRef.current) return;
+                setShippingCost(null);
+                setLockerEligible(false);
+            })
+            .finally(() => {
+                if (myId !== fetchIdRef.current) return;
+                setShippingLoading(false);
+            });
     }, [items, form.country, deliveryMethod]);
 
     useEffect(() => {
@@ -690,7 +716,7 @@ export default function Checkout() {
                                         {/* Delivery method */}
                                         <SectionCard title={t.checkout.deliveryMethod}>
                                             <div className="space-y-2">
-                                                {LP_LOCKER_COUNTRIES.includes(form.country) && (
+                                                {LP_LOCKER_COUNTRIES.includes(form.country) && lockerEligible && (
                                                     <label className={`flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer transition-all ${deliveryMethod === 'locker' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}>
                                                         <div className="flex items-center gap-3">
                                                             <input type="radio" name="delivery" value="locker" checked={deliveryMethod === 'locker'} onChange={() => setDeliveryMethod('locker')} className="accent-red-600" />
@@ -853,7 +879,7 @@ export default function Checkout() {
                                         <div className="flex justify-between text-gray-500">
                                             <span>{t.checkout.shipping} {step === 2 ? `(${deliveryLabel})` : ''}</span>
                                             <span className="font-semibold text-gray-700">
-                                                {step === 1 ? '—' : shippingLoading ? '...' : shippingCost != null ? `${shippingCost.toFixed(2)} €` : '—'}
+                                                {step === 1 ? '—' : deliveryMethod === 'pickup' ? (t.checkout.free ?? 'Nemokamai') : shippingLoading ? '...' : shippingCost != null ? `${shippingCost.toFixed(2)} €` : '—'}
                                             </span>
                                         </div>
                                     </div>

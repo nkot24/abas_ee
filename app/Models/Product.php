@@ -24,10 +24,12 @@ class Product extends Model
         'thickness',
         'weight',
         'active',
+        'locker_eligible',
     ];
 
     protected $casts = [
-        'active'    => 'boolean',
+        'active'          => 'boolean',
+        'locker_eligible' => 'boolean',
         'price'     => 'decimal:2',
         'category'  => 'array',
         'height'    => 'integer',

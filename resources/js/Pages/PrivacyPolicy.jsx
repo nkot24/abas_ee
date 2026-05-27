@@ -3,7 +3,6 @@ import { useCart } from '../useCart';
 import CartDrawer from '../CartDrawer';
 import { useLang } from '../i18n';
 import LangSwitcher from '../LangSwitcher';
-import axios from 'axios';
 
 const content = {
     lt: {
@@ -361,7 +360,12 @@ function DeletionForm({ c }) {
         e.preventDefault();
         setStatus('sending');
         try {
-            await axios.post('/gdpr/delete', { email, order_id: parseInt(orderId, 10) });
+            const res = await fetch('/gdpr/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '' },
+                body: JSON.stringify({ email, order_id: parseInt(orderId, 10) }),
+            });
+            if (!res.ok) throw new Error();
             setStatus('success');
         } catch {
             setStatus('error');
