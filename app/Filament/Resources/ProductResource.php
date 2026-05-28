@@ -85,6 +85,28 @@ class ProductResource extends Resource
                     ->label('Badge (e.g. Popular, New)')
                     ->maxLength(50)
                     ->nullable(),
+
+                Toggle::make('on_sale')
+                    ->label('On sale')
+                    ->default(false)
+                    ->live()
+                    ->columnSpanFull(),
+
+                TextInput::make('sale_price')
+                    ->label('Sale price (€)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->nullable()
+                    ->hidden(fn ($get) => !$get('on_sale')),
+
+                TextInput::make('sale_percent')
+                    ->label('Discount (%)')
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(99)
+                    ->nullable()
+                    ->suffix('%')
+                    ->hidden(fn ($get) => !$get('on_sale')),
             ])->columns(2),
 
             Section::make('Specifications')->schema([
@@ -164,6 +186,15 @@ class ProductResource extends Resource
                 IconColumn::make('active')
                     ->label('Active')
                     ->boolean(),
+
+                IconColumn::make('on_sale')
+                    ->label('Sale')
+                    ->boolean(),
+
+                TextColumn::make('sale_price')
+                    ->label('Sale price')
+                    ->suffix(' €')
+                    ->default('—'),
             ])
             ->filters([])
             ->recordActions([

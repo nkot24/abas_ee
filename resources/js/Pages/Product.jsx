@@ -123,11 +123,18 @@ export default function Product({ product }) {
                                         </svg>
                                     </div>
                                 )}
-                                {product.badge && (
-                                    <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide">
-                                        {product.badge}
-                                    </span>
-                                )}
+                                <div className="absolute top-4 left-4 flex flex-col gap-1.5">
+                                    {product.badge && (
+                                        <span className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide">
+                                            {product.badge}
+                                        </span>
+                                    )}
+                                    {product.on_sale && (
+                                        <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide">
+                                            {product.sale_percent ? `-${product.sale_percent}%` : 'SALE'}
+                                        </span>
+                                    )}
+                                </div>
                                 {images.length > 1 && (
                                     <>
                                         <button
@@ -182,9 +189,23 @@ export default function Product({ product }) {
                             <h1 className="text-3xl font-black text-gray-900 mt-2 mb-4 leading-tight">{lang === 'en' && product.name_en ? product.name_en : product.name}</h1>
                             <div className="w-12 h-1 bg-red-600 mb-6 rounded-full" />
 
-                            <p className="text-4xl font-black text-red-600 mb-8">
-                                {product.price} <span className="text-lg font-normal text-gray-400">€</span>
-                            </p>
+                            {product.on_sale && (product.sale_price || product.sale_percent) ? (
+                                <div className="mb-8">
+                                    <div className="flex items-center gap-3 mb-1">
+                                        <span className="text-xl line-through text-gray-400">{product.price} €</span>
+                                        <span className="text-sm font-bold text-orange-500 bg-orange-50 px-2 py-0.5 rounded">
+                                            {product.sale_percent ? `-${product.sale_percent}%` : 'SALE'}
+                                        </span>
+                                    </div>
+                                    <p className="text-4xl font-black text-red-600">
+                                        {product.sale_price ?? (product.price * (1 - product.sale_percent / 100)).toFixed(2)} <span className="text-lg font-normal text-gray-400">€</span>
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-4xl font-black text-red-600 mb-8">
+                                    {product.price} <span className="text-lg font-normal text-gray-400">€</span>
+                                </p>
+                            )}
 
                             {product.description && (
                                 <p className="text-gray-600 leading-relaxed mb-6">

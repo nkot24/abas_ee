@@ -376,11 +376,18 @@ export default function Products({ products = [] }) {
                                             <a href={`/produktai/${product.id}`} className="block flex-1">
                                                 <div className="relative h-64 overflow-hidden">
                                                     <ProductImage src={product.main_image_url} />
-                                                    {product.badge && (
-                                                        <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
-                                                            {product.badge}
-                                                        </span>
-                                                    )}
+                                                    <div className="absolute top-3 left-3 flex flex-col gap-1">
+                                                        {product.badge && (
+                                                            <span className="bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
+                                                                {product.badge}
+                                                            </span>
+                                                        )}
+                                                        {product.on_sale && (
+                                                            <span className="bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide">
+                                                                {product.sale_percent ? `-${product.sale_percent}%` : 'SALE'}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     {product.material && product.material !== null && (
                                                         <span className="absolute top-3 right-3 bg-gray-900/70 text-white text-xs px-2 py-1 rounded-sm">
                                                             {t.product.materials[product.material] ?? product.material}
@@ -397,9 +404,20 @@ export default function Products({ products = [] }) {
                                                 </div>
                                             </a>
                                             <div className="px-4 pb-4">
-                                                <p className="text-2xl font-black text-red-600 mb-3">
-                                                    {product.price} <span className="text-sm font-normal text-gray-400">€</span>
-                                                </p>
+                                                {product.on_sale && (product.sale_price || product.sale_percent) ? (
+                                                    <div className="mb-3">
+                                                        <div className="flex items-center gap-2 mb-0.5">
+                                                            <span className="text-sm line-through text-gray-400">{product.price} €</span>
+                                                        </div>
+                                                        <p className="text-2xl font-black text-red-600">
+                                                            {product.sale_price ?? (product.price * (1 - product.sale_percent / 100)).toFixed(2)} <span className="text-sm font-normal text-gray-400">€</span>
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-2xl font-black text-red-600 mb-3">
+                                                        {product.price} <span className="text-sm font-normal text-gray-400">€</span>
+                                                    </p>
+                                                )}
                                                 <button
                                                     onClick={() => { addItem(product); setCartOpen(true); }}
                                                     className="w-full py-2.5 bg-gray-900 hover:bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-200"

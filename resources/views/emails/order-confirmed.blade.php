@@ -7,9 +7,13 @@
 </head>
 @php
 $en = ($order->lang ?? 'lt') === 'en';
-$delivery = $order->parcel_locker_name
-    ? ($en ? 'Omniva Parcel Locker' : 'Omniva paštomatas')
-    : ($en ? 'Courier' : 'Kurjeris');
+$isLocker  = !empty($order->parcel_locker_id);
+$isPickup  = !$isLocker && !empty($order->parcel_locker_name);
+$delivery  = $isLocker
+    ? ($en ? 'Latvijas Pasts locker' : 'Latvijas Pasts pakomāts')
+    : ($isPickup
+        ? ($en ? 'Pickup on site' : 'Atsiėmimas vietoje')
+        : ($en ? 'Courier' : 'Kurjeris'));
 @endphp
 <body style="margin:0;padding:0;background:#f5f5f5;font-family:'Segoe UI',Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 0;">
@@ -124,9 +128,13 @@ $delivery = $order->parcel_locker_name
                     {{ $order->city }}, {{ $order->postal_code }}<br>
                     {{ $order->country }}
                   </p>
-                  @if($order->parcel_locker_name)
+                  @if($isLocker)
                   <p style="margin:8px 0 0;font-size:13px;color:#555;">
-                    📦 <strong>{{ $en ? 'Omniva parcel locker' : 'Omniva paštomatas' }}:</strong><br>{{ $order->parcel_locker_name }}
+                    📦 <strong>{{ $en ? 'Latvijas Pasts locker' : 'Latvijas Pasts pakomāts' }}:</strong><br>{{ $order->parcel_locker_name }}
+                  </p>
+                  @elseif($isPickup)
+                  <p style="margin:8px 0 0;font-size:13px;color:#555;">
+                    🏭 <strong>{{ $en ? 'Pickup address' : 'Atsiėmimo adresas' }}:</strong><br>{{ $order->parcel_locker_name }}
                   </p>
                   @endif
                 </td>

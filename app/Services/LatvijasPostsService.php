@@ -47,6 +47,8 @@ class LatvijasPostsService
             $internalId = 'order' . $order->id;
             $parcel     = $this->buildParcel($order, $countryId);
 
+            Log::info('LatvijasPassts: registering shipment for order ' . $order->id, ['parcel' => $parcel]);
+
             $response = Http::asForm()
                 ->timeout(15)
                 ->post(self::BASE_URL . '/parcelsApi/create', [
@@ -104,16 +106,31 @@ class LatvijasPostsService
 
     private function buildParcel(Order $order, int $countryId): array
     {
-        $country = strtoupper($order->country);
+        $country  = strtoupper($order->country);
         $isLocker = $order->parcel_locker_id !== null;
 
         [$street, $house] = $this->splitAddress($order->address);
 
         $type = match (true) {
-            $country === 'LV'              => 'Ie',
+            $country === 'LV'               => 'Ie',
             in_array($country, ['LT','EE']) => 'Be',
-            default                         => 'Ems',
+            default                          => 'Ems',
         };
+
+        // Calculate weight and bounding-box dimensions from ordered products
+        $productIds = array_column($order->items, 'id');
+        $products   = \App\Models\Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        $totalWeight = 0.0;
+        $maxL = 0.0; $maxW = 0.0; $maxH = 0.0;
+        foreach ($order->items as $item) {
+            $product = $products[$item['id']] ?? null;
+            $qty     = (int) $item['qty'];
+            $totalWeight += (float) ($product?->weight ?? 5) * $qty;
+            $maxL = max($maxL, (float) ($product?->length ?? 30));
+            $maxW = max($maxW, (float) ($product?->width  ?? 30));
+            $maxH = max($maxH, (float) ($product?->height ?? 30));
+        }
 
         $parcel = [
             'type'         => $type,
@@ -121,6 +138,11 @@ class LatvijasPostsService
             'email'        => $order->email,
             'country_id'   => $countryId,
             'zipcode'      => $this->formatPostalCode($order->postal_code, $country),
+            // Weight in kg, dimensions in metres (products store cm)
+            'package_weight' => number_format($totalWeight, 3, '.', ''),
+            'length'         => number_format($maxL / 100, 3, '.', ''),
+            'width'          => number_format($maxW / 100, 3, '.', ''),
+            'height'         => number_format($maxH / 100, 3, '.', ''),
         ];
 
         $parcel['phone'] = preg_replace('/[^\d]/', '', $order->phone);

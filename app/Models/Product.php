@@ -25,11 +25,17 @@ class Product extends Model
         'weight',
         'active',
         'locker_eligible',
+        'on_sale',
+        'sale_price',
+        'sale_percent',
     ];
 
     protected $casts = [
         'active'          => 'boolean',
         'locker_eligible' => 'boolean',
+        'on_sale'         => 'boolean',
+        'sale_price'      => 'decimal:2',
+        'sale_percent'    => 'integer',
         'price'     => 'decimal:2',
         'category'  => 'array',
         'height'    => 'integer',

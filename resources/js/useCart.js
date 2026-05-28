@@ -23,11 +23,16 @@ export function useCart() {
             if (existing) {
                 return prev.map(i => i.id === product.id ? { ...i, qty: i.qty + qty } : i);
             }
+            const effectivePrice = product.on_sale && product.sale_price
+                ? parseFloat(product.sale_price)
+                : product.on_sale && product.sale_percent
+                    ? parseFloat((product.price * (1 - product.sale_percent / 100)).toFixed(2))
+                    : product.price;
             return [...prev, {
                 id:      product.id,
                 name:    product.name,
                 name_en: product.name_en ?? null,
-                price:   product.price,
+                price:   effectivePrice,
                 image:   product.main_image_url ?? null,
                 qty,
             }];

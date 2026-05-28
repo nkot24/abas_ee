@@ -51,7 +51,7 @@ function SectionCard({ title, children }) {
 
 function Field({ label, error, half, children }) {
     return (
-        <div className={half ? 'sm:col-span-1' : 'sm:col-span-2'}>
+        <div className={half ? 'sm:col-span-1' : 'col-span-2'}>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{label}</label>
             {children}
             {error && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><span>⚠</span>{error}</p>}
@@ -273,7 +273,7 @@ function StepIndicator({ step }) {
 }
 
 export default function Checkout() {
-    const { items, clearCart, total } = useCart();
+    const { items, clearCart, removeItem, updateQty, total } = useCart();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
@@ -414,6 +414,7 @@ export default function Checkout() {
             if (phoneErr) e.phone = phoneErr;
         }
         if (!form.address.trim())     e.address     = t.checkout.required;
+        if (!form.city.trim())        e.city        = t.checkout.required;
         if (!form.postal_code.trim()) {
             e.postal_code = t.checkout.required;
         } else {
@@ -851,7 +852,7 @@ export default function Checkout() {
 
                                     <div className="px-6 py-4 space-y-4 max-h-72 overflow-y-auto">
                                         {items.map(item => (
-                                            <div key={item.id} className="flex items-center gap-3">
+                                            <div key={item.id} className="flex items-start gap-3">
                                                 <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
                                                     {item.image
                                                         ? <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -864,7 +865,14 @@ export default function Checkout() {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2">{lang === 'en' ? (item.name_en || enNames[item.id] || item.name) : item.name}</p>
-                                                    <p className="text-xs text-gray-400 mt-0.5">× {item.qty}</p>
+                                                    <div className="flex items-center gap-1 mt-1.5">
+                                                        <button type="button" onClick={() => updateQty(item.id, item.qty - 1)} className="w-5 h-5 rounded border border-gray-200 text-gray-500 hover:border-red-400 hover:text-red-500 flex items-center justify-center text-xs leading-none">−</button>
+                                                        <span className="text-xs text-gray-600 w-5 text-center">{item.qty}</span>
+                                                        <button type="button" onClick={() => updateQty(item.id, item.qty + 1)} className="w-5 h-5 rounded border border-gray-200 text-gray-500 hover:border-red-400 hover:text-red-500 flex items-center justify-center text-xs leading-none">+</button>
+                                                        <button type="button" onClick={() => removeItem(item.id)} className="ml-1 text-gray-300 hover:text-red-500 transition-colors">
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <p className="text-sm font-bold text-gray-900 flex-shrink-0">{(item.price * item.qty).toFixed(2)} €</p>
                                             </div>

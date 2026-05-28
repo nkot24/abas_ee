@@ -95,7 +95,10 @@
       "PowerShell(cd \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\"; php artisan tinker --execute=\"App\\\\Models\\\\ShippingRate::all\\(\\)->groupBy\\('country_group'\\)->map\\(fn\\(\\\\$g\\) => \\\\$g->count\\(\\)\\)->toArray\\(\\)\" 2>&1 | Select-Object -Last 5)",
       "PowerShell(cd \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\"; php artisan tinker --execute=\"foreach\\(['lv','baltic'] as \\\\$g\\){foreach\\(['locker','courier'] as \\\\$m\\){Cache::forget\\('shipping_rates_'.\\\\$g.'_'.\\\\$m\\);}} echo 'cache cleared';\" 2>&1)",
       "PowerShell(cd \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\"; npm run build 2>&1 | Select-Object -First 50 | Where-Object { $_ -match \"error|Error|warning|Warning|Cannot|failed\" })",
-      "PowerShell(Get-Content \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\storage\\\\logs\\\\laravel.log\" -Tail 200 | Where-Object { $_ -match \"^\\\\[\" } | Select-Object -Last 10)"
+      "PowerShell(Get-Content \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\storage\\\\logs\\\\laravel.log\" -Tail 200 | Where-Object { $_ -match \"^\\\\[\" } | Select-Object -Last 10)",
+      "Bash(Get-Content \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\storage\\\\logs\\\\laravel.log\" -Tail 50)",
+      "Bash(php -r \"echo app\\(\\)->version\\(\\);\")",
+      "Bash(python -c ' *)"
     ]
   }
 }

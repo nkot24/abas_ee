@@ -9,7 +9,6 @@ use App\Models\Product;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -200,7 +199,7 @@ Route::middleware('throttle:shipping-calc')->post('/shipping/calculate', functio
     try {
         $lockerEligible = \App\Services\ShippingCalculator::lockerEligible($request->items, $products);
     } catch (\Throwable) {
-        $lockerEligible = true;
+        $lockerEligible = false;
     }
 
     return response()->json(['cost' => $cost, 'weight' => round($weight, 2), 'locker_eligible' => $lockerEligible]);
@@ -237,18 +236,24 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
     $itemsTotal = 0;
     foreach ($data['items'] as $item) {
         $product = $products[$item['id']];
+        $price = $product->on_sale && $product->sale_price
+            ? (float) $product->sale_price
+            : ($product->on_sale && $product->sale_percent
+                ? round((float) $product->price * (1 - $product->sale_percent / 100), 2)
+                : (float) $product->price);
         $items[] = [
             'id'    => $product->id,
             'name'  => $product->name,
-            'price' => (float) $product->price,
+            'price' => $price,
             'qty'   => (int) $item['qty'],
         ];
-        $itemsTotal += $product->price * $item['qty'];
+        $itemsTotal += $price * $item['qty'];
     }
 
     // Recalculate shipping server-side from DB rates
+    $isPickup     = empty($data['parcel_locker_id']) && !empty($data['parcel_locker_name']);
     $method       = $data['parcel_locker_id'] ? 'locker' : 'courier';
-    $shippingCost = \App\Services\ShippingCalculator::calculate($data['country'], $method, $data['items'], $products);
+    $shippingCost = $isPickup ? 0 : \App\Services\ShippingCalculator::calculate($data['country'], $method, $data['items'], $products);
 
     $order = Order::create([
         ...$data,
@@ -315,7 +320,8 @@ Route::post('/paysera/callback', function (Request $request) {
                     'status'     => 'paid',
                     'payment_id' => $response['payment'] ?? null,
                 ]);
-                app('shipping')->registerShipment($order);
+                $isPickup = empty($order->parcel_locker_id) && !empty($order->parcel_locker_name);
+                if (!$isPickup) app('shipping')->registerShipment($order);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
                 Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
                 \Illuminate\Support\Facades\Log::info("Order {$order->id} paid, emails sent");
@@ -335,10 +341,34 @@ Route::post('/paysera/callback', function (Request $request) {
     }
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class]);
 
-// Success page after payment — requires valid signed URL from Paysera redirect
 Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
-    abort_unless($request->hasValidSignature(), 403);
     $order = Order::findOrFail($id);
+
+    // Fallback: process payment data from the redirect URL if the server-to-server
+    // callback couldn't reach us (e.g. local dev on localhost).
+    if ($order->status === 'pending' && $request->has('data') && $request->has('ss1')) {
+        try {
+            $response = \WebToPay::validateAndParseData(
+                $request->only(['data', 'ss1', 'ss2']),
+                (int) env('PAYSERA_PROJECT_ID'),
+                env('PAYSERA_SIGN_PASSWORD')
+            );
+            if (($response['status'] ?? null) == 1) {
+                $order->update([
+                    'status'     => 'paid',
+                    'payment_id' => $response['payment'] ?? null,
+                ]);
+                $isPickup = empty($order->parcel_locker_id) && !empty($order->parcel_locker_name);
+                if (!$isPickup) app('shipping')->registerShipment($order);
+                Mail::to($order->email)->send(new OrderConfirmed($order));
+                Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
+                $order->refresh();
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('AcceptUrl payment fallback failed: ' . $e->getMessage());
+        }
+    }
+
     return Inertia::render('OrderSuccess', ['order' => $order->only('id', 'first_name', 'email', 'total', 'status')]);
 })->name('order.success');
 
@@ -349,7 +379,7 @@ Route::get('/privatuma-politika', function () {
 
 // Paysera cancel redirect — delete the pending order and send user back to checkout
 Route::get('/uzsakymas/atsaukta/{id}', function (Request $request, $id) {
-    abort_unless($request->hasValidSignature(), 403);
+    abort_unless($request->hasValidSignatureWhileIgnoring(['data', 'ss1', 'ss2', 'lang']), 403);
     $order = Order::find($id);
     if ($order && $order->status === 'pending') {
         $order->delete();
