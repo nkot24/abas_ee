@@ -94,12 +94,15 @@ $delivery = $isLocker ? 'Latvijas Pasts locker' : ($isPickup ? 'Pickup on site' 
         <tr>
           <td style="padding:28px 40px 8px;">
             <p style="margin:0 0 16px;font-size:11px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase;">Customer Information</p>
+            <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;">Customer</p>
+            <p style="margin:0 0 16px;font-size:14px;color:#1a1a1a;font-weight:600;">
+              {{ $order->first_name }} {{ $order->last_name }}
+            </p>
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="50%" style="vertical-align:top;padding-right:20px;">
                   <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;">Delivery address</p>
                   <p style="margin:0;font-size:14px;color:#444;line-height:1.7;">
-                    {{ $order->first_name }} {{ $order->last_name }}<br>
                     {{ $order->address }}<br>
                     {{ $order->city }}, {{ $order->postal_code }}<br>
                     {{ $order->country }}

@@ -167,7 +167,12 @@ class ProductResource extends Resource
                 TextColumn::make('name')
                     ->label('Name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->getStateUsing(fn($record, $livewire) =>
+                        ($livewire->showLatvian && isset($livewire->latvianNames[$record->id]))
+                            ? $livewire->latvianNames[$record->id]
+                            : $record->name
+                    ),
 
                 TextColumn::make('price')
                     ->label('Price')

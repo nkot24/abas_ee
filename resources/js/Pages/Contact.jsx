@@ -35,7 +35,7 @@ export default function Contact({ settings = {} }) {
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/#produktai' },
+        { label: t.nav.products, href: '/produktai' },
         { label: t.nav.recipes,  href: '/receptai' },
         { label: t.nav.euFunds,  href: '/es-fondai' },
         { label: t.nav.contacts, href: '/kontaktai' },

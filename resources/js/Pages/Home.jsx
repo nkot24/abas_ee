@@ -121,9 +121,11 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
                 <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+                    {t.hero.badge && (
                     <p className="text-red-400 text-sm font-semibold tracking-[0.3em] uppercase mb-4">
                         {t.hero.badge}
                     </p>
+                    )}
                     <h1 className="text-5xl md:text-7xl font-black text-white uppercase leading-tight mb-6 tracking-wide">
                         ABAS<br />
                         <span className="text-red-500">SMOKE HOUSE</span>

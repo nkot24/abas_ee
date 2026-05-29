@@ -10,8 +10,8 @@ const translations = {
             contacts: 'Kontaktai',
         },
         hero: {
-            badge: 'Autentiški rūkyti gaminiai',
-            subtitle: 'Tradiciniai dūminiai gaminiai iš aukščiausios kokybės ingredientų. Paragaukite tikrojo skonio.',
+            badge: '',
+            subtitle: 'Rūkyti ir kepti produktai, gamtoje ir namuose – VISADA SKANU',
             buyNow: 'Pirkti Dabar',
             recipes: 'Receptai',
         },
@@ -248,8 +248,8 @@ const translations = {
             contacts: 'Contacts',
         },
         hero: {
-            badge: 'Authentic smoked products',
-            subtitle: 'Traditional smoked products made from the finest ingredients. Taste the real flavour.',
+            badge: '',
+            subtitle: 'Smoked and baked foods, in nature and at home - ALWAYS TASTY',
             buyNow: 'Shop Now',
             recipes: 'Recipes',
         },
