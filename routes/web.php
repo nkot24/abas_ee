@@ -424,3 +424,13 @@ Route::middleware('throttle:gdpr-delete')->post('/gdpr/delete', function (Reques
 
     return response()->json(['message' => 'ok']);
 });
+
+Route::get('/admin/products/export-download', function (Request $request) {
+    abort_unless($request->hasValidSignature(), 403);
+
+    $zipPath = storage_path('app/exports/products-export.zip');
+    abort_unless(file_exists($zipPath), 404);
+
+    return response()->download($zipPath, 'products-' . date('Y-m-d') . '.zip')
+        ->deleteFileAfterSend();
+})->name('products.export.download');
