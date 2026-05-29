@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html lang="et">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,17 +20,17 @@
 
         <tr><td style="height:1px;background:#e8e8e8;"></td></tr>
 
-        <!-- LT Content -->
+        <!-- ET Content -->
         <tr>
           <td style="padding:36px 40px 8px;">
-            <h1 style="margin:0;font-size:22px;font-weight:700;color:#1a1a1a;">Jūsų duomenys ištrinti</h1>
+            <h1 style="margin:0;font-size:22px;font-weight:700;color:#1a1a1a;">Teie isikuandmed on kustutatud</h1>
           </td>
         </tr>
         <tr>
           <td style="padding:16px 40px 28px;font-size:14px;color:#444;line-height:1.7;">
-            <p style="margin:0 0 12px;">Gavome jūsų prašymą ištrinti asmens duomenis. Visi jūsų asmeniniai duomenys ({{ $orderCount }} {{ $orderCount === 1 ? 'užsakymas' : 'užsakymai' }}) buvo anoniminiai ir nebegali būti susieti su jumis.</p>
-            <p style="margin:0 0 12px;">Finansiniai duomenys (sumos, prekės, mokėjimų ID) išsaugomi buhalteriniais tikslais pagal teisės aktų reikalavimus, tačiau nebeturi jūsų asmeninės informacijos.</p>
-            <p style="margin:0;">Jei turite klausimų, susisiekite su mumis: <a href="mailto:info@abas.lv" style="color:#c0392b;">info@abas.lv</a></p>
+            <p style="margin:0 0 12px;">Oleme töödelnud teie andmete kustutamise taotluse. Kõik teie isikuandmed ({{ $orderCount }} {{ $orderCount === 1 ? 'tellimus' : 'tellimust' }}) on anonüümitud ega ole enam teiega seostatavad.</p>
+            <p style="margin:0 0 12px;">Finantsandmed (summad, kaubad, maksete ID-d) säilitatakse raamatupidamislikel eesmärkidel vastavalt seaduse nõuetele, kuid ei sisalda enam isikuandmeid.</p>
+            <p style="margin:0;">Kui teil on küsimusi, võtke meiega ühendust: <a href="mailto:info@abas.lv" style="color:#c0392b;">info@abas.lv</a></p>
           </td>
         </tr>
 

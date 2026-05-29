@@ -34,7 +34,7 @@ class Recipe extends Model
 
             try {
                 $tr = new GoogleTranslate('en');
-                $tr->setSource('lt');
+                $tr->setSource('et');
 
                 if ($titleChanged || !$recipe->title_en) {
                     $updates['title_en'] = $tr->translate($recipe->title);

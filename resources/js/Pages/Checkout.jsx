@@ -3,7 +3,7 @@ import { useCart } from '../useCart';
 import { useLang } from '../i18n';
 import LangSwitcher from '../LangSwitcher';
 
-const LP_LOCKER_COUNTRIES = ['LV', 'LT'];
+const LP_LOCKER_COUNTRIES = ['LV', 'LT', 'EE'];
 
 function validatePhone(phone, dialCode) {
     const digits = phone.replace(/\D/g, '');
@@ -28,9 +28,9 @@ function validatePostal(postal, country) {
 }
 
 const PHONE_CODES = [
+    { code: 'EE', dial: '+372', flag: '🇪🇪' },
     { code: 'LV', dial: '+371', flag: '🇱🇻' },
     { code: 'LT', dial: '+370', flag: '🇱🇹' },
-    { code: 'EE', dial: '+372', flag: '🇪🇪' },
     { code: 'PL', dial: '+48',  flag: '🇵🇱' },
     { code: 'DE', dial: '+49',  flag: '🇩🇪' },
     { code: 'FI', dial: '+358', flag: '🇫🇮' },
@@ -318,17 +318,17 @@ export default function Checkout() {
     ];
 
     const COUNTRIES = [
+        { code: 'EE', label: t.countries.EE },
         { code: 'LV', label: t.countries.LV },
         { code: 'LT', label: t.countries.LT },
-        { code: 'EE', label: t.countries.EE },
         { code: 'OTHER', label: t.countries.other ?? 'Other' },
     ];
 
     const [showNoShipping, setShowNoShipping] = useState(false);
-    const [phoneCode, setPhoneCode] = useState('+371');
+    const [phoneCode, setPhoneCode] = useState('+372');
     const [form, setForm] = useState({
         first_name: '', last_name: '', email: '', phone: '',
-        address: '', city: '', postal_code: '', country: 'LV',
+        address: '', city: '', postal_code: '', country: 'EE',
     });
 
     // Auto-switch phone code when country changes
@@ -470,7 +470,7 @@ export default function Checkout() {
                     parcel_locker_id:   deliveryMethod === 'locker' && selectedLocker ? String(selectedLocker.id) : null,
                     parcel_locker_name: deliveryMethod === 'locker' && selectedLocker
                         ? `${selectedLocker.title}${selectedLocker.address ? ', ' + selectedLocker.address : ''}`
-                        : deliveryMethod === 'pickup' ? 'Kandava, Jelgavas iela 1J' : null,
+                        : deliveryMethod === 'pickup' ? 'Tallinn, Estonia' : null,
                     payment_method: 'paysera',
                     lang,
                 }),
@@ -521,21 +521,23 @@ export default function Checkout() {
                         </svg>
                     </div>
                     <h3 className="text-lg font-black text-gray-900 mb-2">
-                        {lang === 'en' ? 'International shipping' : 'Tarptautinis pristatymas'}
+                        {lang === 'en' ? 'International shipping' : lang === 'et' ? 'Rahvusvaheline tarne' : 'Tarptautinis pristatymas'}
                     </h3>
                     <p className="text-sm text-gray-500 mb-3">
                         {lang === 'en'
                             ? 'We currently only have shipping contracts for Latvia, Lithuania and Estonia. For other countries, please contact us and we will calculate the shipping cost individually.'
+                            : lang === 'et'
+                            ? 'Hetkel on meil tarnelepingud ainult Läti, Leedu ja Eesti jaoks. Teiste riikide jaoks võtke meiega ühendust ja me arvutame tarnekulud individuaalselt.'
                             : 'Šiuo metu turime pristatymo sutartis tik Latvijai, Lietuvai ir Estijai. Kitoms šalims susisiekite su mumis ir mes apskaičiuosime pristatymo kainą individualiai.'}
                     </p>
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-5 text-left">
                         <p className="text-xs font-semibold text-gray-700 mb-1">
-                            {lang === 'en' ? 'How it works:' : 'Kaip tai veikia:'}
+                            {lang === 'en' ? 'How it works:' : lang === 'et' ? 'Kuidas see toimib:' : 'Kaip tai veikia:'}
                         </p>
                         <ol className="text-xs text-gray-500 space-y-1 list-decimal list-inside">
-                            <li>{lang === 'en' ? 'Email us the products you are interested in and your delivery address' : 'Parašykite mums produktus, kurie jus domina, ir pristatymo adresą'}</li>
-                            <li>{lang === 'en' ? 'We will reply with the total shipping cost' : 'Mes atsakysime su bendra pristatymo kaina'}</li>
-                            <li>{lang === 'en' ? 'If you approve — we send you an invoice' : 'Jei sutinkate — išsiunčiame sąskaitą faktūrą'}</li>
+                            <li>{lang === 'en' ? 'Email us the products you are interested in and your delivery address' : lang === 'et' ? 'Saatke meile e-kiri toodetega, mis teid huvitavad, ja oma tarneaadress' : 'Parašykite mums produktus, kurie jus domina, ir pristatymo adresą'}</li>
+                            <li>{lang === 'en' ? 'We will reply with the total shipping cost' : lang === 'et' ? 'Vastame kogu tarnekuluga' : 'Mes atsakysime su bendra pristatymo kaina'}</li>
+                            <li>{lang === 'en' ? 'If you approve — we send you an invoice' : lang === 'et' ? 'Kui nõustute – saadame teile arve' : 'Jei sutinkate — išsiunčiame sąskaitą faktūrą'}</li>
                         </ol>
                         <a href="mailto:info@abas.lv" className="inline-block mt-2 text-xs font-bold text-red-600 hover:text-red-700">
                             info@abas.lv
@@ -777,7 +779,7 @@ export default function Checkout() {
                                             {deliveryMethod === 'pickup' && (
                                                 <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
                                                     {t.checkout.pickupNote}<br/>
-                                                    <strong>Kandava, Jelgavas iela 1J</strong>
+                                                    <strong>Tallinn, Estonia</strong>
                                                 </div>
                                             )}
                                         </SectionCard>

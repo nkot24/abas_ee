@@ -15,7 +15,7 @@ class AutoTranslate extends Command
     public function handle(): void
     {
         $tr = new GoogleTranslate('en');
-        $tr->setSource('lt');
+        $tr->setSource('et');
 
         $this->translateProducts($tr);
         $this->translateRecipes($tr);

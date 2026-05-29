@@ -56,7 +56,7 @@ class Product extends Model
             }
             try {
                 $tr = new GoogleTranslate('en');
-                $tr->setSource('lt');
+                $tr->setSource('et');
                 $updates = [];
                 if (!$product->name_en || $product->wasChanged('name')) {
                     $updates['name_en'] = $tr->translate($product->name);

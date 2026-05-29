@@ -20,7 +20,7 @@ function translateSetting(string $page, string $key, string $value): string
     return Cache::rememberForever($cacheKey, function () use ($value) {
         try {
             $tr = new GoogleTranslate('en');
-            $tr->setSource('lt');
+            $tr->setSource('et');
             return $tr->translate($value);
         } catch (\Exception) {
             return $value;
@@ -220,7 +220,7 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
         'city'                => 'required|string|max:100',
         'postal_code'         => 'required|string|max:20',
         'country'             => 'required|string|size:2',
-        'lang'                => 'nullable|in:lt,en',
+        'lang'                => 'nullable|in:lt,et,en',
         'payment_method'      => 'required|in:paysera',
     ]);
 

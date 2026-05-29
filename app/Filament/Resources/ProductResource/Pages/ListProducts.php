@@ -20,29 +20,29 @@ class ListProducts extends ListRecords
 {
     protected static string $resource = ProductResource::class;
 
-    public bool $showLatvian = false;
-    public array $latvianNames = [];
+    public bool $showFinnish = false;
+    public array $finnishNames = [];
 
-    public function toggleLatvian(): void
+    public function toggleFinnish(): void
     {
-        $this->showLatvian = !$this->showLatvian;
+        $this->showFinnish = !$this->showFinnish;
 
-        if ($this->showLatvian && empty($this->latvianNames)) {
+        if ($this->showFinnish && empty($this->finnishNames)) {
             $products = Product::pluck('name', 'id');
             $ids = $products->keys()->all();
             $names = $products->values()->all();
             $combined = implode("\n", $names);
             try {
-                $tr = new GoogleTranslate('lv');
-                $tr->setSource('lt');
+                $tr = new GoogleTranslate('fi');
+                $tr->setSource('et');
                 $translated = $tr->translate($combined);
                 $parts = explode("\n", $translated);
                 foreach ($ids as $i => $id) {
-                    $this->latvianNames[$id] = trim($parts[$i] ?? $names[$i]);
+                    $this->finnishNames[$id] = trim($parts[$i] ?? $names[$i]);
                 }
             } catch (\Exception) {
                 foreach ($products as $id => $name) {
-                    $this->latvianNames[$id] = $name;
+                    $this->finnishNames[$id] = $name;
                 }
             }
         }
@@ -51,11 +51,11 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('toggleLatvian')
-                ->label($this->showLatvian ? 'Show Lithuanian names' : 'Translate to Latvian')
+            Action::make('toggleFinnish')
+                ->label($this->showFinnish ? 'Show Estonian names' : 'Translate to Finnish')
                 ->icon('heroicon-o-language')
-                ->color($this->showLatvian ? 'warning' : 'gray')
-                ->action(fn() => $this->toggleLatvian()),
+                ->color($this->showFinnish ? 'warning' : 'gray')
+                ->action(fn() => $this->toggleFinnish()),
 
             Action::make('export')
                 ->label('Export ZIP')
@@ -165,11 +165,27 @@ class ListProducts extends ListRecords
                 ])
                 ->action(function (array $data) {
                     $targetLang = $data['target_lang'];
-                    $zipPath    = storage_path('app/' . $data['zip_file']);
+
+                    // Filament/Livewire may store the path relative to the local disk root
+                    // or with a livewire-tmp prefix — try both locations.
+                    $relative = $data['zip_file'];
+                    $zipPath  = storage_path('app/' . $relative);
+                    if (!file_exists($zipPath)) {
+                        $zipPath = storage_path('app/private/' . $relative);
+                    }
+                    if (!file_exists($zipPath)) {
+                        Notification::make()->title('Upload file not found: ' . $relative)->danger()->send();
+                        return;
+                    }
+
                     $extractDir = storage_path('app/imports/extract_' . uniqid());
 
-                    $zip = new ZipArchive();
-                    $zip->open($zipPath);
+                    $zip    = new ZipArchive();
+                    $opened = $zip->open($zipPath);
+                    if ($opened !== true) {
+                        Notification::make()->title("Failed to open ZIP (code: {$opened})")->danger()->send();
+                        return;
+                    }
                     $zip->extractTo($extractDir);
                     $zip->close();
 

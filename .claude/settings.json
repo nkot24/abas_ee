@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(\\(Get-Content \"C:\\\\php-8.4.12\\\\php.ini\"\\) -replace \"max_execution_time = 120\", \"max_execution_time = 600\" | Set-Content \"C:\\\\php-8.4.12\\\\php.ini\" -Encoding utf8)",
+      "PowerShell(php -r \"echo ini_get\\('max_execution_time'\\);\")",
+      "PowerShell(php artisan tinker --execute=\"echo App\\\\Models\\\\Product::count\\(\\) . ' products in DB';\")",
+      "PowerShell(php artisan tinker --execute=\"App\\\\Models\\\\ProductImage::truncate\\(\\); App\\\\Models\\\\Product::truncate\\(\\); echo 'Done - ' . App\\\\Models\\\\Product::count\\(\\) . ' products remaining';\")",
+      "PowerShell($count = \\(Get-ChildItem \"storage\\\\app\\\\public\\\\products\" -ErrorAction SilentlyContinue | Measure-Object\\).Count; Write-Host \"Files in storage: $count\"; Test-Path \"public\\\\storage\" | Write-Host -ForegroundColor Cyan)",
+      "PowerShell(php artisan tinker --execute=\"echo Storage::disk\\('public'\\)->exists\\('products/01KSSTK0QH3MSCWZPMPRQ4TCM3.jpg'\\) ? 'file exists' : 'file NOT found';\")",
+      "PowerShell(php artisan tinker --execute=\"echo app\\(\\\\Filament\\\\FilamentManager::class\\)->getCurrentPanel\\(\\)?->getId\\(\\) ?? 'no panel'; echo PHP_EOL; echo \\\\Composer\\\\InstalledVersions::getVersion\\('filament/filament'\\);\")",
+      "PowerShell(php artisan view:clear 2>&1)",
+      "PowerShell($link = Get-Item \"public\\\\storage\" -ErrorAction SilentlyContinue; if \\($link\\) { Write-Host \"Type: $\\($link.GetType\\(\\).Name\\)\"; Write-Host \"Target: $\\($link.Target\\)\"; Write-Host \"LinkType: $\\($link.LinkType\\)\" } else { Write-Host \"Not found\" })",
+      "PowerShell($f = Get-ChildItem \"public\\\\storage\\\\products\" -ErrorAction SilentlyContinue | Select-Object -First 1; if\\($f\\){ Write-Host \"File: $\\($f.FullName\\)\"; Write-Host \"Exists via junction: $\\(Test-Path $f.FullName\\)\" })",
+      "Bash(php -r ' *)"
+    ]
+  }
+}

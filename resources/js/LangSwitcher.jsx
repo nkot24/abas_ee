@@ -6,10 +6,10 @@ export default function LangSwitcher() {
     return (
         <div className="flex items-center gap-1 text-xs font-bold tracking-widest">
             <button
-                onClick={() => switchLang('lt')}
-                className={`transition-colors ${lang === 'lt' ? 'text-red-600' : 'text-gray-400 hover:text-gray-700'}`}
+                onClick={() => switchLang('et')}
+                className={`transition-colors ${lang === 'et' ? 'text-red-600' : 'text-gray-400 hover:text-gray-700'}`}
             >
-                LT
+                ET
             </button>
             <span className="text-gray-300 select-none">|</span>
             <button

@@ -44,6 +44,7 @@ class ProductResource extends Resource
                         ->directory('products')
                         ->visibility('public')
                         ->reorderable()
+                        ->fetchFileInformation(false)
                         ->columnSpanFull(),
                 ]),
 
@@ -169,8 +170,8 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->getStateUsing(fn($record, $livewire) =>
-                        ($livewire->showLatvian && isset($livewire->latvianNames[$record->id]))
-                            ? $livewire->latvianNames[$record->id]
+                        ($livewire->showFinnish && isset($livewire->finnishNames[$record->id]))
+                            ? $livewire->finnishNames[$record->id]
                             : $record->name
                     ),
 
