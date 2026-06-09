@@ -229,7 +229,7 @@ class LatvijasPostsService
             "Errors:\n{$errorLines}\n\n" .
             "Please create the label manually in the Latvijas Pasts portal.",
             fn($msg) => $msg
-                ->to(env('ADMIN_EMAIL', 'niksindriksons2006@gmail.com'))
+                ->to(config('services.admin_email'))
                 ->subject("⚠ Label failed – Order #{$order->id}")
         );
     }

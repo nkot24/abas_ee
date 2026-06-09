@@ -20,29 +20,29 @@ class ListProducts extends ListRecords
 {
     protected static string $resource = ProductResource::class;
 
-    public bool $showFinnish = false;
-    public array $finnishNames = [];
+    public bool $showLatvian = false;
+    public array $latvianNames = [];
 
-    public function toggleFinnish(): void
+    public function toggleLatvian(): void
     {
-        $this->showFinnish = !$this->showFinnish;
+        $this->showLatvian = !$this->showLatvian;
 
-        if ($this->showFinnish && empty($this->finnishNames)) {
+        if ($this->showLatvian && empty($this->latvianNames)) {
             $products = Product::pluck('name', 'id');
             $ids = $products->keys()->all();
             $names = $products->values()->all();
             $combined = implode("\n", $names);
             try {
-                $tr = new GoogleTranslate('fi');
+                $tr = new GoogleTranslate('lv');
                 $tr->setSource('et');
                 $translated = $tr->translate($combined);
                 $parts = explode("\n", $translated);
                 foreach ($ids as $i => $id) {
-                    $this->finnishNames[$id] = trim($parts[$i] ?? $names[$i]);
+                    $this->latvianNames[$id] = trim($parts[$i] ?? $names[$i]);
                 }
             } catch (\Exception) {
                 foreach ($products as $id => $name) {
-                    $this->finnishNames[$id] = $name;
+                    $this->latvianNames[$id] = $name;
                 }
             }
         }
@@ -51,11 +51,11 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('toggleFinnish')
-                ->label($this->showFinnish ? 'Show Estonian names' : 'Translate to Finnish')
+            Action::make('toggleLatvian')
+                ->label($this->showLatvian ? 'Show Estonian names' : 'Translate to Latvian')
                 ->icon('heroicon-o-language')
-                ->color($this->showFinnish ? 'warning' : 'gray')
-                ->action(fn() => $this->toggleFinnish()),
+                ->color($this->showLatvian ? 'warning' : 'gray')
+                ->action(fn() => $this->toggleLatvian()),
 
             Action::make('export')
                 ->label('Export ZIP')

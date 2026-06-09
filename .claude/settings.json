@@ -11,7 +11,9 @@
       "PowerShell(php artisan view:clear 2>&1)",
       "PowerShell($link = Get-Item \"public\\\\storage\" -ErrorAction SilentlyContinue; if \\($link\\) { Write-Host \"Type: $\\($link.GetType\\(\\).Name\\)\"; Write-Host \"Target: $\\($link.Target\\)\"; Write-Host \"LinkType: $\\($link.LinkType\\)\" } else { Write-Host \"Not found\" })",
       "PowerShell($f = Get-ChildItem \"public\\\\storage\\\\products\" -ErrorAction SilentlyContinue | Select-Object -First 1; if\\($f\\){ Write-Host \"File: $\\($f.FullName\\)\"; Write-Host \"Exists via junction: $\\(Test-Path $f.FullName\\)\" })",
-      "Bash(php -r ' *)"
+      "Bash(php -r ' *)",
+      "Bash(tail -50 storage/logs/laravel.log)",
+      "Bash(powershell -command \"Get-Content storage/logs/laravel.log -Tail 50\")"
     ]
   }
 }

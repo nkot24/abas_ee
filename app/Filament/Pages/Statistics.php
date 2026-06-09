@@ -12,8 +12,8 @@ class Statistics extends Page
 {
     protected static string|\UnitEnum|null      $navigationGroup = null;
     protected static \BackedEnum|string|null    $navigationIcon  = 'heroicon-o-chart-bar';
-    protected static ?string $navigationLabel = 'Statistika';
-    protected static ?string $title          = 'Užsakymų statistika';
+    protected static ?string $navigationLabel = 'Statistics';
+    protected static ?string $title          = 'Order Statistics';
     protected static ?int    $navigationSort = 10;
     protected string $view = 'filament.pages.statistics';
 

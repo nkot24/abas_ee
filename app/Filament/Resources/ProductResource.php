@@ -24,10 +24,10 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-shopping-bag';
-    protected static ?string $navigationLabel = 'Produktai';
-    protected static ?string $pluralModelLabel = 'Produktai';
-    protected static ?string $modelLabel = 'Produktas';
-    protected static string|\UnitEnum|null $navigationGroup = 'Turinys';
+    protected static ?string $navigationLabel = 'Products';
+    protected static ?string $pluralModelLabel = 'Products';
+    protected static ?string $modelLabel = 'Product';
+    protected static string|\UnitEnum|null $navigationGroup = 'Content';
     protected static ?int $navigationSort = 1;
 
     public static function form(Schema $form): Schema
@@ -170,8 +170,8 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->getStateUsing(fn($record, $livewire) =>
-                        ($livewire->showFinnish && isset($livewire->finnishNames[$record->id]))
-                            ? $livewire->finnishNames[$record->id]
+                        ($livewire->showLatvian && isset($livewire->latvianNames[$record->id]))
+                            ? $livewire->latvianNames[$record->id]
                             : $record->name
                     ),
 

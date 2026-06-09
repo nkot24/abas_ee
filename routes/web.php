@@ -268,16 +268,16 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
         $amountCents = (int) round($grandTotal * 100);
 
         $params = \WebToPay::buildRequest([
-            'projectid'     => (int) env('PAYSERA_PROJECT_ID'),
-            'sign_password' => env('PAYSERA_SIGN_PASSWORD'),
+            'projectid'     => (int) config('services.paysera.project_id'),
+            'sign_password' => config('services.paysera.sign_password'),
             'orderid'       => $order->id,
             'amount'        => $amountCents,
             'currency'      => 'EUR',
             'country'       => strtoupper($order->country),
             'accepturl'     => \Illuminate\Support\Facades\URL::signedRoute('order.success', ['id' => $order->id]),
             'cancelurl'     => \Illuminate\Support\Facades\URL::signedRoute('order.cancel', ['id' => $order->id]),
-            'callbackurl'   => env('APP_URL') . '/paysera/callback',
-            'test'          => env('PAYSERA_TEST', false) ? 1 : 0,
+            'callbackurl'   => config('app.url') . '/paysera/callback',
+            'test'          => config('services.paysera.test') ? 1 : 0,
             'p_firstname'   => $order->first_name,
             'p_lastname'    => $order->last_name,
             'p_email'       => $order->email,
@@ -301,11 +301,12 @@ Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $re
 
 // Paysera callback — called server-to-server when payment is confirmed
 Route::post('/paysera/callback', function (Request $request) {
+    abort_unless($request->hasValidSignatureWhileIgnoring(['data', 'ss1', 'ss2', 'lang']), 403);
     try {
         $response = \WebToPay::validateAndParseData(
             $request->all(),
-            (int) env('PAYSERA_PROJECT_ID'),
-            env('PAYSERA_SIGN_PASSWORD')
+            (int) config('services.paysera.project_id'),
+            config('services.paysera.sign_password')
         );
 
         $orderId = $response['orderid'] ?? null;
@@ -323,7 +324,7 @@ Route::post('/paysera/callback', function (Request $request) {
                 $isPickup = empty($order->parcel_locker_id) && !empty($order->parcel_locker_name);
                 if (!$isPickup) app('shipping')->registerShipment($order);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
-                Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
+                Mail::to(config('services.admin_email'))->send(new OrderPlaced($order));
                 \Illuminate\Support\Facades\Log::info("Order {$order->id} paid, emails sent");
             }
         } elseif (in_array($status, [0, 2, 3])) {
@@ -350,8 +351,8 @@ Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
         try {
             $response = \WebToPay::validateAndParseData(
                 $request->only(['data', 'ss1', 'ss2']),
-                (int) env('PAYSERA_PROJECT_ID'),
-                env('PAYSERA_SIGN_PASSWORD')
+                (int) config('services.paysera.project_id'),
+                config('services.paysera.sign_password')
             );
             if (($response['status'] ?? null) == 1) {
                 $order->update([
@@ -361,7 +362,7 @@ Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
                 $isPickup = empty($order->parcel_locker_id) && !empty($order->parcel_locker_name);
                 if (!$isPickup) app('shipping')->registerShipment($order);
                 Mail::to($order->email)->send(new OrderConfirmed($order));
-                Mail::to(env('ADMIN_EMAIL'))->send(new OrderPlaced($order));
+                Mail::to(config('services.admin_email'))->send(new OrderPlaced($order));
                 $order->refresh();
             }
         } catch (\Exception $e) {
@@ -434,3 +435,13 @@ Route::get('/admin/products/export-download', function (Request $request) {
     return response()->download($zipPath, 'products-' . date('Y-m-d') . '.zip')
         ->deleteFileAfterSend();
 })->name('products.export.download');
+
+Route::get('/admin/recipes/export-download', function (Request $request) {
+    abort_unless($request->hasValidSignature(), 403);
+
+    $zipPath = storage_path('app/exports/recipes-export.zip');
+    abort_unless(file_exists($zipPath), 404);
+
+    return response()->download($zipPath, 'recipes-' . date('Y-m-d') . '.zip')
+        ->deleteFileAfterSend();
+})->name('recipes.export.download');

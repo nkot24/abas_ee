@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'paysera' => [
+        'project_id'    => env('PAYSERA_PROJECT_ID'),
+        'sign_password' => env('PAYSERA_SIGN_PASSWORD'),
+        'test'          => env('PAYSERA_TEST', false),
+    ],
+
+    'admin_email' => env('ADMIN_EMAIL'),
+
 ];
