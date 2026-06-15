@@ -1,0 +1,231 @@
+{
+  "_CartDrawer-CfeMQ0WW.js": {
+    "file": "assets/CartDrawer-CfeMQ0WW.js",
+    "name": "CartDrawer",
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js"
+    ]
+  },
+  "_LangSwitcher-DB_lb_tj.js": {
+    "file": "assets/LangSwitcher-DB_lb_tj.js",
+    "name": "LangSwitcher",
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js"
+    ]
+  },
+  "_dist-2P9pXBI6.js": {
+    "file": "assets/dist-2P9pXBI6.js",
+    "name": "dist",
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js"
+    ]
+  },
+  "_i18n-usE-nAik.js": {
+    "file": "assets/i18n-usE-nAik.js",
+    "name": "i18n",
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js"
+    ]
+  },
+  "_jsx-runtime-AC5R_bPZ.js": {
+    "file": "assets/jsx-runtime-AC5R_bPZ.js",
+    "name": "jsx-runtime"
+  },
+  "_useCart-CmhVs8dm.js": {
+    "file": "assets/useCart-CmhVs8dm.js",
+    "name": "useCart",
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-B8yVUar-.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Pages/Checkout.jsx": {
+    "file": "assets/Checkout-imwM_I5m.js",
+    "name": "Checkout",
+    "src": "resources/js/Pages/Checkout.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Contact.jsx": {
+    "file": "assets/Contact-BkJUIRbE.js",
+    "name": "Contact",
+    "src": "resources/js/Pages/Contact.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/EsFondai.jsx": {
+    "file": "assets/EsFondai-B-gAx47R.js",
+    "name": "EsFondai",
+    "src": "resources/js/Pages/EsFondai.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Home.jsx": {
+    "file": "assets/Home-BqdMJojP.js",
+    "name": "Home",
+    "src": "resources/js/Pages/Home.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/OrderCancelled.jsx": {
+    "file": "assets/OrderCancelled-Cu5v2UrE.js",
+    "name": "OrderCancelled",
+    "src": "resources/js/Pages/OrderCancelled.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js"
+    ]
+  },
+  "resources/js/Pages/OrderSuccess.jsx": {
+    "file": "assets/OrderSuccess-CmovslOg.js",
+    "name": "OrderSuccess",
+    "src": "resources/js/Pages/OrderSuccess.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/PrivacyPolicy.jsx": {
+    "file": "assets/PrivacyPolicy-D4MJARuA.js",
+    "name": "PrivacyPolicy",
+    "src": "resources/js/Pages/PrivacyPolicy.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Product.jsx": {
+    "file": "assets/Product-CoE2sCPG.js",
+    "name": "Product",
+    "src": "resources/js/Pages/Product.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_dist-2P9pXBI6.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Products.jsx": {
+    "file": "assets/Products-CFoHL-I6.js",
+    "name": "Products",
+    "src": "resources/js/Pages/Products.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Recipe.jsx": {
+    "file": "assets/Recipe-B-GKs3Zj.js",
+    "name": "Recipe",
+    "src": "resources/js/Pages/Recipe.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_dist-2P9pXBI6.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Recipes.jsx": {
+    "file": "assets/Recipes-DDSaKrW-.js",
+    "name": "Recipes",
+    "src": "resources/js/Pages/Recipes.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_dist-2P9pXBI6.js",
+      "_i18n-usE-nAik.js",
+      "_CartDrawer-CfeMQ0WW.js",
+      "_LangSwitcher-DB_lb_tj.js",
+      "_useCart-CmhVs8dm.js"
+    ]
+  },
+  "resources/js/Pages/Welcome.jsx": {
+    "file": "assets/Welcome-EQJl45V8.js",
+    "name": "Welcome",
+    "src": "resources/js/Pages/Welcome.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js"
+    ]
+  },
+  "resources/js/app.jsx": {
+    "file": "assets/app-D3WTnAI9.js",
+    "name": "app",
+    "src": "resources/js/app.jsx",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-AC5R_bPZ.js",
+      "_dist-2P9pXBI6.js",
+      "_i18n-usE-nAik.js"
+    ],
+    "dynamicImports": [
+      "resources/js/Pages/Checkout.jsx",
+      "resources/js/Pages/Contact.jsx",
+      "resources/js/Pages/EsFondai.jsx",
+      "resources/js/Pages/Home.jsx",
+      "resources/js/Pages/OrderCancelled.jsx",
+      "resources/js/Pages/OrderSuccess.jsx",
+      "resources/js/Pages/PrivacyPolicy.jsx",
+      "resources/js/Pages/Product.jsx",
+      "resources/js/Pages/Products.jsx",
+      "resources/js/Pages/Recipe.jsx",
+      "resources/js/Pages/Recipes.jsx",
+      "resources/js/Pages/Welcome.jsx"
+    ],
+    "css": [
+      "assets/app-B8yVUar-.css"
+    ]
+  }
+}
