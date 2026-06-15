@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
+if (!function_exists('translateSetting')) {
 function translateSetting(string $page, string $key, string $value): string
 {
     $cacheKey = "setting_en_{$page}_{$key}";
@@ -26,6 +27,7 @@ function translateSetting(string $page, string $key, string $value): string
             return $value;
         }
     });
+}
 }
 
 Route::get('/', function () {
