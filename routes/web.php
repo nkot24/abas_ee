@@ -69,19 +69,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/receptai', function () {
+Route::get('/recipes', function () {
     return Inertia::render('Recipes', [
         'recipes' => Recipe::where('active', true)->orderBy('id')->get()->toArray(),
     ]);
 });
 
-Route::get('/produktai', function () {
+Route::get('/products', function () {
     return Inertia::render('Products', [
         'products' => Product::where('active', true)->with('mainImage')->orderBy('id')->get()->toArray(),
     ]);
 });
 
-Route::get('/produktai/{id}', function ($id) {
+Route::get('/products/{id}', function ($id) {
     $categoryLabels = [
         'aksesuarai'     => 'Aksesuarai',
         'sodo-baldai'    => 'Sodo baldai',
@@ -111,25 +111,25 @@ Route::get('/produktai/{id}', function ($id) {
     return Inertia::render('Product', ['product' => $data]);
 });
 
-Route::get('/es-fondai', function () {
+Route::get('/eu-funds', function () {
     $settings = PageSetting::getForPage('es-fondai');
 
     return Inertia::render('EsFondai', ['settings' => $settings]);
 });
 
-Route::get('/kontaktai', function () {
+Route::get('/contact', function () {
     $settings = PageSetting::getForPage('contact');
 
     return Inertia::render('Contact', ['settings' => $settings]);
 });
 
-Route::get('/receptai/{id}', function ($id) {
+Route::get('/recipes/{id}', function ($id) {
     $recipe = Recipe::where('active', true)->findOrFail($id);
 
     return Inertia::render('Recipe', ['recipe' => $recipe->toArray()]);
 });
 
-Route::get('/uzsakymas', function () {
+Route::get('/checkout', function () {
     return Inertia::render('Checkout');
 });
 
@@ -207,7 +207,7 @@ Route::middleware('throttle:shipping-calc')->post('/shipping/calculate', functio
     return response()->json(['cost' => $cost, 'weight' => round($weight, 2), 'locker_eligible' => $lockerEligible]);
 });
 
-Route::middleware('throttle:checkout')->post('/uzsakymas', function (Request $request) {
+Route::middleware('throttle:checkout')->post('/checkout', function (Request $request) {
     $data = $request->validate([
         'items'               => 'required|array|min:1',
         'items.*.id'          => 'required|integer',
@@ -344,7 +344,7 @@ Route::post('/paysera/callback', function (Request $request) {
     }
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class]);
 
-Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
+Route::get('/checkout/success/{id}', function (Request $request, $id) {
     $order = Order::findOrFail($id);
 
     // Fallback: process payment data from the redirect URL if the server-to-server
@@ -376,18 +376,18 @@ Route::get('/uzsakymas/sekmingai/{id}', function (Request $request, $id) {
 })->name('order.success');
 
 // Cancel page
-Route::get('/privatuma-politika', function () {
+Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');
 });
 
 // Paysera cancel redirect — delete the pending order and send user back to checkout
-Route::get('/uzsakymas/atsaukta/{id}', function (Request $request, $id) {
+Route::get('/checkout/cancelled/{id}', function (Request $request, $id) {
     abort_unless($request->hasValidSignatureWhileIgnoring(['data', 'ss1', 'ss2', 'lang']), 403);
     $order = Order::find($id);
     if ($order && $order->status === 'pending') {
         $order->delete();
     }
-    return redirect('/uzsakymas?error=cancelled');
+    return redirect('/checkout?error=cancelled');
 })->name('order.cancel');
 
 // GDPR data deletion request

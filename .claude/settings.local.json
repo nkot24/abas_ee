@@ -98,7 +98,10 @@
       "PowerShell(Get-Content \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\storage\\\\logs\\\\laravel.log\" -Tail 200 | Where-Object { $_ -match \"^\\\\[\" } | Select-Object -Last 10)",
       "Bash(Get-Content \"c:\\\\Users\\\\niksi\\\\programming\\\\abas_lt\\\\storage\\\\logs\\\\laravel.log\" -Tail 50)",
       "Bash(php -r \"echo app\\(\\)->version\\(\\);\")",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }

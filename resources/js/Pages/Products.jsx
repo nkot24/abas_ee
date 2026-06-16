@@ -40,10 +40,10 @@ export default function Products({ products = [] }) {
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/produktai' },
-        { label: t.nav.recipes,  href: '/receptai' },
-        { label: t.nav.euFunds,  href: '/es-fondai' },
-        { label: t.nav.contacts, href: '/kontaktai' },
+        { label: t.nav.products, href: '/products' },
+        { label: t.nav.recipes,  href: '/recipes' },
+        { label: t.nav.euFunds,  href: '/eu-funds' },
+        { label: t.nav.contacts, href: '/contact' },
     ];
 
     const categories = [
@@ -122,7 +122,7 @@ export default function Products({ products = [] }) {
                         {navLinks.map(link => (
                             <a key={link.href} href={link.href}
                                 className={`text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
-                                    link.href === '/produktai' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                                    link.href === '/products' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
                                 }`}>
                                 {link.label}
                             </a>
@@ -373,7 +373,7 @@ export default function Products({ products = [] }) {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {paginated.map(product => (
                                         <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                                            <a href={`/produktai/${product.id}`} className="block flex-1">
+                                            <a href={`/products/${product.id}`} className="block flex-1">
                                                 <div className="relative h-64 overflow-hidden">
                                                     <ProductImage src={product.main_image_url} />
                                                     <div className="absolute top-3 left-3 flex flex-col gap-1">
@@ -485,7 +485,7 @@ export default function Products({ products = [] }) {
                             <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
                             <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.footer.euFundsDesc}</p>
-                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
+                            <a href="/eu-funds" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
                             </div>

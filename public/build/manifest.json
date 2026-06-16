@@ -1,6 +1,6 @@
 {
-  "_CartDrawer-CfeMQ0WW.js": {
-    "file": "assets/CartDrawer-CfeMQ0WW.js",
+  "_CartDrawer-Du3YjLZ_.js": {
+    "file": "assets/CartDrawer-Du3YjLZ_.js",
     "name": "CartDrawer",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
@@ -52,7 +52,7 @@
     "isEntry": true
   },
   "resources/js/Pages/Checkout.jsx": {
-    "file": "assets/Checkout-imwM_I5m.js",
+    "file": "assets/Checkout-DEmFqKWZ.js",
     "name": "Checkout",
     "src": "resources/js/Pages/Checkout.jsx",
     "isDynamicEntry": true,
@@ -64,46 +64,46 @@
     ]
   },
   "resources/js/Pages/Contact.jsx": {
-    "file": "assets/Contact-BkJUIRbE.js",
+    "file": "assets/Contact-BRKCFjg3.js",
     "name": "Contact",
     "src": "resources/js/Pages/Contact.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/EsFondai.jsx": {
-    "file": "assets/EsFondai-B-gAx47R.js",
+    "file": "assets/EsFondai-DOdXzNaj.js",
     "name": "EsFondai",
     "src": "resources/js/Pages/EsFondai.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/Home.jsx": {
-    "file": "assets/Home-BqdMJojP.js",
+    "file": "assets/Home-Cj2BPhjD.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/OrderCancelled.jsx": {
-    "file": "assets/OrderCancelled-Cu5v2UrE.js",
+    "file": "assets/OrderCancelled-CxVUefF1.js",
     "name": "OrderCancelled",
     "src": "resources/js/Pages/OrderCancelled.jsx",
     "isDynamicEntry": true,
@@ -124,20 +124,20 @@
     ]
   },
   "resources/js/Pages/PrivacyPolicy.jsx": {
-    "file": "assets/PrivacyPolicy-D4MJARuA.js",
+    "file": "assets/PrivacyPolicy-cOeyreEu.js",
     "name": "PrivacyPolicy",
     "src": "resources/js/Pages/PrivacyPolicy.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/Product.jsx": {
-    "file": "assets/Product-CoE2sCPG.js",
+    "file": "assets/Product-CYwYpnzN.js",
     "name": "Product",
     "src": "resources/js/Pages/Product.jsx",
     "isDynamicEntry": true,
@@ -145,26 +145,26 @@
       "_jsx-runtime-AC5R_bPZ.js",
       "_dist-2P9pXBI6.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/Products.jsx": {
-    "file": "assets/Products-CFoHL-I6.js",
+    "file": "assets/Products-D8Y1Z1xy.js",
     "name": "Products",
     "src": "resources/js/Pages/Products.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/Recipe.jsx": {
-    "file": "assets/Recipe-B-GKs3Zj.js",
+    "file": "assets/Recipe-BG18eNe1.js",
     "name": "Recipe",
     "src": "resources/js/Pages/Recipe.jsx",
     "isDynamicEntry": true,
@@ -172,13 +172,13 @@
       "_jsx-runtime-AC5R_bPZ.js",
       "_dist-2P9pXBI6.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
   },
   "resources/js/Pages/Recipes.jsx": {
-    "file": "assets/Recipes-DDSaKrW-.js",
+    "file": "assets/Recipes-CP_dpx5G.js",
     "name": "Recipes",
     "src": "resources/js/Pages/Recipes.jsx",
     "isDynamicEntry": true,
@@ -186,7 +186,7 @@
       "_jsx-runtime-AC5R_bPZ.js",
       "_dist-2P9pXBI6.js",
       "_i18n-usE-nAik.js",
-      "_CartDrawer-CfeMQ0WW.js",
+      "_CartDrawer-Du3YjLZ_.js",
       "_LangSwitcher-DB_lb_tj.js",
       "_useCart-CmhVs8dm.js"
     ]
@@ -201,7 +201,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-D3WTnAI9.js",
+    "file": "assets/app-B81PflPh.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,

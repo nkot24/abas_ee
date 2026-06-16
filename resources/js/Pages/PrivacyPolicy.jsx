@@ -197,10 +197,10 @@ export default function PrivacyPolicy() {
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/produktai' },
-        { label: t.nav.recipes,  href: '/receptai' },
-        { label: t.nav.euFunds,  href: '/es-fondai' },
-        { label: t.nav.contacts, href: '/kontaktai' },
+        { label: t.nav.products, href: '/products' },
+        { label: t.nav.recipes,  href: '/recipes' },
+        { label: t.nav.euFunds,  href: '/eu-funds' },
+        { label: t.nav.contacts, href: '/contact' },
     ];
 
     return (

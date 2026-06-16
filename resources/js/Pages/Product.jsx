@@ -14,10 +14,10 @@ export default function Product({ product }) {
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/produktai' },
-        { label: t.nav.recipes,  href: '/receptai' },
-        { label: t.nav.euFunds,  href: '/es-fondai' },
-        { label: t.nav.contacts, href: '/kontaktai' },
+        { label: t.nav.products, href: '/products' },
+        { label: t.nav.recipes,  href: '/recipes' },
+        { label: t.nav.euFunds,  href: '/eu-funds' },
+        { label: t.nav.contacts, href: '/contact' },
     ];
 
     const images   = product.images ?? [];
@@ -38,7 +38,7 @@ export default function Product({ product }) {
                         {navLinks.map(link => (
                             <a key={link.href} href={link.href}
                                 className={`text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
-                                    link.href === '/produktai' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                                    link.href === '/products' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
                                 }`}>
                                 {link.label}
                             </a>
@@ -95,7 +95,7 @@ export default function Product({ product }) {
                     <p className="text-sm text-gray-500">
                         <a href="/" className="hover:text-red-600 transition-colors">{t.product.breadHome}</a>
                         <span className="mx-2">/</span>
-                        <a href="/produktai" className="hover:text-red-600 transition-colors">{t.product.breadProducts}</a>
+                        <a href="/products" className="hover:text-red-600 transition-colors">{t.product.breadProducts}</a>
                         <span className="mx-2">/</span>
                         <span className="text-gray-800">{product.name}</span>
                     </p>
@@ -269,7 +269,7 @@ export default function Product({ product }) {
                                 </button>
                             </div>
 
-                            <a href="/kontaktai"
+                            <a href="/contact"
                                 className="block text-center w-full py-3 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200">
                                 {t.product.inquiry}
                             </a>
@@ -277,7 +277,7 @@ export default function Product({ product }) {
                     </div>
 
                     <div className="mt-14">
-                        <Link href="/produktai"
+                        <Link href="/products"
                             className="inline-block px-8 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200">
                             {t.btn.backToProducts}
                         </Link>
@@ -300,7 +300,7 @@ export default function Product({ product }) {
                             <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.euFundsTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
                             <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.footer.euFundsDesc}</p>
-                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
+                            <a href="/eu-funds" className="text-red-500 hover:text-red-400 text-sm transition-colors">{t.footer.readMore}</a>
                             <div className="mt-6">
                                 <img src="/images/eu_fond.png" alt="ES Fondai" className="h-16 w-auto" />
                             </div>

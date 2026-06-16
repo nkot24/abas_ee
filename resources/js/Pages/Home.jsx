@@ -26,10 +26,10 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/produktai' },
-        { label: t.nav.recipes,  href: '/receptai' },
-        { label: t.nav.euFunds,  href: '/es-fondai' },
-        { label: t.nav.contacts, href: '/kontaktai' },
+        { label: t.nav.products, href: '/products' },
+        { label: t.nav.recipes,  href: '/recipes' },
+        { label: t.nav.euFunds,  href: '/eu-funds' },
+        { label: t.nav.contacts, href: '/contact' },
     ];
 
     return (
@@ -137,13 +137,13 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
-                            href="/produktai"
+                            href="/products"
                             className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:shadow-lg hover:shadow-red-900/40 hover:-translate-y-0.5"
                         >
                             {t.hero.buyNow}
                         </a>
                         <a
-                            href="/receptai"
+                            href="/recipes"
                             className="px-8 py-4 border border-white/40 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 hover:bg-white/10"
                         >
                             {t.hero.recipes}
@@ -159,7 +159,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
             </section>
 
             {/* ── PRODUCTS ── */}
-            <section id="produktai" className="py-24 bg-white">
+            <section id="products" className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
 
                     <div className="text-center mb-14">
@@ -176,7 +176,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {products.map(product => (
                             <div key={product.id} className="group bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                                <a href={`/produktai/${product.id}`} className="block flex-1">
+                                <a href={`/products/${product.id}`} className="block flex-1">
                                     <div className="relative h-52 overflow-hidden">
                                         {product.main_image_url
                                             ? <img src={product.main_image_url} alt={product.name} className="w-full h-full object-cover" />
@@ -212,7 +212,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
 
                     <div className="text-center mt-12">
                         <a
-                            href="/produktai"
+                            href="/products"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
                             {t.btn.viewAllProducts}
@@ -223,7 +223,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
 
 
             {/* ── RECIPES ── */}
-            <section id="receptai" className="py-24 bg-white">
+            <section id="recipes" className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
 
                     <div className="text-center mb-14">
@@ -241,7 +241,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                         {recipes.map(recipe => (
                             <a
                                 key={recipe.id}
-                                href={`/receptai/${recipe.id}`}
+                                href={`/recipes/${recipe.id}`}
                                 className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                             >
                                 <div className="w-full h-40 bg-gray-200 overflow-hidden">
@@ -264,7 +264,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
 
                     <div className="text-center mt-12">
                         <a
-                            href="/receptai"
+                            href="/recipes"
                             className="inline-block px-10 py-3.5 border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                         >
                             {t.btn.viewAllRecipes}
@@ -274,7 +274,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
             </section>
 
             {/* ── WHOLESALE / CONTACT CTA ── */}
-            <section id="kontaktai" className="relative py-28 overflow-hidden bg-black">
+            <section id="contact" className="relative py-28 overflow-hidden bg-black">
 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <div className="max-w-xl">
@@ -284,13 +284,13 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                         </h2>
                         <div className="flex flex-col sm:flex-row gap-4">
                             <a
-                                href="/kontaktai"
+                                href="/contact"
                                 className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center"
                             >
                                 {t.btn.contactUs}
                             </a>
                             <a
-                                href="/kontaktai"
+                                href="/contact"
                                 className="px-8 py-4 border border-white/30 hover:border-white text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200 text-center hover:bg-white/10"
                             >
                                 {t.btn.contacts}
@@ -330,7 +330,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                                 {lang === 'en' ? (settingsEn.about_text_4 || t.home.aboutP4) : (settings.about_text_4 || t.home.aboutP4)}
                             </p>
                             <a
-                                href="/kontaktai"
+                                href="/contact"
                                 className="inline-block px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-sm transition-all duration-200"
                             >
                                 {t.btn.contactUs}
@@ -351,7 +351,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                             <p className="text-gray-400 text-sm leading-relaxed mb-6">
                                 {t.footer.aboutDesc}
                             </p>
-                            <a href="/privatuma-politika" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
+                            <a href="/privacy-policy" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
                                 {t.footer.privacy}
                             </a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
@@ -363,7 +363,7 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                             <p className="text-gray-400 text-sm leading-relaxed mb-4">
                                 {t.footer.euFundsDesc}
                             </p>
-                            <a href="/es-fondai" className="text-red-500 hover:text-red-400 text-sm transition-colors">
+                            <a href="/eu-funds" className="text-red-500 hover:text-red-400 text-sm transition-colors">
                                 {t.footer.readMore}
                             </a>
                             <div className="mt-6">

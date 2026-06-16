@@ -305,16 +305,16 @@ export default function Checkout() {
         const err = params.get('error');
         if (err === 'cancelled') {
             setToast(t.checkout.errorCancelled ?? 'Mokėjimas atšauktas. Jūsų krepšelis išsaugotas – galite bandyti dar kartą.');
-            window.history.replaceState({}, '', '/uzsakymas');
+            window.history.replaceState({}, '', '/checkout');
         }
     }, []);
 
     const navLinks = [
         { label: t.nav.home,     href: '/' },
-        { label: t.nav.products, href: '/produktai' },
-        { label: t.nav.recipes,  href: '/receptai' },
-        { label: t.nav.euFunds,  href: '/es-fondai' },
-        { label: t.nav.contacts, href: '/kontaktai' },
+        { label: t.nav.products, href: '/products' },
+        { label: t.nav.recipes,  href: '/recipes' },
+        { label: t.nav.euFunds,  href: '/eu-funds' },
+        { label: t.nav.contacts, href: '/contact' },
     ];
 
     const COUNTRIES = [
@@ -454,7 +454,7 @@ export default function Checkout() {
         if (shippingCost === null) { setServerError(t.checkout.waitShipping); return; }
         setSubmitting(true);
         try {
-            const res = await fetch('/uzsakymas', {
+            const res = await fetch('/checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -591,7 +591,7 @@ export default function Checkout() {
                 <div className="bg-white border-b border-gray-100">
                     <div className="max-w-6xl mx-auto px-6 py-5 flex items-center gap-3">
                         {step === 1 ? (
-                            <a href="/produktai" className="text-gray-400 hover:text-gray-600 transition-colors">
+                            <a href="/products" className="text-gray-400 hover:text-gray-600 transition-colors">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
                             </a>
                         ) : (
@@ -612,7 +612,7 @@ export default function Checkout() {
                                 </svg>
                             </div>
                             <p className="text-gray-400 mb-6">{t.checkout.emptyCart}</p>
-                            <a href="/produktai" className="inline-block px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-md transition-colors">
+                            <a href="/products" className="inline-block px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-md transition-colors">
                                 {t.checkout.shopBtn}
                             </a>
                         </div>

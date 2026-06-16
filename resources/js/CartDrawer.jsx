@@ -105,7 +105,7 @@ export default function CartDrawer({ open, onClose, items, removeItem, updateQty
                             <span>{total.toFixed(2)} €</span>
                         </div>
                         <a
-                            href="/uzsakymas"
+                            href="/checkout"
                             className="block w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest text-center rounded-sm transition-colors"
                         >
                             {t.cart.checkout}
