@@ -1,30 +1,30 @@
 {
-  "_CartDrawer-C2BmHV9J.js": {
-    "file": "assets/CartDrawer-C2BmHV9J.js",
+  "_CartDrawer-Ccz2PQaO.js": {
+    "file": "assets/CartDrawer-Ccz2PQaO.js",
     "name": "CartDrawer",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js"
+      "_i18n-DFujvjIg.js"
     ]
   },
-  "_LangSwitcher-DuGgpt74.js": {
-    "file": "assets/LangSwitcher-DuGgpt74.js",
+  "_LangSwitcher-B8beMDYH.js": {
+    "file": "assets/LangSwitcher-B8beMDYH.js",
     "name": "LangSwitcher",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js"
+      "_i18n-DFujvjIg.js"
     ]
   },
-  "_dist-BwHhugow.js": {
-    "file": "assets/dist-BwHhugow.js",
+  "_dist-Dj8dhdJ6.js": {
+    "file": "assets/dist-Dj8dhdJ6.js",
     "name": "dist",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js"
+      "_i18n-DFujvjIg.js"
     ]
   },
-  "_i18n-DCF6_Z40.js": {
-    "file": "assets/i18n-DCF6_Z40.js",
+  "_i18n-DFujvjIg.js": {
+    "file": "assets/i18n-DFujvjIg.js",
     "name": "i18n",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js"
@@ -34,12 +34,12 @@
     "file": "assets/jsx-runtime-AC5R_bPZ.js",
     "name": "jsx-runtime"
   },
-  "_useCart-D4bePZyy.js": {
-    "file": "assets/useCart-D4bePZyy.js",
+  "_useCart-BnTrhrbh.js": {
+    "file": "assets/useCart-BnTrhrbh.js",
     "name": "useCart",
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js"
+      "_i18n-DFujvjIg.js"
     ]
   },
   "resources/css/app.css": {
@@ -52,156 +52,156 @@
     "isEntry": true
   },
   "resources/js/Pages/Checkout.jsx": {
-    "file": "assets/Checkout-DSmGtJAp.js",
+    "file": "assets/Checkout-9HhUvsTy.js",
     "name": "Checkout",
     "src": "resources/js/Pages/Checkout.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Contact.jsx": {
-    "file": "assets/Contact-BpGUue4l.js",
+    "file": "assets/Contact-C8O9g9M_.js",
     "name": "Contact",
     "src": "resources/js/Pages/Contact.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/EsFondai.jsx": {
-    "file": "assets/EsFondai-DoJFDRK3.js",
+    "file": "assets/EsFondai-DW2Y1swJ.js",
     "name": "EsFondai",
     "src": "resources/js/Pages/EsFondai.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Home.jsx": {
-    "file": "assets/Home-DwxXmeVR.js",
+    "file": "assets/Home-BjGmf3t8.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/OrderCancelled.jsx": {
-    "file": "assets/OrderCancelled-BTxOa-9j.js",
+    "file": "assets/OrderCancelled-CBzeCwq7.js",
     "name": "OrderCancelled",
     "src": "resources/js/Pages/OrderCancelled.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js"
+      "_i18n-DFujvjIg.js"
     ]
   },
   "resources/js/Pages/OrderSuccess.jsx": {
-    "file": "assets/OrderSuccess-CzCRXWL5.js",
+    "file": "assets/OrderSuccess-B17hZafd.js",
     "name": "OrderSuccess",
     "src": "resources/js/Pages/OrderSuccess.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/PrivacyPolicy.jsx": {
-    "file": "assets/PrivacyPolicy-C5M1KPaq.js",
+    "file": "assets/PrivacyPolicy-DWJ25oNE.js",
     "name": "PrivacyPolicy",
     "src": "resources/js/Pages/PrivacyPolicy.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Product.jsx": {
-    "file": "assets/Product-CG8ugLvb.js",
+    "file": "assets/Product-CRLzcgy7.js",
     "name": "Product",
     "src": "resources/js/Pages/Product.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_dist-BwHhugow.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_dist-Dj8dhdJ6.js",
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Products.jsx": {
-    "file": "assets/Products-DSouScIk.js",
+    "file": "assets/Products-kFdBpcwN.js",
     "name": "Products",
     "src": "resources/js/Pages/Products.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Recipe.jsx": {
-    "file": "assets/Recipe-CmCthL70.js",
+    "file": "assets/Recipe-BbjCySqu.js",
     "name": "Recipe",
     "src": "resources/js/Pages/Recipe.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_dist-BwHhugow.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_dist-Dj8dhdJ6.js",
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Recipes.jsx": {
-    "file": "assets/Recipes-DryPdXlJ.js",
+    "file": "assets/Recipes-QEO-6HaU.js",
     "name": "Recipes",
     "src": "resources/js/Pages/Recipes.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_dist-BwHhugow.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_dist-Dj8dhdJ6.js",
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Shipping.jsx": {
-    "file": "assets/Shipping-LgHZZls6.js",
+    "file": "assets/Shipping-C6PibXmK.js",
     "name": "Shipping",
     "src": "resources/js/Pages/Shipping.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_i18n-DCF6_Z40.js",
-      "_CartDrawer-C2BmHV9J.js",
-      "_LangSwitcher-DuGgpt74.js",
-      "_useCart-D4bePZyy.js"
+      "_i18n-DFujvjIg.js",
+      "_CartDrawer-Ccz2PQaO.js",
+      "_LangSwitcher-B8beMDYH.js",
+      "_useCart-BnTrhrbh.js"
     ]
   },
   "resources/js/Pages/Welcome.jsx": {
@@ -214,14 +214,14 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CuIjEt7Q.js",
+    "file": "assets/app-QTaqY_4s.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-AC5R_bPZ.js",
-      "_dist-BwHhugow.js",
-      "_i18n-DCF6_Z40.js"
+      "_dist-Dj8dhdJ6.js",
+      "_i18n-DFujvjIg.js"
     ],
     "dynamicImports": [
       "resources/js/Pages/Checkout.jsx",

@@ -470,7 +470,7 @@ export default function Checkout() {
                     parcel_locker_id:   deliveryMethod === 'locker' && selectedLocker ? String(selectedLocker.id) : null,
                     parcel_locker_name: deliveryMethod === 'locker' && selectedLocker
                         ? `${selectedLocker.title}${selectedLocker.address ? ', ' + selectedLocker.address : ''}`
-                        : deliveryMethod === 'pickup' ? 'Tallinn, Estonia' : null,
+                        : deliveryMethod === 'pickup' ? 'Kandava, Jelgavas iela 1J' : null,
                     payment_method: 'paysera',
                     lang,
                 }),
@@ -778,8 +778,7 @@ export default function Checkout() {
                                             )}
                                             {deliveryMethod === 'pickup' && (
                                                 <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
-                                                    {t.checkout.pickupNote}<br/>
-                                                    <strong>Tallinn, Estonia</strong>
+                                                    {t.checkout.pickupNote}
                                                 </div>
                                             )}
                                         </SectionCard>

@@ -187,7 +187,7 @@ const translations = {
             courier: 'Kuller',
             courierLarge: 'Suurtele kaupadele (grill, suitsuahi, mööbel)',
             pickup: 'Kohapeal kättesaamine',
-            pickupAddress: 'Tallinn, Estonia · Eelneval kokkuleppel',
+            pickupAddress: 'Kandava, Jelgavas iela 1J · Eelneval kokkuleppel',
             free: 'Tasuta',
             pickupNote: 'Võtame teiega ühendust kättesaamise aja kokkuleppimiseks.',
             courierNote: 'Võtame teiega pärast tellimuse kinnitamist ühendust tarneaja osas.',
