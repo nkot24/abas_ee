@@ -46,10 +46,10 @@ export default function Product({ product }) {
                     </div>
                     <div className="flex items-center gap-5">
                         <div className="hidden md:flex items-center gap-3">
-                            <a href="#" className="text-gray-500 hover:text-red-600 transition-colors" aria-label="Facebook">
+                            <a href="https://www.facebook.com/abas.lv/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600 transition-colors" aria-label="Facebook">
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
                             </a>
-                            <a href="#" className="text-gray-500 hover:text-red-600 transition-colors" aria-label="Instagram">
+                            <a href="https://www.instagram.com/abassmokehouse" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600 transition-colors" aria-label="Instagram">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                             </a>
                         </div>

@@ -101,7 +101,9 @@
       "Bash(python -c ' *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(sed -i 's|<a href=\"#\" className=\"text-gray-500 hover:text-red-600 transition-colors\" aria-label=\"Facebook\">|<a href=\"https://www.facebook.com/abas.lv/\" target=\"_blank\" rel=\"noopener noreferrer\" className=\"text-gray-500 hover:text-red-600 transition-colors\" aria-label=\"Facebook\">|g' resources/js/Pages/Home.jsx resources/js/Pages/Contact.jsx resources/js/Pages/EsFondai.jsx resources/js/Pages/Product.jsx resources/js/Pages/Products.jsx resources/js/Pages/Recipe.jsx resources/js/Pages/Recipes.jsx)",
+      "Bash(sed -i 's|<a href=\"#\" className=\"text-gray-500 hover:text-red-600 transition-colors\" aria-label=\"Instagram\">|<a href=\"https://www.instagram.com/abassmokehouse\" target=\"_blank\" rel=\"noopener noreferrer\" className=\"text-gray-500 hover:text-red-600 transition-colors\" aria-label=\"Instagram\">|g' resources/js/Pages/Home.jsx resources/js/Pages/Contact.jsx resources/js/Pages/EsFondai.jsx resources/js/Pages/Product.jsx resources/js/Pages/Products.jsx resources/js/Pages/Recipe.jsx resources/js/Pages/Recipes.jsx)"
     ]
   }
 }

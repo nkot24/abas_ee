@@ -64,7 +64,7 @@
     ]
   },
   "resources/js/Pages/Contact.jsx": {
-    "file": "assets/Contact-CPKIMHim.js",
+    "file": "assets/Contact-BpGUue4l.js",
     "name": "Contact",
     "src": "resources/js/Pages/Contact.jsx",
     "isDynamicEntry": true,
@@ -77,7 +77,7 @@
     ]
   },
   "resources/js/Pages/EsFondai.jsx": {
-    "file": "assets/EsFondai-CpL9gznm.js",
+    "file": "assets/EsFondai-DoJFDRK3.js",
     "name": "EsFondai",
     "src": "resources/js/Pages/EsFondai.jsx",
     "isDynamicEntry": true,
@@ -90,7 +90,7 @@
     ]
   },
   "resources/js/Pages/Home.jsx": {
-    "file": "assets/Home-Bc-5utsI.js",
+    "file": "assets/Home-DwxXmeVR.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.jsx",
     "isDynamicEntry": true,
@@ -137,7 +137,7 @@
     ]
   },
   "resources/js/Pages/Product.jsx": {
-    "file": "assets/Product-CBiNrW2N.js",
+    "file": "assets/Product-CG8ugLvb.js",
     "name": "Product",
     "src": "resources/js/Pages/Product.jsx",
     "isDynamicEntry": true,
@@ -151,7 +151,7 @@
     ]
   },
   "resources/js/Pages/Products.jsx": {
-    "file": "assets/Products-DY7niWbU.js",
+    "file": "assets/Products-DSouScIk.js",
     "name": "Products",
     "src": "resources/js/Pages/Products.jsx",
     "isDynamicEntry": true,
@@ -164,7 +164,7 @@
     ]
   },
   "resources/js/Pages/Recipe.jsx": {
-    "file": "assets/Recipe-DuMBFT9j.js",
+    "file": "assets/Recipe-CmCthL70.js",
     "name": "Recipe",
     "src": "resources/js/Pages/Recipe.jsx",
     "isDynamicEntry": true,
@@ -178,7 +178,7 @@
     ]
   },
   "resources/js/Pages/Recipes.jsx": {
-    "file": "assets/Recipes-B92HVgDH.js",
+    "file": "assets/Recipes-DryPdXlJ.js",
     "name": "Recipes",
     "src": "resources/js/Pages/Recipes.jsx",
     "isDynamicEntry": true,
@@ -214,7 +214,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BAME9Tqg.js",
+    "file": "assets/app-CkoDhSzP.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
