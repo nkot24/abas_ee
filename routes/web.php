@@ -375,9 +375,12 @@ Route::get('/checkout/success/{id}', function (Request $request, $id) {
     return Inertia::render('OrderSuccess', ['order' => $order->only('id', 'first_name', 'email', 'total', 'status')]);
 })->name('order.success');
 
-// Cancel page
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');
+});
+
+Route::get('/shipping', function () {
+    return Inertia::render('Shipping');
 });
 
 // Paysera cancel redirect — delete the pending order and send user back to checkout

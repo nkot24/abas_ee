@@ -351,8 +351,11 @@ export default function Home({ featuredProducts = [], featuredRecipes = [], sett
                             <p className="text-gray-400 text-sm leading-relaxed mb-6">
                                 {t.footer.aboutDesc}
                             </p>
-                            <a href="/privacy-policy" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
+                            <a href="/privacy-policy" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-2">
                                 {t.footer.privacy}
+                            </a>
+                            <a href="/shipping" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">
+                                {t.footer.shipping}
                             </a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>

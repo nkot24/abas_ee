@@ -156,7 +156,8 @@ export default function EsFondai({ settings = {} }) {
                             <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-1">{t.footer.aboutTitle}</h3>
                             <div className="w-10 h-0.5 bg-red-600 mb-5" />
                             <p className="text-gray-400 text-sm leading-relaxed mb-6">{t.footer.aboutDesc}</p>
-                            <a href="#" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">{t.footer.privacy}</a>
+                            <a href="/privacy-policy" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-2">{t.footer.privacy}</a>
+                            <a href="/shipping" className="text-gray-400 hover:text-red-400 text-sm transition-colors block mb-6">{t.footer.shipping}</a>
                             <img src="/images/foter_image.png" alt="ABAS Smoke House" className="h-44 w-auto block" />
                         </div>
                         <div className="flex-1">
