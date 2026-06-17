@@ -10,18 +10,21 @@ const content = {
         deliveryTitle: 'Tarnetingimused',
         deliveryItems: [
             'Tarne toimub Latvijas Posti kaudu.',
-            'Tarneaeg on 2–5 tööpäeva alates tellimuse kinnitamisest.',
+            'Tarneaeg on 2–5 tööpäeva alates tellimuse saatmisest.',
             'Pakid toimetatakse postkontori või pakiautomaadi punkti (Omniva, Latvijas Pasts).',
             'Tarnekulud arvutatakse tellimuse esitamisel sõltuvalt sihtriigist ja pakikaalu.',
             'Saadame Eestisse, Lätti ja Leetu.',
         ],
         returnsTitle: 'Tagastustingimused',
         returnsItems: [
-            'Teil on õigus kaup tagastada 14 päeva jooksul alates kättesaamisest.',
-            'Kaup peab olema kasutamata, originaalpakendis ja samas seisukorras nagu kättetoimetamisel.',
-            'Tagastuse kulud kannab ostja, välja arvatud juhul, kui kaup on defektiga.',
-            'Tagastamiseks võtke meiega ühendust: info@abas.ee',
-            'Pärast kauba tagastuse kontrollimist tagastame raha 5–10 tööpäeva jooksul.',
+            'Vastavalt tarbijakaitseseadusele on tarbijal õigus 14 päeva jooksul lepingust taganeda, põhjust nimetamata.',
+            '14-päevane tähtaeg algab päevast, mil tarbija või tema määratud isik kauba kätte sai.',
+            'Taganemisõiguse kasutamiseks palume teavitada meid e-posti teel info@abas.lv, märkides tellimuse numbri.',
+            'Tagastatav kaup peab olema kasutamata, kahjustamata, originaalpakendis ja täiskomplektis.',
+            'Kaup tuleb saata tagasi hiljemalt 14 päeva jooksul pärast taganemisteate saatmist.',
+            'Kauba tagasisaatmise kulud kannab ostja.',
+            'Tagastame raha (sh algsed tarnekulud) hiljemalt 14 päeva jooksul pärast taganemisteate saamist, kasutades sama makseviisi. Meil on õigus tagasimakset edasi lükata kuni kauba kättesaamiseni.',
+            'Kui kaup on defektne või ei vasta lepingutingimustele, palume meiega ühendust võtta — sellisel juhul katame tagasisaatmiskulud meie.',
         ],
         contactTitle: 'Küsimused?',
         contactText: 'Võtke meiega ühendust: ',
@@ -31,18 +34,21 @@ const content = {
         deliveryTitle: 'Delivery Terms',
         deliveryItems: [
             'Delivery is carried out via Latvijas Pasts (Latvian Post).',
-            'Delivery time is 2–5 business days from order confirmation.',
+            'Delivery time is 2–5 business days from the date of shipment.',
             'Packages are delivered to a post office or parcel locker (Omniva, Latvijas Pasts).',
             'Shipping costs are calculated at checkout depending on the destination country and package weight.',
             'We ship to Estonia, Latvia, and Lithuania.',
         ],
         returnsTitle: 'Return Policy',
         returnsItems: [
-            'You have the right to return goods within 14 days of receipt.',
-            'The item must be unused, in its original packaging, and in the same condition as when delivered.',
-            'Return shipping costs are the responsibility of the buyer, unless the item is defective.',
-            'To initiate a return, contact us at: info@abas.ee',
-            'After inspecting the returned item, we will issue a refund within 5–10 business days.',
+            'In accordance with consumer protection law, the consumer has the right to withdraw from the contract within 14 days without giving any reason.',
+            'The 14-day period begins on the day the consumer or their designated person receives the goods.',
+            'To exercise the right of withdrawal, please notify us by email at info@abas.lv, stating the order number.',
+            'The returned item must be unused, undamaged, in its original packaging and complete.',
+            'The item must be sent back no later than 14 days after sending the notice of withdrawal.',
+            'The cost of returning the goods is borne by the buyer.',
+            'We will refund the payment (including original delivery costs) no later than 14 days after receiving the withdrawal notice, using the same payment method. We reserve the right to withhold the refund until the goods have been received back.',
+            'If the item is defective or does not conform to the contract, please contact us — in such cases we will cover the return shipping costs.',
         ],
         contactTitle: 'Questions?',
         contactText: 'Contact us: ',
@@ -52,18 +58,21 @@ const content = {
         deliveryTitle: 'Pristatymo sąlygos',
         deliveryItems: [
             'Pristatymas vykdomas per Latvijas Pasts (Latvijos paštą).',
-            'Pristatymo laikas – 2–5 darbo dienos nuo užsakymo patvirtinimo.',
+            'Pristatymo laikas – 2–5 darbo dienos nuo siuntos išsiuntimo.',
             'Siuntos pristatomos į pašto skyrius arba paketų automatus (Omniva, Latvijas Pasts).',
             'Pristatymo išlaidos apskaičiuojamos atsiskaitant, atsižvelgiant į paskirties šalį ir siuntinio svorį.',
             'Siunčiame į Estiją, Latviją ir Lietuvą.',
         ],
         returnsTitle: 'Grąžinimo politika',
         returnsItems: [
-            'Turite teisę grąžinti prekes per 14 dienų nuo gavimo.',
-            'Prekė turi būti nenaudota, originalioje pakuotėje ir tokios pat būklės, kaip buvo pristatyta.',
-            'Grąžinimo išlaidas padengia pirkėjas, išskyrus atvejus, kai prekė yra su defektu.',
-            'Norėdami grąžinti, susisiekite su mumis: info@abas.ee',
-            'Patikrinus grąžintą prekę, pinigai bus grąžinti per 5–10 darbo dienų.',
+            'Pagal vartotojų teisių apsaugos įstatymus vartotojas turi teisę per 14 dienų atsisakyti sutarties nenurodydamas priežasties.',
+            '14 dienų terminas prasideda dieną, kai vartotojas arba jo nurodytas asmuo gavo prekę.',
+            'Norėdami pasinaudoti atsisakymo teise, prašome informuoti mus el. paštu info@abas.lv, nurodant užsakymo numerį.',
+            'Grąžinama prekė turi būti nenaudota, nepažeista, originalioje pakuotėje ir pilnoje komplektacijoje.',
+            'Prekė turi būti išsiųsta atgal ne vėliau kaip per 14 dienų nuo atsisakymo pranešimo išsiuntimo.',
+            'Prekės grąžinimo išlaidas padengia pirkėjas.',
+            'Pinigus (įskaitant pradines pristatymo išlaidas) grąžinsime ne vėliau kaip per 14 dienų nuo atsisakymo pranešimo gavimo, naudodami tą patį mokėjimo būdą. Turime teisę sulaikyti grąžinimą tol, kol prekė bus gauta atgal.',
+            'Jei prekė yra su defektu arba neatitinka sutarties sąlygų, prašome susisiekti su mumis — tokiais atvejais grąžinimo išlaidas dengiame mes.',
         ],
         contactTitle: 'Klausimai?',
         contactText: 'Susisiekite su mumis: ',
@@ -152,7 +161,7 @@ export default function Shipping() {
 
                     <div>
                         <h2 className="text-xl font-bold text-gray-900 uppercase tracking-wide mb-4 pb-2 border-b border-gray-200">{c.contactTitle}</h2>
-                        <p>{c.contactText}<a href="mailto:info@abas.ee" className="text-red-600 hover:underline font-medium">info@abas.ee</a></p>
+                        <p>{c.contactText}<a href="mailto:info@abas.lv" className="text-red-600 hover:underline font-medium">info@abas.lv</a></p>
                     </div>
 
                 </div>
