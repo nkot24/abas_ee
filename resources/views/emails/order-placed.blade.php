@@ -50,12 +50,18 @@ $delivery = $isLocker ? 'Latvijas Pasts locker' : ($isPickup ? 'Pickup on site' 
         </tr>
 
         @foreach($order->items as $item)
+        @php $product = \App\Models\Product::find($item['id']); $img = $product?->mainImage?->url; @endphp
         <tr>
           <td style="padding:8px 40px;">
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="font-size:14px;color:#1a1a1a;">{{ $item['name'] }} &times; {{ $item['qty'] }}</td>
-                <td align="right" style="font-size:14px;color:#1a1a1a;white-space:nowrap;">{{ number_format($item['price'] * $item['qty'], 2) }} €</td>
+                @if($img)
+                <td width="52" style="vertical-align:middle;padding-right:12px;">
+                  <img src="{{ config('app.url') }}{{ $img }}" width="48" height="48" style="width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #eee;">
+                </td>
+                @endif
+                <td style="font-size:14px;color:#1a1a1a;vertical-align:middle;">{{ $item['name'] }} &times; {{ $item['qty'] }}</td>
+                <td align="right" style="font-size:14px;color:#1a1a1a;white-space:nowrap;vertical-align:middle;">{{ number_format($item['price'] * $item['qty'], 2) }} €</td>
               </tr>
             </table>
           </td>
