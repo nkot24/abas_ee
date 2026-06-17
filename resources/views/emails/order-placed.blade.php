@@ -19,7 +19,7 @@ $delivery = $isLocker ? 'Latvijas Pasts locker' : ($isPickup ? 'Pickup on site' 
         <!-- Logo -->
         <tr>
           <td align="center" style="padding:36px 40px 24px;">
-            <img src="{{ env('APP_URL') }}/images/logo.png" alt="ABAS Home Smokehouse" style="height:60px;width:auto;">
+            <img src="{{ config('app.url') }}/images/logo.png" alt="ABAS Home Smokehouse" style="height:60px;width:auto;">
           </td>
         </tr>
 

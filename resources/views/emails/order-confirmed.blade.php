@@ -25,7 +25,7 @@ $delivery  = $isLocker
         <!-- Logo -->
         <tr>
           <td align="center" style="padding:36px 40px 24px;">
-            <img src="{{ env('APP_URL') }}/images/logo.png" alt="ABAS Home Smokehouse" style="height:60px;width:auto;">
+            <img src="{{ config('app.url') }}/images/logo.png" alt="ABAS Home Smokehouse" style="height:60px;width:auto;">
           </td>
         </tr>
 
@@ -75,7 +75,7 @@ $delivery  = $isLocker
               <tr>
                 @if($img)
                 <td width="52" style="vertical-align:middle;padding-right:12px;">
-                  <img src="{{ env('APP_URL') }}{{ $img }}" width="48" height="48" style="width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #eee;">
+                  <img src="{{ config('app.url') }}{{ $img }}" width="48" height="48" style="width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #eee;">
                 </td>
                 @endif
                 <td style="font-size:14px;color:#1a1a1a;vertical-align:middle;">
