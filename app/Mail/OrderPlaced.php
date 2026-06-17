@@ -19,7 +19,7 @@ class OrderPlaced extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Jauns užsakymas #' . $this->order->id);
+        return new Envelope(subject: 'New Order #' . $this->order->id);
     }
 
     public function content(): Content
