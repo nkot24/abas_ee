@@ -11,7 +11,7 @@ const content = {
         deliveryItems: [
             'Tarne toimub Latvijas Posti kaudu.',
             'Tarneaeg on 2–5 tööpäeva alates tellimuse saatmisest.',
-            'Pakid toimetatakse postkontori või pakiautomaadi punkti (Omniva, Latvijas Pasts).',
+            'Pakid toimetatakse postkontorisse, pakiautomaati või koju (Latvijas Pasts).',
             'Tarnekulud arvutatakse tellimuse esitamisel sõltuvalt sihtriigist ja pakikaalu.',
             'Saadame Eestisse, Lätti ja Leetu.',
         ],
@@ -35,7 +35,7 @@ const content = {
         deliveryItems: [
             'Delivery is carried out via Latvijas Pasts (Latvian Post).',
             'Delivery time is 2–5 business days from the date of shipment.',
-            'Packages are delivered to a post office or parcel locker (Omniva, Latvijas Pasts).',
+            'Packages are delivered to a post office, parcel locker, or to your home (Latvijas Pasts).',
             'Shipping costs are calculated at checkout depending on the destination country and package weight.',
             'We ship to Estonia, Latvia, and Lithuania.',
         ],
@@ -59,7 +59,7 @@ const content = {
         deliveryItems: [
             'Pristatymas vykdomas per Latvijas Pasts (Latvijos paštą).',
             'Pristatymo laikas – 2–5 darbo dienos nuo siuntos išsiuntimo.',
-            'Siuntos pristatomos į pašto skyrius arba paketų automatus (Omniva, Latvijas Pasts).',
+            'Siuntos pristatomos į pašto skyrius, paketų automatus arba namo (Latvijas Pasts).',
             'Pristatymo išlaidos apskaičiuojamos atsiskaitant, atsižvelgiant į paskirties šalį ir siuntinio svorį.',
             'Siunčiame į Estiją, Latviją ir Lietuvą.',
         ],
