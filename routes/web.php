@@ -288,10 +288,11 @@ Route::middleware('throttle:checkout')->post('/checkout', function (Request $req
             'p_city'        => $order->city,
             'p_zip'         => $order->postal_code,
             'p_countrycode' => strtoupper($order->country),
-            'lang'          => 'LIT',
+            'lang'          => 'ENG',
+            'paytext'       => 'Order No [order_nr] at abas.ee',
         ]);
 
-        $payseraUrl = \WebToPay::getPaymentUrl('LIT') . '?' . http_build_query($params);
+        $payseraUrl = \WebToPay::getPaymentUrl('EST') . '?' . http_build_query($params);
 
         return response()->json(['redirect' => $payseraUrl]);
     } catch (\Exception $e) {
