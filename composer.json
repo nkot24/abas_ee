@@ -91,6 +91,9 @@
         "audit": {
             "abandoned": "ignore",
             "block-insecure": false
+        },
+        "platform": {
+            "php": "8.3.22"
         }
     },
     "minimum-stability": "stable",
