@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SecurityHeaders::class,
             \App\Http\Middleware\TrackPageView::class,
         ]);
+
+        $middleware->alias([
+            'scope' => \Laravel\Passport\Http\Middleware\CheckTokenForAnyScope::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
