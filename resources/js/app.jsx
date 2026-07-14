@@ -5,7 +5,10 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { LanguageProvider } from './i18n';
 
 createInertiaApp({
-    title: (title) => `${title} - ${import.meta.env.VITE_APP_NAME ?? 'Laravel'}`,
+    title: (title) => {
+        const siteName = import.meta.env.VITE_APP_NAME ?? 'Laravel';
+        return title ? `${title} - ${siteName}` : siteName;
+    },
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.jsx`,
