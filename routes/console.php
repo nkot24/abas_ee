@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('gdpr:anonymize-old-orders')->weekly();
+Schedule::command('sitemap:generate')->hourly();

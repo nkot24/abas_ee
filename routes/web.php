@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use App\Mail\DataDeleted;
 use App\Mail\OrderConfirmed;
 use App\Mail\OrderPlaced;
@@ -29,6 +30,8 @@ function translateSetting(string $page, string $key, string $value): string
     });
 }
 }
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::get('/', function () {
     $settings = PageSetting::getForPage('home');
